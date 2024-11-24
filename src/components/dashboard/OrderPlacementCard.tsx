@@ -1,0 +1,124 @@
+import {Image, Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
+import React, {useState} from 'react';
+import {colors} from '../../utils/Colors';
+import {FontPath} from '../../utils/FontPath';
+import {hp, RFValue, wp} from '../../helper/Responsive';
+import {IconsPath} from '../../utils/IconPath';
+import {OrderPlacementCardProps} from '../../interfaces/Types';
+import { useTranslation } from 'react-i18next';
+
+const OrderPlacementCard = ({
+  productName,
+  value,
+  onChangeText
+}: OrderPlacementCardProps) => {
+  const {t} = useTranslation();
+  // const [unit, setUnit] = useState(0);
+
+  return (
+    <View style={styles.cardView}>
+      <View>
+        <Text style={styles.productName}>{productName}</Text>
+        <Text style={styles.mrp}>
+          MRP : <Text style={styles.unit}>12,000/MT</Text>
+        </Text>
+        <Text style={styles.mrp}>
+          {t('orderPlacement.amount')} ₹ : <Text style={styles.unit}>1,00,00</Text>
+        </Text>
+      </View>
+      <View>
+        <Text style={styles.weight}>Weight (MT)</Text>
+        <View style={styles.addUnitView}>
+          <TextInput
+          placeholder='0'
+          value={value}
+          onChangeText={onChangeText}
+          placeholderTextColor={colors.darkGray}
+          style={styles.textInput}
+          keyboardType='numeric'
+          />
+          {/* <Pressable
+            onPress={() => setUnit(() => (unit > 0 ? unit - unitPluse : 0))}>
+            <Image source={IconsPath.miuns} style={styles.icons} />
+          </Pressable> */}
+          {/* <Text style={styles.unitNumber}>{unit}</Text> */}
+          {/* <Pressable
+            onPress={() => setUnit(() => (unit >= 0 ? unit + unitPluse : 0))}>
+            <Image source={IconsPath.pluse3} style={styles.icons} />
+          </Pressable> */}
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default OrderPlacementCard;
+
+const styles = StyleSheet.create({
+  cardView: {
+    backgroundColor: colors.white,
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    marginHorizontal: wp(5),
+    shadowOpacity: 0.05,
+    shadowRadius: 10.65,
+    elevation: 8,
+    borderRadius: 8,
+    marginBottom: hp(2),
+    padding: wp(4),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  productName: {
+    color: colors.primary,
+    fontFamily: FontPath.OutfitSemiBold,
+    fontSize: RFValue(16),
+    marginBottom: hp(0.8),
+  },
+  mrp: {
+    color: colors.black,
+    fontFamily: FontPath.OutfitSemiBold,
+    fontSize: RFValue(14),
+  },
+  unit: {
+    fontFamily: FontPath.OutfitMedium,
+  },
+  weight: {
+    color: colors.black,
+    fontFamily: FontPath.OutfitMedium,
+    fontSize: RFValue(14),
+    textAlign: 'center',
+  },
+  icons: {
+    width: wp(4),
+    height: wp(4),
+    resizeMode: 'contain',
+  },
+  unitNumber: {
+    color: colors.black,
+    fontFamily: FontPath.OutfitSemiBold,
+    fontSize: RFValue(12),
+    // width: wp(10),
+    textAlign: 'center',
+  },
+  addUnitView: {
+    // flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: colors.lightGray_2,
+    // paddingHorizontal: wp(3),
+    paddingVertical: hp(1),
+    marginTop: hp(1),
+    borderRadius: 5,
+    // width: wp(28),
+  },
+  textInput:{
+    color:colors.black,
+    fontFamily:FontPath.OutfitMedium,
+    fontSize:RFValue(14)
+  }
+});

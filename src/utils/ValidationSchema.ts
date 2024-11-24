@@ -1,0 +1,85 @@
+import * as yup from 'yup';
+import 'yup-phone-lite';
+
+export const loginValidationSchema = yup.object().shape({
+  phoneNumber: yup
+    .string()
+    .phone('IN')
+    .required('error.phoneNumberRequired'),
+    password: yup
+    .string()
+    .required('error.passwordRequired')
+    .min(8, 'error.password8Required')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+      'error.passwordUppercaseRequired',
+    ),
+});
+
+
+export const forgotPasswordValidationSchema = yup.object().shape({
+  phoneNumber: yup
+    .string()
+    .phone('IN')
+    .required('error.phoneNumberRequired'),
+});
+
+
+export const signUpValidationSchema = yup.object().shape({
+  phoneNumber: yup
+    .string()
+    .phone('IN')
+    .required('error.phoneNumberRequired'),
+  email: yup
+    .string()
+    .email('error.emailValid')
+    .required('error.emailRequired'),
+  fullname: yup.string().required('error.fullnameRequired'),
+});
+
+export const setPasswordValidationSchema = yup.object().shape({
+  newPassword: yup
+    .string()
+    .required('error.newPasswordRequired')
+    .min(8, 'error.password8Required')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/,
+      'error.passwordUppercaseRequired',
+    ),
+  passwordConfirmation: yup
+    .string()
+    .required('error.confirmationPasswordRequired')
+    .oneOf([yup.ref('newPassword')], 'error.passwordMatch'),
+});
+
+export const dealerValidationSchema = yup.object().shape({
+  firmName: yup.string().required('error.firmNameRequired'),
+  workCity: yup.string().required('error.workCityRequired'),
+  zipCode: yup.string().required('error.zipCodeRequired'),
+  counterAddress: yup.string().required('error.counterAddressRequired'),
+});
+
+export const cancelationRemarksValidationSchema = yup.object().shape({
+  remarks: yup.string().required('error.remarksRequired'),
+});
+
+export const supportRequestValidationSchema = yup.object().shape({
+  description: yup.string().required('error.descriptionRequired'),
+});
+
+
+export const newDealerValidationSchema = yup.object().shape({
+  firmName: yup.string().required('error.firmNameRequired'),
+  fullname: yup.string().required('error.fullnameRequired'),
+  email: yup
+  .string()
+  .email('error.emailValid')
+  .required('error.emailRequired'),
+  phoneNumber: yup
+  .string()
+  .phone('IN')
+  .required('error.phoneNumberRequired'),
+  workCity: yup.string().required('error.workCityRequired'),
+  zipCode: yup.string().required('error.zipCodeRequired'),
+  counterAddress: yup.string().required('error.counterAddressRequired'),
+});

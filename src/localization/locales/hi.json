@@ -1,0 +1,285 @@
+{
+  "navigationLabel":{
+    "Home":"होम",
+    "orderApproval":"ऑर्डर अप्रूवल",
+    "orderList":"ऑर्डर लिस्ट",
+    "profile":"प्रोफ़ाइल",
+    "placeOrder":"ऑर्डर करें",
+    "orderHistory":"ऑर्डर हिस्ट्री"
+  },
+  "onBording": {
+    "portalAccress": "पोर्टल एक्सेस",
+    "portalAccressDesc": "अपना लॉगिन एक्सेस पोर्टल चुनें",
+    "chooseLanguage": "भाषा चुनें"
+  },
+  "login": {
+    "singInAccessPotal": "पोर्टल एक्सेस करने के लिए साइन इन करें",
+    "enterMobileNo": "मोबाइल नंबर दर्ज करें",
+    "enterYourMobileNo": "अपना मोबाइल नंबर दर्ज करें",
+    "password": "पासवर्ड",
+    "signIn": "साइन इन करें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "dontHaveAccount": "अगर आपका खाता नहीं है?",
+    "registerNow": "अभी रजिस्टर करें"
+  },
+  "signUp": {
+    "singUpAccessPortal": "पोर्टल एक्सेस करने के लिए साइन अप करें",
+    "fullName": "पूरा नाम (आधार में जैसा है)",
+    "enterName": "नाम दर्ज करें",
+    "emailAddress": "ईमेल पता",
+    "enterEmailAddress": "अपना ईमेल पता दर्ज करें",
+    "mobileNo": "मोबाइल नंबर",
+    "enterMobileNo": "मोबाइल नंबर दर्ज करें",
+    "sendOtp": "OTP भेजें",
+    "alreadyHaveAnAccount": "अगर आपका खाता है तो",
+    "signIn": "साइन इन करें।"
+  },
+  "verifyOTP": {
+    "verifyOTP": "OTP की पुष्टि करें",
+    "des": "कृपया अपने पंजीकृत मोबाइल नंबर पर भेजे गए पुष्टि कोड को जांचें",
+    "changeMobileNo": "मोबाइल नंबर बदलें",
+    "resendCode": "कोड फिर से भेजें",
+    "resendIn": "{{timer}} सेकंड में पुनः भेजें",
+    "verifyOTP1": " OTP की पुष्टि करें"
+  },
+  "setPassword": {
+    "setPassword": "पासवर्ड सेट करें",
+    "newPassword": "नया पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "submit": "सबमिट करें"
+  },
+  "registration": {
+    "completeRegistration": "पंजीकरण पूरा करें",
+    "enterprise": "उद्यम / फर्म का नाम",
+    "enterEnterprise": "उद्यम/फर्म का नाम दर्ज करें",
+    "workCity": "कार्य शहर",
+    "enterWorkCity": "कार्य शहर दर्ज करें",
+    "zipCode": "पिन कोड",
+    "enterZipCode": "6 अंकों का पिन कोड दर्ज करें",
+    "counterAddress": "काउंटर पता",
+    "enterCounterAddress": "काउंटर पता दर्ज करें",
+    "personalInfo": "व्यक्तिगत जानकारी (वैकल्पिक)",
+    "yourBirthDate": "आपकी जन्म तिथि",
+    "DDMM": "दिन/माह",
+    "familyMemberName": "परिवार के सदस्य का नाम",
+    "entreFamilyMemberName": "परिवार के सदस्यों का नाम दर्ज करें",
+    "relationShipWithMember": "सदस्य के साथ संबंध",
+    "enterRelatioshipWithEmeber": "सदस्य के साथ संबंध दर्ज करें",
+    "addMoreMember": "और सदस्य जोड़ें",
+    "aadharCardUpload": "आधार कार्ड अपलोड करें",
+    "panCardUpload": "पैन कार्ड अपलोड करें",
+    "GSTCertificateUpload": "GST प्रमाणपत्र अपलोड करें ",
+    "photoUpload": "फोटो अपलोड करें",
+    "signedChequeUpload": "साइन  चेक अपलोड  करें",
+    "iAgreeWithAllTheTermsComditions": "मैं सभी शर्तों और नियमों से सहमत हूँ।",
+    "submitForApproval": "अप्रूवल के लिए सबमिट करें",
+    "fullName":"पूरा नाम (जैसा आधार में है)",
+    "selectCity":"शहर चुनें",
+    "uplaodDocuments":"दस्तावेज़ अपलोड करें"
+  },
+  "completingRegistration": {
+    "thankYouForCompletingTheRegistration": "पंजीकरण पूरा करने के लिए धन्यवाद।",
+    "yourApplicationIsUnderReview": "आपका आवेदन जांच में है",
+    "des": "हमारे एरिया सेल्स ऑफिसर 7 दिनों के भीतर आपके पास दस्तावेज़ों की वेरिफिकेशन के लिए आएंगे और हस्ताक्षरित चेक आपसे प्राप्त करेंगे।"
+  },
+  "drawer": {
+    "dealerCode": "डीलर कोड",
+    "distributorID": "डिस्ट्रीब्यूटर आईडी",
+    "dashboard": "डैशबोर्ड",
+    "orderPlacement": "ऑर्डर प्लेसमें",
+    "orderHistory": "ऑर्डर हिस्ट्री",
+    "myInvoice": "मेरा बिल",
+    "ledger": "मेरा खाता पुस्तक",
+    "myScheme": "मेरी स्कीम",
+    "brandingRequest": "ब्रांडिंग रिक्वेस्ट",
+    "support": "सहायता",
+    "logOut": "लॉग आउट",
+    "orderApproval": "ऑर्डर अप्रूवल",
+    "orderList": "ऑर्डर लिस्ट",
+    "myLedger": "माई लेज़र ",
+    "dealerwiseSales": "डीलरवाइज सेल्स",
+    "dealerManagemet": "डीलर मैनेजमेंट",
+    "RunningScheme": "रनिंग स्कीम"
+  },
+  "dashboard": {
+    "dashboard": "डैशबोर्ड",
+    "seeAllOrder": "सभी ऑर्डर देखें",
+    "newOrderStatus": "नए ऑर्डर की स्थिति",
+    "orderNo": "ऑर्डर संख्या",
+    "orderDate": "ऑर्डर तिथि",
+    "ordered": "ऑर्डर किया गया",
+    "approvedByDisctributor": "वितरक द्वारा स्वीकृत",
+    "approvedByASO": "ASO द्वारा स्वीकृत",
+    "orderDispatched": "ऑर्डर भेजा गया",
+    "placeNewOrder": "नया ऑर्डर करें",
+    "viewOrderHistory": "ऑर्डर हिस्ट्री देखें",
+    "myScheme": "मेरी स्कीम",
+    "supportRequest": "सहायता के लिए आवेदन",
+    "brandingMaterialRequest": "ब्रांडिंग सामग्री रिक्वेस्ट",
+    "orderHistory": "ऑर्डर हिस्ट्री ",
+    "totalOrderPlaced": "कुल ऑर्डर दिए गए",
+    "totalOrderDispatched": "कुल ऑर्डर भेजे गए",
+    "totalOutstandingPayment": "कुल शेष भुगतान",
+    "runningScheme": "चल रही स्कीम",
+    "salesVolume": "सेल्स वॉल्यूम",
+    "outstandingPayment": "आउटस्टैंडिंग पेमेंट",
+    "orderApproved": "ऑर्डर अप्रूव",
+    "orderRejected": "ऑर्डर रिजेक्टेड",
+    "weight": "महिना(MT)",
+    "approve":"अप्रूव",
+    "reject":"रिजेक्ट",
+    "pendingOrder":"पेंडिंग ऑर्डर",
+    "viewAll":"सभी देखें",
+    "approveOrder":"अप्रूव ऑर्डर",
+    "manageOrder":"मैनेज ऑर्डर",
+    "viewLedger":"व्यू लेजर",
+    "onboardDealer":"ऑनबोर्ड डीलर",
+    "searchDealer":"डीलर खोजें",
+    "rejected":"अप्रूव्ड",
+    "approved":"रिजेक्ट",
+    "dealerManagement":"डीलर मैनेजमेंट"
+  },
+  "orderPlacement": {
+    "orderPlacement": "ऑर्डर करें",
+    "amount": "Amount",
+    "totalWeight": "कुल वजन",
+    "totalAmount": "कुल राशि",
+    "orderPreview": "ऑर्डर प्रीव्यू"
+  },
+  "confirmOrder": {
+    "confirmOrder": "ऑर्डर की पुष्टि करें",
+    "productDecription": "प्रोडक्ट डिस्क्रिप्शन",
+    "weight": "वजन",
+    "amount": "राशि",
+    "subTotal": "उप-राशि",
+    "total": "कुल",
+    "PlaceOrder": "ऑर्डर करें"
+  },
+  "cancelOrder": {
+    "cancelOrder": "ऑर्डर रद्द करें",
+    "addCancelationRemarks": "रद्दीकरण टिप्पणी जोड़ें",
+    "enterRemarks": "टिप्पणी दर्ज करें",
+    "Submit": "जमा करें"
+  },
+  "orderHistory": {
+    "orderHistory": "ऑर्डर हिस्ट्री",
+    "all": "सभी",
+    "approved": "स्वीकृत",
+    "rejected": "रद्द किया गया",
+    "dispatched": "भेजा गया",
+    "orderNo": "ऑर्डर नं",
+    "reorder": "फिर से ऑर्डर करें",
+    "orderDate": "ऑर्डर तिथि",
+    "totalWeight": "कुल वजन",
+    "totalAmount": "कुल राशि",
+    "dispatchDate": "भेजने की तिथि",
+    "cancelOrder": "ऑर्डर रद्द करें",
+    "orderList":"ऑर्डर लिस्ट",
+    "rejectOrder":"ऑर्डर रिजेक्ट करें",
+    "reason":"कारण",
+    "selectReason":"कारण चुनें",
+    "remark":"टिप्पणी",
+    "enterTheDescription":"डिस्क्रिप्शन दर्ज करें",
+    "rejectOrders":"रिजेक्ट ऑर्डर"
+  },
+  "viewOrder": {
+    "viewOrder": "आर्डर देखें",
+    "orderDate": "ऑर्डर तिथि",
+    "dispatchDate": "भेजने की तिथि",
+    "totalWeight": "कुल वजन",
+    "totalAmount": "कुल राशि"
+  },
+  "invoice": {
+    "invoice": "इनवॉइस",
+    "invoiceNo": "इनवॉइस नं"
+  },
+  "filter": {
+    "filter": "फ़िल्टर करें",
+    "stratDate": "आरंभ तिथि",
+    "selectStratDate": "शुरुआत तिथि चुनें",
+    "endDate": "अंतिम तिथि",
+    "selectEndDate": "अंतिम तिथि चुनें",
+    "applyFilter": "फ़िल्टर का चयन करें"
+  },
+  "ledger": {
+    "ledger": "खाता पुस्तक",
+    "download": "डाउनलोड करें",
+    "date": "तारीख",
+    "sales": "बिक्री"
+  },
+  "supportRequest": {
+    "supportRequest": "सहायता अनुरोध",
+    "requestType": "आवेदन प्रकार",
+    "selectCategory": "वर्ग चुनें",
+    "description": "विवरण",
+    "enterDescription": "विवरण दर्ज करें"
+  },
+  "brandingRequest": {
+    "brandingRequest": "ब्रांडिंग अनुरोध",
+    "selectItems": "आइटम चयन करें"
+  },
+  "success": {
+    "success": "सक्सेस",
+    "des": "आपका सपोर्ट रिक्वेस्ट सफलतापूर्वक सबमिट कर दिया गया है | हम आपको जल्दी सूचित करेंगे।",
+    "dealerOnboardingSuccessfully":"डीलर ऑनबोर्डिंग सफलतापूर्वक सबमिट कर दी गई है।",
+    "dealerOnboardingSuccessfullyDes" : "ऑनबॉर्डिंग प्रक्रिया को पूरा करने के लिए एएसओ या एडमिन को इसे मंजूरी देनी होगी",
+    "yourOrderHasBeenPlacedSuccessfully":"आपका ऑर्डर सफलतापूर्वक दे दिया गया है.",
+    "yourOrderIsSubmittedForApproval":"आपका आदेश अनुमोदन के लिए प्रस्तुत किया गया है।",
+    "yourOrderHasBeenPlacedSuccessfullyDes":"एक बार जब हमारे क्षेत्र के बिक्री अधिकारी और वितरक आपके ऑर्डर को मंजूरी दे देंगे तो ऑर्डर भेज दिया जाएगा।"
+  },
+  "myScheme": {
+    "myScheme": "मेरी स्कीम",
+    "viewScheme": "योजना देखें",
+    "no": "नं.",
+    "slab": "स्लैब",
+    "scheme": "स्कीम",
+    "myOrder": "मेरी ऑर्डर (MT)",
+    "status": "स्थिति",
+    "remaining": "बाकी"
+  },
+  "myProfile": {
+    "myProfile": "मेरा प्रोफ़ाइल",
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "save": "सुरक्षित करें",
+    "email": "ईमेल",
+    "mobileNo": "मोबाइल नंबर",
+    "birthData": "जन्म तिथि",
+    "counterAddress": "काउंटर पता",
+    "member": "सदस्य"
+  },
+  "logOut": {
+    "areYouSure": "क्या आप सुनिश्चित हैं?",
+    "des": "क्या आप सुनिश्चित हैं कि आप इस पोर्टल से लॉग आउट करना चाहते हैं?",
+    "no": "NO",
+    "yes": "YES"
+  },
+  "invoiceDetail": {
+    "invoiceDetail": "Invoice Detail",
+    "invoice": "INVOICE",
+    "balanceDue": "Balance Due",
+    "billTo": "Bill To",
+    "invoiceDate": "Invoice Date",
+    "dueDate": "Due Date"
+  },
+  "error": {
+    "phoneNumberRequired": "फोन नंबर आवश्यक है।",
+    "passwordRequired": "पासवर्ड आवश्यक है।",
+    "password8Required": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए।",
+    "passwordUppercaseRequired": "पासवर्ड में कम से कम एक बड़ा अक्षर, एक छोटा अक्षर, एक संख्या और एक विशेष चिन्ह होना चाहिए।",
+    "emailValid": "कृपया एक वैध ईमेल दर्ज करें।",
+    "emailRequired": "ईमेल आवश्यक है",
+    "fullnameRequired": "कृपया अपना पूरा नाम दर्ज करें।",
+    "newPasswordRequired": "नया पासवर्ड आवश्यक है।",
+    "confirmationPasswordRequired": "पासवर्ड की पुष्टि आवश्यक है।",
+    "passwordMatch": "पासवर्ड मैच होना चाहिए।",
+    "firmNameRequired": "उद्यम / फर्म का नाम आवश्यक है।",
+    "workCityRequired": "कार्य स्थल शहर आवश्यक है।",
+    "zipCodeRequired": "जिप कोड आवश्यक है।",
+    "counterAddressRequired": "काउंटर का पता आवश्यक है।",
+    "remarksRequired": "टिप्पणियाँ आवश्यक हैं।",
+    "descriptionRequired": "डिस्क्रिप्शन आवश्यक हैं।"
+  },
+  "newDealerOnboard":{
+    "newDealerOnboard":"नए डीलर का पंजीकरण"
+  }
+}

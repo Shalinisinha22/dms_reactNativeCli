@@ -1,0 +1,294 @@
+{
+  "navigationLabel":{
+    "Home":"Home",
+    "orderApproval":"Order Approval",
+    "orderList":"Order List",
+    "profile":"Profile",
+    "placeOrder":"Place Order",
+    "orderHistory":"Order History"
+  },
+  "onBording": {
+    "portalAccress": "Portal Accress",
+    "portalAccressDesc": "Select Your Login Access Portal",
+    "chooseLanguage": "Choose Language"
+  },
+  "login": {
+    "singInAccessPotal": "Sign In to Access Portal",
+    "enterMobileNo": "Enter Mobile No.",
+    "enterYourMobileNo": "Enter Your mobile No",
+    "password": "Password",
+    "signIn": "SIGN IN",
+    "forgotPassword": "Forgot password?",
+    "dontHaveAccount": "Don't Have Account?",
+    "registerNow": "Register Now",
+    "enterYourRegisteredMobileNumber": "Enter your registered mobile number"
+  },
+  "signUp": {
+    "singUpAccessPortal": "Sing Up to Access Portal",
+    "fullName": "Full Name (As In Aadhar)",
+    "enterName": "Enter Name",
+    "emailAddress": "Email Address",
+    "enterEmailAddress": "Enter email address",
+    "mobileNo": "Mobile No",
+    "enterMobileNo": "Enter mobile no",
+    "sendOtp": "SEND OTP",
+    "alreadyHaveAnAccount": "Already Have an Account?",
+    "signIn": "Sign In"
+  },
+  "verifyOTP": {
+    "verifyOTP": "Verify OTP",
+    "des": "Please check on the verification code sent to your registered mobile number.",
+    "changeMobileNo": "Change mobile no.",
+    "resendCode": "Resend Code",
+    "resendIn": "Resend in {{timer}}s",
+    "verifyOTP1": "VERIFY OTP"
+  },
+  "setPassword": {
+    "setPassword": "Set Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "SUBMIT"
+  },
+  "registration": {
+    "completeRegistration": "Complete Registration",
+    "enterprise": "Enterprise / Firm Name",
+    "enterEnterprise": "Enter enterprise/firm name",
+    "workCity": "Work City",
+    "enterWorkCity": "Enter Work City",
+    "zipCode": "Zip Code",
+    "enterZipCode": "Enter 6 digit zip code",
+    "counterAddress": "Counter Address",
+    "enterCounterAddress": "Enter Counter Address",
+    "personalInfo": "Personal Info(Optional)",
+    "yourBirthDate": "Your Birth Date",
+    "DDMM": "DD/MM",
+    "familyMemberName": "Family Member Name",
+    "entreFamilyMemberName": "Entre family member name",
+    "relationShipWithMember": "Relation Ship with member",
+    "enterRelatioshipWithEmeber": "Enter relatioship with emeber",
+    "birthDate": "Birth Date",
+    "addMoreMember": "Add More member",
+    "aadharCardUpload": "Aadhar Card Upload",
+    "panCardUpload": "Pan Card Upload",
+    "GSTCertificateUpload": "GST Certificate Upload",
+    "photoUpload": "Photo Upload",
+    "signedChequeUpload": "Signed Cheque Upload",
+    "iAgreeWithAllTheTermsComditions": "I Agree with all the terms & Comditions.",
+    "submitForApproval": "SUBMIT FOR APPROVAL",
+    "fullName":"Full Name (As in Aadhar)",
+    "selectCity":"Select City",
+    "uplaodDocuments":"Uplaod Documents"
+  },
+  "completingRegistration": {
+    "thankYouForCompletingTheRegistration": "Thank You for completing the Registration.",
+    "yourApplicationIsUnderReview": "Your Application Is under review.",
+    "des": "Our Area  Sales officer will visit you within 7 days to verify the documents and collect the signed cheque from you."
+  },
+  "drawer": {
+    "dealerCode": "Dealer Code",
+    "distributorID":"Distributor ID",
+    "dashboard": "Dashboard",
+    "orderPlacement": "Order Placement",
+    "orderHistory": "Order History",
+    "myInvoice": "My Invoice",
+    "ledger": "My Ledger",
+    "myScheme": "My Scheme",
+    "brandingRequest": "Branding Request",
+    "support": "Support",
+    "logOut": "Log-out",
+    "orderApproval":"Order Approval",
+    "orderList":"Order List",
+    "myLedger":"My Ledger",
+    "dealerwiseSales":"Dealerwise Sales",
+    "dealerManagemet":"Dealer Managemet",
+    "RunningScheme":"Running Scheme"
+  },
+  "dashboard": {
+    "dashboard": "Dashboard",
+    "seeAllOrder": "See All Order",
+    "newOrderStatus": "New Order Status",
+    "orderNo": "Order No",
+    "orderDate": "Order Date",
+    "ordered": "Ordered",
+    "approvedByDisctributor": "Approved By Disctributor",
+    "approvedByASO": "Approved By ASO",
+    "orderDispatched": "Order Dispatched",
+    "placeNewOrder": "Place New Order",
+    "viewOrderHistory": "View Order History",
+    "myScheme": "My Scheme",
+    "supportRequest": "Support Request",
+    "brandingMaterialRequest": "Branding Material Request",
+    "orderHistory": "Order History",
+    "totalOrderPlaced": "Total Order Placed",
+    "totalOrderDispatched": "Total Order Dispatched",
+    "totalOutstandingPayment": "Total Outstanding Payment",
+    "runningScheme": "Running Scheme",
+    "salesVolume":"Sales Volume",
+    "outstandingPayment":"Outstanding Payment",
+    "orderApproved":"Order Approved",
+    "orderRejected":"Order Rejected",
+    "weight":"Weight(MT)",
+    "approve":"Approve",
+    "reject":"Reject",
+    "pendingOrder":"Pending Order",
+    "viewAll":"View All",
+    "approveOrder":"Approve Order",
+    "manageOrder":"Manage Order",
+    "viewLedger":"View Ledger",
+    "onboardDealer":"Onboard Dealer",
+    "searchDealer":"Search dealer",
+    "rejected":"Rejected",
+    "approved":"Approved",
+    "dealerManagement":"Dealer Management"
+  },
+  "orderPlacement": {
+    "orderPlacement": "Order Placement",
+    "amount": "Amount",
+    "totalWeight": "Total Weight",
+    "totalAmount": "Total Amount",
+    "orderPreview": "ORDER PREVIEW"
+  },
+  "confirmOrder": {
+    "confirmOrder": "Confirm Order",
+    "productDecription": "Product Decription",
+    "weight": "Weight",
+    "amount": "Amount",
+    "subTotal": "Sub Total",
+    "total": "Total",
+    "PlaceOrder": "PLACE ORDER"
+  },
+  "cancelOrder": {
+    "cancelOrder": "Cancel Order",
+    "addCancelationRemarks": "Add Cancelation Remarks",
+    "enterRemarks": "Enter remarks",
+    "Submit": "SUBMIT"
+  },
+  "orderHistory": {
+    "orderHistory": "Order History",
+    "all": "All",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "dispatched": "Dispatched",
+    "orderNo": "Order No",
+    "reorder": "Reorder",
+    "orderDate": "Order Date",
+    "totalWeight": "Total Weight",
+    "totalAmount": "Total Amount",
+    "dispatchDate": "Dispatch Date",
+    "cancelOrder": "Cancel Order",
+    "orderList":"OrderList",
+    "rejectOrder":"Reject Order",
+    "reason":"Reason",
+    "selectReason":"Select Reason",
+    "remark":"Remark",
+    "enterTheDescription":"Enter the description",
+    "rejectOrders":"REJECT ORDER"
+  },
+  "viewOrder": {
+    "viewOrder": "ViewOrder",
+    "orderDate": "Order Date",
+    "dispatchDate": "Dispatch Date",
+    "totalWeight": "Total Weight",
+    "totalAmount": "Total Amount"
+  },
+  "invoice": {
+    "invoice": "Invoice",
+    "invoiceNo": "Invoice No"
+  },
+  "filter": {
+    "filter": "Filter",
+    "stratDate": "Start Date",
+    "selectStratDate": "Select Start Date",
+    "endDate": "End Date",
+    "selectEndDate": "Select End Date",
+    "applyFilter": "APPLY FILTER"
+  },
+  "ledger": {
+    "ledger": "Ledger",
+    "download": "Download",
+    "date": "Date",
+    "sales": "Sales"
+  },
+  "supportRequest": {
+    "supportRequest": "Support Request",
+    "requestType": "Request Type",
+    "selectCategory": "Select Category",
+    "description": "Description",
+    "enterDescription": "Enter Description"
+  },
+  "brandingRequest": {
+    "brandingRequest": "Branding Request",
+    "selectItems": "Select Items"
+  },
+  "success": {
+    "success": "Success",
+    "des": "Your support request has been successfully submitted. We will notify you soon.",
+    "dealerOnboardingSuccessfully":" Dealer onboarding has been submitted successfully.",
+    "dealerOnboardingSuccessfullyDes" : "ASO or Admin has to approve it for completing the Onbording process",
+    "yourOrderHasBeenPlacedSuccessfully":"Your order has been placed successfully.",
+    "yourOrderIsSubmittedForApproval":" Your order is  submitted for Approval.",
+    "yourOrderHasBeenPlacedSuccessfullyDes":"Once Our Area  Sales officer and Distributor will approve your order then the order will be dispatched."
+  },
+  "myScheme": {
+    "myScheme": "My Scheme",
+    "viewScheme": "View Scheme",
+    "no": "No",
+    "slab": "Slab",
+    "scheme": "Scheme",
+    "myOrder": "My Order(MT)",
+    "status": "Status",
+    "remaining": "Remaining"
+  },
+  "myProfile": {
+    "myProfile": "My Profile",
+    "personalInfo": "Personal Info",
+    "save": "SAVE",
+    "email": "Email",
+    "mobileNo": "Mobile No",
+    "birthData": "Birth Date",
+    "counterAddress": "Counter Address",
+    "member": "Member"
+  },
+  "logOut": {
+    "areYouSure": "Are You Sure?",
+    "des": " Are you sure you want to log out of this portal?",
+    "no": "NO",
+    "yes": "YES"
+  },
+  "notification": {
+    "notification": "Notification",
+    "nothingHere": " Nothing Here!",
+    "des": "Tap the notifications setting button below and check again",
+    "notificationSettings": "NOTIFICATION SETTINGS",
+    "new": "New"
+  },
+  "invoiceDetail": {
+    "invoiceDetail": "Invoice Detail",
+    "invoice": "INVOICE",
+    "balanceDue": "Balance Due",
+    "billTo": "Bill To",
+    "invoiceDate": "Invoice Date",
+    "dueDate": "Due Date"
+  },
+  "error": {
+    "phoneNumberRequired": "The phone number is required",
+    "passwordRequired": "The password is required",
+    "password8Required": "Password must be at least 8 characters",
+    "passwordUppercaseRequired": "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character",
+    "emailValid": "Please enter a valid email",
+    "emailRequired": "The email is required",
+    "fullnameRequired": "Please enter your fullname",
+    "newPasswordRequired": "The new password is required",
+    "confirmationPasswordRequired": "Password confirmation is required",
+    "passwordMatch": "Passwords must match",
+    "firmNameRequired": "The enterprise / firm name is required",
+    "workCityRequired": "The work city is required",
+    "zipCodeRequired": "The zip code is required",
+    "counterAddressRequired": "The counter address is required",
+    "remarksRequired": "The Remarks is required",
+    "descriptionRequired": "The Description is required"
+  },
+  "newDealerOnboard":{
+    "newDealerOnboard":"New Dealer Onboard"
+  }
+}
