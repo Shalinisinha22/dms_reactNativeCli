@@ -84,7 +84,7 @@ const DealerSchemeView = () => {
                     </Text>
                   )}
                 </View>
-                <Text style={styles.itemText5}>{item.status}</Text>
+                <Text style={styles.itemText5}>{t('myScheme.achieved')}</Text>
               </View>
             );
           }}

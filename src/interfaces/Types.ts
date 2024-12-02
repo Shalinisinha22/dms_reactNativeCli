@@ -46,6 +46,7 @@ export type DocumentUploadViewProps = {
   icons: ImageSourcePropType;
   onPress: () => void;
   fileName: string;
+  isRequired: boolean
 };
 
 export type OrderTrackingProps = {
@@ -71,6 +72,11 @@ export type FilterModalProps = {
   backOnPress: () => void;
 };
 
+export type PerviousOrderModalProps = {
+  isVisible: boolean;
+  backOnPress: () => void;
+}
+
 export type SuccessModalProps = {
   isVisible: boolean;
   backOnPress: () => void;
@@ -87,6 +93,8 @@ export type DropDownViewProps = {
   placeHolder: string;
   mainViewStyle?: StyleProp<ViewStyle>
   data?: any
+  selectedName: (name: string) => void
+  errors: string | undefined
 };
 
 export type UserInfoRowViewProps = {
@@ -120,4 +128,20 @@ export type DealerManagementCardProps = {
 
 export type OrderCardProps = {
   isShowButton: boolean
+  orderModifiedOnPress?: () => void
+  perviouseOnPress?: () => void
+}
+
+export type CustomToggleProps = {
+  initialValue: boolean;
+  onToggle: (val: boolean) => void;
+};
+
+export type DealerInfoViewProps = {
+  title: string
+  des: string
+}
+
+export type SearchViewProps = {
+  searchMainViewStyle?: StyleProp<ViewStyle>
 }

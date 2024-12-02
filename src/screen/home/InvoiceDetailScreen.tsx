@@ -1,58 +1,65 @@
-import {FlatList, Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {colors} from '../../utils/Colors';
-import {IconsPath} from '../../utils/IconPath';
-import {FontPath} from '../../utils/FontPath';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { colors } from "../../utils/Colors";
+import { IconsPath } from "../../utils/IconPath";
+import { FontPath } from "../../utils/FontPath";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
-import {commonStyle} from '../../utils/commonStyles';
-import Share from 'react-native-share';
+} from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
+import { commonStyle } from "../../utils/commonStyles";
+import Share from "react-native-share";
 const data = [
   {
-    id: '1',
-    description: 'TMT Bar 8mm',
-    weight: '12 MT',
-    amount: '2,000.00',
+    id: "1",
+    description: "TMT Bar 8mm",
+    weight: "12 MT",
+    amount: "2,000.00",
   },
   {
-    id: '2',
-    description: 'TMT Bar 6mm',
-    weight: '12 MT',
-    amount: '2,000.00',
+    id: "2",
+    description: "TMT Bar 6mm",
+    weight: "12 MT",
+    amount: "2,000.00",
   },
 ];
 
 const InvoiceDetailScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const handleShare = () => {
     Share.open({
-      message: 'Hello',
+      message: "Hello",
     })
-      .then(res => {
+      .then((res) => {
         console.log(res);
       })
-      .catch(err => {
+      .catch((err) => {
         err && console.log(err);
       });
   };
 
   return (
-    <SafeAreaContainer>
+    <SafeAreaContainer showHeader={false}>
       <View style={styles.headerRowView}>
         <View style={styles.innerView}>
           <Pressable onPress={() => navigation.goBack()}>
             <Image source={IconsPath.backArrow1} style={styles.icon} />
           </Pressable>
           <Text style={styles.headerTitle}>
-            {t('invoiceDetail.invoiceDetail')}
+            {t("invoiceDetail.invoiceDetail")}
           </Text>
         </View>
         <Pressable onPress={handleShare}>
@@ -69,7 +76,7 @@ const InvoiceDetailScreen = () => {
             tintColor={colors.white}
             style={styles.downloadIcons}
           />
-          <Text style={styles.download}>{t('ledger.download')}</Text>
+          <Text style={styles.download}>{t("ledger.download")}</Text>
         </Pressable>
       </View>
       <View style={styles.rowView1}>
@@ -81,15 +88,15 @@ const InvoiceDetailScreen = () => {
           <Text style={styles.zipcode}>434343</Text>
         </View>
         <View>
-          <Text style={styles.invoice}>{t('invoiceDetail.invoice')}</Text>
+          <Text style={styles.invoice}>{t("invoiceDetail.invoice")}</Text>
           <Text style={styles.invoiceNo}>120002</Text>
-          <Text style={styles.balanceDue}>{t('invoiceDetail.balanceDue')}</Text>
+          <Text style={styles.balanceDue}>{t("invoiceDetail.balanceDue")}</Text>
           <Text style={styles.amount}>Rs.12,000.00</Text>
         </View>
       </View>
       <View style={styles.rowView1}>
         <View>
-          <Text style={styles.billTO}>{t('invoiceDetail.billTo')}</Text>
+          <Text style={styles.billTO}>{t("invoiceDetail.billTo")}</Text>
           <Text style={styles.invoiceName}>Rajesh Kumar</Text>
           <Text style={styles.address}>
             A 672 Kalyan Nagar, HRBR Layout, Banglore
@@ -99,7 +106,7 @@ const InvoiceDetailScreen = () => {
         <View>
           <View style={styles.totalRowView}>
             <Text style={styles.invoiceDate}>
-              {t('invoiceDetail.invoiceDate')} :{' '}
+              {t("invoiceDetail.invoiceDate")} :{" "}
             </Text>
             <Text style={styles.date}> 12 Sept 2024</Text>
           </View>
@@ -109,9 +116,10 @@ const InvoiceDetailScreen = () => {
               {
                 marginTop: hp(0.9),
               },
-            ]}>
+            ]}
+          >
             <Text style={styles.invoiceDate}>
-              {t('invoiceDetail.dueDate')} :{' '}
+              {t("invoiceDetail.dueDate")} :{" "}
             </Text>
             <Text style={styles.date}> 25 Sept 2024</Text>
           </View>
@@ -120,15 +128,15 @@ const InvoiceDetailScreen = () => {
       <View style={styles.headerView}>
         <Text style={styles.headerTitle1}>#</Text>
         <Text style={styles.headerTitle2}>
-          {t('confirmOrder.productDecription')}
+          {t("confirmOrder.productDecription")}
         </Text>
-        <Text style={styles.headerTitle3}>{t('confirmOrder.weight')}</Text>
-        <Text style={styles.headerTitle4}>{t('confirmOrder.amount')}</Text>
+        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")}</Text>
+        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")}</Text>
       </View>
       <View>
         <FlatList
           data={data}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView}>
                 <Text style={styles.itemText1}>{item.id}</Text>
@@ -142,7 +150,7 @@ const InvoiceDetailScreen = () => {
       </View>
       <View style={styles.totalView}>
         <View style={styles.totalRowView}>
-          <Text style={styles.total}>{t('confirmOrder.subTotal')} : </Text>
+          <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
           <Text style={styles.subAmount}> 4,000.00</Text>
         </View>
         <View
@@ -151,8 +159,9 @@ const InvoiceDetailScreen = () => {
             {
               marginTop: hp(0.8),
             },
-          ]}>
-          <Text style={styles.total}>{t('confirmOrder.total')} : </Text>
+          ]}
+        >
+          <Text style={styles.total}>{t("confirmOrder.total")} : </Text>
           <Text style={styles.totalAmount}> 4,000.00</Text>
         </View>
       </View>
@@ -164,10 +173,10 @@ export default InvoiceDetailScreen;
 
 const styles = StyleSheet.create({
   headerRowView: {
-    flexDirection: 'row',
+    flexDirection: "row",
     height: hp(7),
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: wp(5),
     backgroundColor: colors.white,
     shadowColor: colors.black,
@@ -181,13 +190,13 @@ const styles = StyleSheet.create({
     marginBottom: hp(4),
   },
   innerView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   icon: {
     width: wp(10),
     height: wp(10),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   headerTitle: {
     color: colors.black,
@@ -198,27 +207,27 @@ const styles = StyleSheet.create({
   shareIcon: {
     width: wp(6.5),
     height: wp(6.5),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   rowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
   },
   downloadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: colors.primary,
     width: wp(30),
-    justifyContent: 'center',
+    justifyContent: "center",
     height: hp(4),
     borderRadius: 5,
   },
   downloadIcons: {
     width: wp(5),
     height: wp(5),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   download: {
     color: colors.white,
@@ -227,8 +236,8 @@ const styles = StyleSheet.create({
     marginLeft: wp(1.5),
   },
   rowView1: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     marginTop: hp(1.5),
   },
@@ -253,38 +262,38 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(23),
-    textAlign: 'right',
+    textAlign: "right",
     marginBottom: hp(0.5),
   },
   invoiceNo: {
     color: colors.black,
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(16),
-    textAlign: 'right',
+    textAlign: "right",
   },
   balanceDue: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
-    textAlign: 'right',
+    textAlign: "right",
     marginTop: hp(2),
   },
   amount: {
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(20),
-    textAlign: 'right',
+    textAlign: "right",
   },
   totalRowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   invoiceDate: {
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(13),
     color: colors.black,
     width: wp(25),
-    textAlign: 'right',
+    textAlign: "right",
   },
   date: {
     fontFamily: FontPath.OutfitBold,
@@ -303,12 +312,12 @@ const styles = StyleSheet.create({
     fontSize: RFValue(16),
   },
   headerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     backgroundColor: colors.drarkGray_1,
     height: hp(4),
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: wp(5),
     borderRadius: 3,
     marginTop: hp(2),
@@ -362,8 +371,8 @@ const styles = StyleSheet.create({
     width: wp(15),
   },
   itemView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     paddingHorizontal: wp(5),
     paddingVertical: hp(1),
@@ -373,7 +382,7 @@ const styles = StyleSheet.create({
     borderColor: colors.black_100,
   },
   totalView: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginHorizontal: wp(5),
     marginTop: hp(2),
   },
@@ -382,13 +391,13 @@ const styles = StyleSheet.create({
     fontSize: RFValue(12),
     color: colors.black,
     width: wp(25),
-    textAlign: 'right',
+    textAlign: "right",
   },
   subAmount: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    textAlign: 'right',
+    textAlign: "right",
   },
   totalAmount: {
     color: colors.black,

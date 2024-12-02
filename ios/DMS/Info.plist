@@ -24,13 +24,25 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>157.245.111.173</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+        <key>NSExceptionRequiresForwardSecrecy</key>
+        <false/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
   <key>LSApplicationQueriesSchemes</key>

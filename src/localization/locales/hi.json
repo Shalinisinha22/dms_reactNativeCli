@@ -2,10 +2,12 @@
   "navigationLabel":{
     "Home":"होम",
     "orderApproval":"ऑर्डर अप्रूवल",
-    "orderList":"ऑर्डर लिस्ट",
+    "dealars":"डीलर",
     "profile":"प्रोफ़ाइल",
     "placeOrder":"ऑर्डर करें",
-    "orderHistory":"ऑर्डर हिस्ट्री"
+    "orderHistory":"ऑर्डर हिस्ट्री",
+    "referralClaim":"रेफरल क्लेम",
+    "rewardHistory":"रिवॉर्ड हिस्ट्री"
   },
   "onBording": {
     "portalAccress": "पोर्टल एक्सेस",
@@ -75,7 +77,7 @@
     "submitForApproval": "अप्रूवल के लिए सबमिट करें",
     "fullName":"पूरा नाम (जैसा आधार में है)",
     "selectCity":"शहर चुनें",
-    "uplaodDocuments":"दस्तावेज़ अपलोड करें"
+    "uplaodDocuments":"डॉक्यूमेंट अपलोड करें"
   },
   "completingRegistration": {
     "thankYouForCompletingTheRegistration": "पंजीकरण पूरा करने के लिए धन्यवाद।",
@@ -90,7 +92,7 @@
     "orderHistory": "ऑर्डर हिस्ट्री",
     "myInvoice": "मेरा बिल",
     "ledger": "मेरा खाता पुस्तक",
-    "myScheme": "मेरी स्कीम",
+    "myScheme": "मेरा स्कीम",
     "brandingRequest": "ब्रांडिंग रिक्वेस्ट",
     "support": "सहायता",
     "logOut": "लॉग आउट",
@@ -99,7 +101,13 @@
     "myLedger": "माई लेज़र ",
     "dealerwiseSales": "डीलरवाइज सेल्स",
     "dealerManagemet": "डीलर मैनेजमेंट",
-    "RunningScheme": "रनिंग स्कीम"
+    "RunningScheme": "रनिंग स्कीम",
+    "masonManagement":"मेसन मैनेजमेंट",
+    "engineerManagement":"इंजीनियर मैनेजमेंट",
+    "brandingMaterialquery":"ब्रांडिंग मटेरियल क्वेरी",
+    "referralSubmission":"रेफरल सबमिशन",
+    "rewardStatus":"रिवॉर्ड स्टेटस",
+    "rducationalResources":"एजुकेशनल रिसोर्सेस"
   },
   "dashboard": {
     "dashboard": "डैशबोर्ड",
@@ -113,16 +121,17 @@
     "orderDispatched": "ऑर्डर भेजा गया",
     "placeNewOrder": "नया ऑर्डर करें",
     "viewOrderHistory": "ऑर्डर हिस्ट्री देखें",
-    "myScheme": "मेरी स्कीम",
+    "myScheme": "मेरा स्कीम",
     "supportRequest": "सहायता के लिए आवेदन",
     "brandingMaterialRequest": "ब्रांडिंग सामग्री रिक्वेस्ट",
     "orderHistory": "ऑर्डर हिस्ट्री ",
     "totalOrderPlaced": "कुल ऑर्डर दिए गए",
     "totalOrderDispatched": "कुल ऑर्डर भेजे गए",
     "totalOutstandingPayment": "कुल शेष भुगतान",
+    "totalOrderRejected":"कुल ऑर्डर रिजेक्टेड",
     "runningScheme": "चल रही स्कीम",
     "salesVolume": "सेल्स वॉल्यूम",
-    "outstandingPayment": "आउटस्टैंडिंग पेमेंट",
+    "outstandingPayment": "अपूर्ण ऑर्डर",
     "orderApproved": "ऑर्डर अप्रूव",
     "orderRejected": "ऑर्डर रिजेक्टेड",
     "weight": "महिना(MT)",
@@ -137,7 +146,8 @@
     "searchDealer":"डीलर खोजें",
     "rejected":"अप्रूव्ड",
     "approved":"रिजेक्ट",
-    "dealerManagement":"डीलर मैनेजमेंट"
+    "dealerManagement":"डीलर मैनेजमेंट",
+    "totalSalesVolume":"कुल बिक्री वॉल्यूम"
   },
   "orderPlacement": {
     "orderPlacement": "ऑर्डर करें",
@@ -180,7 +190,10 @@
     "selectReason":"कारण चुनें",
     "remark":"टिप्पणी",
     "enterTheDescription":"डिस्क्रिप्शन दर्ज करें",
-    "rejectOrders":"रिजेक्ट ऑर्डर"
+    "rejectOrders":"रिजेक्ट ऑर्डर",
+    "orderModified":"ऑर्डर में परिवर्तन किया गया",
+    "pending":"लंबित",
+    "previous":"पहले का देखें"
   },
   "viewOrder": {
     "viewOrder": "आर्डर देखें",
@@ -190,7 +203,7 @@
     "totalAmount": "कुल राशि"
   },
   "invoice": {
-    "invoice": "इनवॉइस",
+    "invoice": "मेरा इनवॉइस",
     "invoiceNo": "इनवॉइस नं"
   },
   "filter": {
@@ -202,17 +215,17 @@
     "applyFilter": "फ़िल्टर का चयन करें"
   },
   "ledger": {
-    "ledger": "खाता पुस्तक",
+    "ledger": "मेरा लेजर",
     "download": "डाउनलोड करें",
     "date": "तारीख",
     "sales": "बिक्री"
   },
   "supportRequest": {
     "supportRequest": "सहायता अनुरोध",
-    "requestType": "आवेदन प्रकार",
-    "selectCategory": "वर्ग चुनें",
-    "description": "विवरण",
-    "enterDescription": "विवरण दर्ज करें"
+    "requestType": "रिक्वेस्ट टाइप",
+    "selectCategory": "कैटेगरी चुनें",
+    "description": "डिस्क्रिप्शन",
+    "enterDescription": "डिस्क्रिप्शन  दर्ज करें"
   },
   "brandingRequest": {
     "brandingRequest": "ब्रांडिंग अनुरोध",
@@ -229,17 +242,18 @@
   },
   "myScheme": {
     "myScheme": "मेरी स्कीम",
-    "viewScheme": "योजना देखें",
+    "viewScheme": "स्कीमs देखें",
     "no": "नं.",
     "slab": "स्लैब",
     "scheme": "स्कीम",
     "myOrder": "मेरी ऑर्डर (MT)",
     "status": "स्थिति",
-    "remaining": "बाकी"
+    "remaining": "बाकी",
+    "achieved":"अचीव्ड"
   },
   "myProfile": {
     "myProfile": "मेरा प्रोफ़ाइल",
-    "personalInfo": "व्यक्तिगत जानकारी",
+    "personalInfo": "पर्सनल इनफॉर्मेशन",
     "save": "सुरक्षित करें",
     "email": "ईमेल",
     "mobileNo": "मोबाइल नंबर",
@@ -250,8 +264,8 @@
   "logOut": {
     "areYouSure": "क्या आप सुनिश्चित हैं?",
     "des": "क्या आप सुनिश्चित हैं कि आप इस पोर्टल से लॉग आउट करना चाहते हैं?",
-    "no": "NO",
-    "yes": "YES"
+    "no": "नहीं",
+    "yes": "हाँ"
   },
   "invoiceDetail": {
     "invoiceDetail": "Invoice Detail",
@@ -277,9 +291,80 @@
     "zipCodeRequired": "जिप कोड आवश्यक है।",
     "counterAddressRequired": "काउंटर का पता आवश्यक है।",
     "remarksRequired": "टिप्पणियाँ आवश्यक हैं।",
-    "descriptionRequired": "डिस्क्रिप्शन आवश्यक हैं।"
+    "descriptionRequired": "डिस्क्रिप्शन आवश्यक हैं।",
+    "requestTypeRequired" : "अनुरोध प्रकार आवश्यक है",
+    "validPhoneNumber" : "एक मान्य दूरभाष क्रमांक दर्ज करे",
+    "nameRequired" : "नाम आवश्यक है",
+    "cityRequired" : "शहर की आवश्यकता है",
+    "addressRequired" : "पता आवश्यक है",
+    "masonRequired" : "राजमिस्त्री कौशल प्रकार आवश्यक है",
+    "referralRequired" : "रेफरल आवश्यक है",
+    "typeRequired" : "प्रकार आवश्यक है",
+    "productUsedRequired" : "उपयोग किया गया उत्पाद आवश्यक है"
   },
   "newDealerOnboard":{
     "newDealerOnboard":"नए डीलर का पंजीकरण"
+  },
+  "viewDealerDetails":{
+    "viewDealerDetails":"व्यू डीलर डिटेल्स",
+    "changeDealerStatus":"डीलर स्थिति बदलें",
+    "name":"नाम",
+    "emailAddress":"ईमेल एड्रेस",
+    "mobileNo":"मोबाइल नंबर",
+    "city":"शहर",
+    "address":"पता",
+    "uplodedDocuments":"डॉक्युमेंट्स अपलोड करें"
+  },
+  "dealerwiseSales":{
+    "dealerwiseSales":"डीलरवार बिक्री",
+    "dealerNo":"डीलर नं"
+  },
+  "ASODealerOnboard" : {
+    "name":"नाम",
+    "enterName":"नाम दर्ज करें",
+    "emailAddress":"ईमेल एड्रेस",
+    "enterEmailAddress":"ईमेल एड्रेस दर्ज करें",
+    "mobileNo":"मोबाइल नंबर",
+    "enterMobilNo":"मोबाइल नंबर दर्ज करें",
+    "city":"शहर",
+    "selectCity":"शहर चुनें",
+    "address":"पता",
+    "addressDetail":"एड्रेस डिटेल"
+  },
+  "masonOnboard":{
+    "masonOnboard":"मेसन ऑनबोर्ड",
+    "masonSkillType":"मेसन स्किल टाइप",
+    "selectMasonSkillType":"मेसन स्किल टाइप चुनें"
+  },
+  "masonManagement":{
+    "masonId":"मेसन आईडी",
+    "date":"तारीख",
+    "approvedByDealaer":"डीलर द्वारा स्वीकृत",
+    "approvedByASO":"एएसओ द्वारा अनुमोदित",
+    "changeMasonStatus":"मेसन स्थिति बदलें"
+  },
+  "referralSubmission":{
+    "Referral":"रेफरल",
+    "enterReferralname":"रेफरल नाम दर्ज करें",
+    "phoneNO":"फोन नंबर",
+    "enterPhoneNumber":"फोन नंबर दर्ज करें",
+    "type":"प्रकार",
+    "selectProjectType":"प्रोजेक्ट टाइप चुनें",
+    "ProductUsed":"प्रोडक्ट यूज़्ड",
+    "selectProjectUsed":"सेलेक्ट प्रोजेक्ट यूज़्ड",
+    "enterAddress":"पता दर्ज करें",
+    "uploadProof":"प्रूफ अपलोड करें(pdf,jpg)",
+    "totalReferralClaimed":"कुल रेफरल क्लेम ",
+    "totalReferralClaimedApproved":"कुल रेफरल क्लेम अप्रूव्ड",
+    "totalReferralClaimedRejected":"कुल रेफरल क्लेम रिजेक्टेड"
+  },
+  "rewardStatus":{
+    "viewDetail":"डिटेल देखें",
+    "rewardStatusDetail":"रिवॉर्ड स्टेटस विवरण",
+    "proofDocument":"प्रूफ डॉक्युमेंट"
+  },
+  "engineerOnboard":{
+    "engineerOnboard":"इंजीनियर ऑनबोर्ड",
+    "changeEngineerStatus":"इंजीनियर स्टेटस बदल"
   }
 }

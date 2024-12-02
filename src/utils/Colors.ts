@@ -22,6 +22,7 @@ export const colors = {
     black_530: '#00000053',
     gray:'#455A64',
     blue_1: '#4361EE',
+    blue_2: '#1C72E3',
     lightBlue_1: '#4361EE80',
     lightBlue_2: '#A1B0F740',
     drarkGray_1:'#606060',

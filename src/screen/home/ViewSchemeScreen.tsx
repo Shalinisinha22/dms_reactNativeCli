@@ -1,14 +1,14 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {IconsPath} from '../../utils/IconPath';
-import {hp, wp} from '../../helper/Responsive';
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { IconsPath } from "../../utils/IconPath";
+import { hp, wp } from "../../helper/Responsive";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import RunningSchemeCard from '../../components/dashboard/RunningSchemeCard';
+} from "@react-navigation/native";
+import RunningSchemeCard from "../../components/dashboard/RunningSchemeCard";
 
 const ViewSchemeScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   backArrow: {
     width: wp(10),
     height: wp(10),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   backButton: {
     marginHorizontal: wp(5),

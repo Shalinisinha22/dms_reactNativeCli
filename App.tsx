@@ -6,6 +6,9 @@ import {PersistGate} from 'redux-persist/integration/react';
 import store, {persistor} from './src/redux/Store';
 import SplashScreen from 'react-native-splash-screen';
 import { colors } from './src/utils/Colors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const App = () => {
 
@@ -13,12 +16,13 @@ const App = () => {
     SplashScreen.hide();
   }, []);
 
-
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
+      <QueryClientProvider client={queryClient}>
         <Routes />
         <StatusBar translucent barStyle={'dark-content'} backgroundColor={colors.white}/>
+        </QueryClientProvider>
       </PersistGate>
     </Provider>
   );

@@ -33,5 +33,18 @@ export const RouteString = {
     DealerManagementScreen:'DealerManagementScreen',
     NewDealerOnboardScreen:'NewDealerOnboardScreen',
     DealerSuccessfullyScreen:"DealerSuccessfullyScreen",
-    OrderSuccessfullyScreen:"OrderSuccessfullyScreen"
+    OrderSuccessfullyScreen:"OrderSuccessfullyScreen",
+    ViewDealerDetailScreen:"ViewDealerDetailScreen",
+    DealerWiseSalesScreen:"DealerWiseSalesScreen",
+    ASORegistrationScreen:"ASORegistrationScreen",
+    AsoNewDealerOnboardScreen:"AsoNewDealerOnboardScreen",
+    AsoNewMasonOnboardScreen:"AsoNewMasonOnboardScreen",
+    AsoNewEngineerOnboardScreen:"AsoNewEngineerOnboardScreen",
+    MasonManagementScreen:"MasonManagementScreen",
+    EngineerManagementScreen:"EngineerManagementScreen",
+    BrandingMaterialQueryScreen:"BrandingMaterialQueryScreen",
+    MasonAndEngineerRegistrationScreen:"MasonAndEngineerRegistrationScreen",
+    ReferralSubmissionScreen:"ReferralSubmissionScreen",
+    RewardStatusScreen:"RewardStatusScreen",
+    RewardStatusdetailScreen:"RewardStatusdetailScreen"
 }

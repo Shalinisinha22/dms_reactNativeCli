@@ -1,19 +1,19 @@
-import { ScrollView, StyleSheet, Text } from 'react-native';
-import React, { useState } from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import { colors } from '../../utils/Colors';
-import { FontPath } from '../../utils/FontPath';
-import { hp, RFValue, wp } from '../../helper/Responsive';
-import OrderPlacementCard from '../../components/dashboard/OrderPlacementCard';
-import Button from '../../components/common/Button';
+import { ScrollView, StyleSheet, Text } from "react-native";
+import React, { useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import OrderPlacementCard from "../../components/dashboard/OrderPlacementCard";
+import Button from "../../components/common/Button";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import { RouteString } from '../../navigation/RouteString';
-import { useTranslation } from 'react-i18next';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+} from "@react-navigation/native";
+import { RouteString } from "../../navigation/RouteString";
+import { useTranslation } from "react-i18next";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const OrderPlacementScreen = () => {
   const { t } = useTranslation();
@@ -21,10 +21,10 @@ const OrderPlacementScreen = () => {
 
   // State for order items
   const [orderItems, setOrderItems] = useState([
-    { productName: 'TMT Bar 8mm', value: '' },
-    { productName: 'TMT Bar 10mm',  value: '' },
-    { productName: 'TMT Bar 12mm',  value: '' },
-    { productName: 'TMT Bar 14mm', value: '' },
+    { productName: "TMT Bar 8mm", value: "" },
+    { productName: "TMT Bar 10mm", value: "" },
+    { productName: "TMT Bar 12mm", value: "" },
+    { productName: "TMT Bar 14mm", value: "" },
   ]);
 
   // Handler to update individual values
@@ -35,15 +35,19 @@ const OrderPlacementScreen = () => {
   };
 
   // Compute total weight and amount (example logic)
-  const totalWeight = orderItems.reduce((acc, item) => acc + (parseFloat(item.value) || 0), 0);
+  const totalWeight = orderItems.reduce(
+    (acc, item) => acc + (parseFloat(item.value) || 0),
+    0
+  );
   const totalAmount = totalWeight * 5000; // Assuming a price per unit
 
   return (
     <SafeAreaContainer>
-      <Text style={styles.title}>{t('orderPlacement.orderPlacement')}</Text>
-      <KeyboardAwareScrollView 
-      extraScrollHeight={hp(-10)} // Adjust as needed
-      showsVerticalScrollIndicator={false}>
+      <Text style={styles.title}>{t("orderPlacement.orderPlacement")}</Text>
+      <KeyboardAwareScrollView
+        extraScrollHeight={hp(-10)} // Adjust as needed
+        showsVerticalScrollIndicator={false}
+      >
         {orderItems.map((item, index) => (
           <OrderPlacementCard
             key={index}
@@ -53,13 +57,13 @@ const OrderPlacementScreen = () => {
           />
         ))}
         <Text style={styles.totalWeight}>
-          {t('orderPlacement.totalWeight')} : {totalWeight} MT
+          {t("orderPlacement.totalWeight")} : {totalWeight} MT
         </Text>
         <Text style={styles.totalAmount}>
-          {t('orderPlacement.totalAmount')}: Rs. {totalAmount}
+          {t("orderPlacement.totalAmount")}: Rs. {totalAmount}
         </Text>
         <Button
-          buttonName={t('orderPlacement.orderPreview')}
+          buttonName={t("orderPlacement.orderPreview")}
           isLoading={false}
           onPress={() => navigation.navigate(RouteString.ConfirmOrderScreen)}
           buttonStyle={styles.button}
@@ -82,14 +86,14 @@ const styles = StyleSheet.create({
   totalWeight: {
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(17),
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.black,
     marginTop: hp(2),
   },
   totalAmount: {
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(18),
-    textAlign: 'center',
+    textAlign: "center",
     color: colors.primary,
     marginTop: hp(0.8),
   },

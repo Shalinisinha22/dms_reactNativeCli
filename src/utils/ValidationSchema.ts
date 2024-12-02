@@ -4,7 +4,7 @@ import 'yup-phone-lite';
 export const loginValidationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
-    .phone('IN')
+    .phone('IN', "error.validPhoneNumber")
     .required('error.phoneNumberRequired'),
     password: yup
     .string()
@@ -20,7 +20,7 @@ export const loginValidationSchema = yup.object().shape({
 export const forgotPasswordValidationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
-    .phone('IN')
+    .phone('IN', "error.validPhoneNumber")
     .required('error.phoneNumberRequired'),
 });
 
@@ -28,7 +28,7 @@ export const forgotPasswordValidationSchema = yup.object().shape({
 export const signUpValidationSchema = yup.object().shape({
   phoneNumber: yup
     .string()
-    .phone('IN')
+    .phone('IN', "error.validPhoneNumber")
     .required('error.phoneNumberRequired'),
   email: yup
     .string()
@@ -65,6 +65,7 @@ export const cancelationRemarksValidationSchema = yup.object().shape({
 
 export const supportRequestValidationSchema = yup.object().shape({
   description: yup.string().required('error.descriptionRequired'),
+  type: yup.string().required('error.requestTypeRequired'),
 });
 
 
@@ -77,9 +78,60 @@ export const newDealerValidationSchema = yup.object().shape({
   .required('error.emailRequired'),
   phoneNumber: yup
   .string()
-  .phone('IN')
+  .phone('IN', "error.validPhoneNumber")
   .required('error.phoneNumberRequired'),
   workCity: yup.string().required('error.workCityRequired'),
   zipCode: yup.string().required('error.zipCodeRequired'),
   counterAddress: yup.string().required('error.counterAddressRequired'),
 });
+
+export const asoRegistrationValidationSchema = yup.object().shape({
+  workCity: yup.string().required('error.workCityRequired'),
+  zipCode: yup.string().required('error.zipCodeRequired'),
+})
+
+export const asoNewDealerOnboard = yup.object().shape({
+  name: yup.string().required('error.nameRequired'),
+  email: yup
+  .string()
+  .email('error.emailValid')
+  .required('error.emailRequired'),
+  phoneNumber: yup
+  .string()
+  .phone('IN', "error.validPhoneNumber")
+  .required('error.phoneNumberRequired'),
+  city: yup.string().required('error.cityRequired'),
+  address: yup.string().required('error.addressRequired'),
+})
+
+export const masonOnboard = yup.object().shape({
+  name: yup.string().required('error.nameRequired'),
+  email: yup
+  .string()
+  .email('error.emailValid')
+  .required('error.emailRequired'),
+  phoneNumber: yup
+  .string()
+  .phone('IN', "error.validPhoneNumber")
+  .required('error.phoneNumberRequired'),
+  city: yup.string().required('error.cityRequired'),
+  address: yup.string().required('error.addressRequired'),
+  masonSkill: yup.string().required('error.masonRequired'),
+})
+
+export const masonAndEngineerRegistration = yup.object().shape({
+  workCity: yup.string().required('error.workCityRequired'),
+  zipCode: yup.string().required('error.zipCodeRequired'),
+  counterAddress: yup.string().required('error.counterAddressRequired'),
+})
+
+export const referralSubmission = yup.object().shape({
+  referral: yup.string().required('error.referralRequired'),
+  phoneNumber: yup
+  .string()
+  .phone('IN', "error.validPhoneNumber")
+  .required('error.phoneNumberRequired'),
+  type: yup.string().required('error.typeRequired'),
+  productUsed: yup.string().required('error.productUsedRequired'),
+  address: yup.string().required('error.addressRequired'),
+})

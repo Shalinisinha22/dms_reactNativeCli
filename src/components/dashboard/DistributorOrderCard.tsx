@@ -11,7 +11,6 @@ import {
 } from '@react-navigation/native';
 import ApproveButton from '../common/ApproveButton';
 import RejectButton from '../common/RejectButton';
-import {orderMoreOption} from '../../utils/JsonData';
 import { commonStyle } from '../../utils/commonStyles';
 
 const DistributorOrderCard = () => {
@@ -61,25 +60,6 @@ const DistributorOrderCard = () => {
           </View>
         </View>
       </Pressable>
-      {isOptionShow && (
-        <View style={styles.statusUpdateView}>
-          {orderMoreOption.map((item, index) => {
-            return (
-              <Pressable
-                style={styles.button}
-                key={index}
-                onPress={() => navigation.navigate(item.routes)}>
-                <Image
-                  source={item.icons}
-                  style={styles.icons}
-                  tintColor={colors.black}
-                />
-                <Text style={styles.buttonName}>{t(`${item.name}`)}</Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      )}
     </>
   );
 };
@@ -147,37 +127,5 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(11),
     marginTop: hp(0.3),
-  },
-  statusUpdateView: {
-    backgroundColor: colors.white,
-    shadowColor: colors.black,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    marginHorizontal: wp(5),
-    shadowOpacity: 0.05,
-    shadowRadius: 10.65,
-    elevation: 8,
-    borderRadius: 8,
-    paddingTop: hp(3),
-    marginBottom: hp(2),
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: wp(5),
-    marginBottom: hp(3),
-  },
-  buttonName: {
-    fontSize: RFValue(18),
-    fontFamily: FontPath.OutfitRegular,
-    marginLeft: wp(3),
-    color: colors.black,
-  },
-  icons: {
-    width: wp(6),
-    height: wp(6),
-    resizeMode: 'cover',
   },
 });

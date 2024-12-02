@@ -1,42 +1,56 @@
-import {FlatList, Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {IconsPath} from '../../utils/IconPath';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { IconsPath } from "../../utils/IconPath";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {colors} from '../../utils/Colors';
-import {FontPath} from '../../utils/FontPath';
-import OrderTracking from '../../components/common/OrderTracking';
-import { useTranslation } from 'react-i18next';
+} from "@react-navigation/native";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import OrderTracking from "../../components/common/OrderTracking";
+import { useTranslation } from "react-i18next";
+import ApproveButton from "../../components/common/ApproveButton";
+import RejectButton from "../../components/common/RejectButton";
+import { useAppSelector } from "../../redux/Store";
+import { UserType } from "../../interfaces/Types";
+import RejectOrderModal from "../../components/modal/RejectOrderModal";
 
 const data = [
   {
-    id: '1',
-    description: 'MS Rod TMT Bar 8mm MRP: 20000',
-    weight: '12 MT',
-    amount: '2,000.00',
+    id: "1",
+    description: "MS Rod TMT Bar 8mm MRP: 20000",
+    weight: "12 MT",
+    amount: "2,000.00",
   },
   {
-    id: '2',
-    description: 'MS Rod TMT Bar 8mm MRP: 20000',
-    weight: '12 MT',
-    amount: '2,000.00',
+    id: "2",
+    description: "MS Rod TMT Bar 8mm MRP: 20000",
+    weight: "12 MT",
+    amount: "2,000.00",
   },
   {
-    id: '3',
-    description: 'MS Rod TMT Bar 8mm MRP: 20000',
-    weight: '12 MT',
-    amount: '2,000.00',
+    id: "3",
+    description: "MS Rod TMT Bar 8mm MRP: 20000",
+    weight: "12 MT",
+    amount: "2,000.00",
   },
 ];
 
 const ViewOrderScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { portal } = useAppSelector((state) => state.auth);
+  const [isRejectOpenModal, setIsRejectOpenModal] = useState(false);
 
   return (
     <SafeAreaContainer>
@@ -44,44 +58,46 @@ const ViewOrderScreen = () => {
         <Pressable onPress={() => navigation.goBack()}>
           <Image source={IconsPath.backArrow} style={styles.backIcons} />
         </Pressable>
-        <Text style={styles.viewOrder}>{t('viewOrder.viewOrder')}</Text>
+        <Text style={styles.viewOrder}>{t("viewOrder.viewOrder")}</Text>
       </View>
       <View style={styles.orderInfoRowView}>
         <View>
-          <Text style={[styles.orderinfoText, {color: colors.primary}]}>
-          {t('viewOrder.orderDate')}
+          <Text style={[styles.orderinfoText, { color: colors.primary }]}>
+            {t("viewOrder.orderDate")}
           </Text>
-          <Text style={[styles.orderInfoDes, {color: colors.primary}]}>
+          <Text style={[styles.orderInfoDes, { color: colors.primary }]}>
             12 Sept 2024
           </Text>
         </View>
         <View>
-          <Text style={[styles.orderinfoText, {color: colors.green}]}>
-          {t('viewOrder.dispatchDate')}
+          <Text style={[styles.orderinfoText, { color: colors.green }]}>
+            {t("viewOrder.dispatchDate")}
           </Text>
-          <Text style={[styles.orderInfoDes, {color: colors.green}]}>
+          <Text style={[styles.orderInfoDes, { color: colors.green }]}>
             16 Sept 2024
           </Text>
         </View>
         <View>
-          <Text style={styles.orderinfoText}>{t('viewOrder.totalWeight')}</Text>
+          <Text style={styles.orderinfoText}>{t("viewOrder.totalWeight")}</Text>
           <Text style={styles.orderInfoDes}>10 MT</Text>
         </View>
         <View>
-          <Text style={styles.orderinfoText}>{t('viewOrder.totalAmount')}</Text>
+          <Text style={styles.orderinfoText}>{t("viewOrder.totalAmount")}</Text>
           <Text style={styles.orderInfoDes}>Rs.12,0000</Text>
         </View>
       </View>
       <View style={styles.headerView}>
         <Text style={styles.headerTitle1}>#</Text>
-        <Text style={styles.headerTitle2}>{t('confirmOrder.productDecription')}</Text>
-        <Text style={styles.headerTitle3}>{t('confirmOrder.weight')}</Text>
-        <Text style={styles.headerTitle4}>{t('confirmOrder.amount')}</Text>
+        <Text style={styles.headerTitle2}>
+          {t("confirmOrder.productDecription")}
+        </Text>
+        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")}</Text>
+        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")}</Text>
       </View>
       <View>
         <FlatList
           data={data}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView}>
                 <Text style={styles.itemText1}>{item.id}</Text>
@@ -95,7 +111,7 @@ const ViewOrderScreen = () => {
       </View>
       <View style={styles.totalView}>
         <View style={styles.totalRowView}>
-          <Text style={styles.total}>{t('confirmOrder.subTotal')} : </Text>
+          <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
           <Text style={styles.amount}> 4,000.00</Text>
         </View>
         <View style={styles.totalRowView}>
@@ -103,19 +119,29 @@ const ViewOrderScreen = () => {
           <Text style={styles.amount}> 720</Text>
         </View>
         <View style={styles.totalRowView}>
-          <Text style={[styles.total, {fontFamily: FontPath.OutfitBold}]}>
-          {t('confirmOrder.total')} :{' '}
+          <Text style={[styles.total, { fontFamily: FontPath.OutfitBold }]}>
+            {t("confirmOrder.total")} :{" "}
           </Text>
-          <Text style={[styles.amount, {fontFamily: FontPath.OutfitBold}]}>
-            {' '}
+          <Text style={[styles.amount, { fontFamily: FontPath.OutfitBold }]}>
+            {" "}
             4,720.00
           </Text>
         </View>
       </View>
       <OrderTracking
         selectedStep={0}
-        containerStyle={{marginTop: hp(4)}}
+        containerStyle={{ marginTop: hp(4) }}
         isCheckIcons={true}
+      />
+      {portal === UserType.DISTRIBUTOR && (
+        <View style={styles.rowView}>
+          <ApproveButton onPress={() => null} />
+          <RejectButton onPress={() => setIsRejectOpenModal(true)} />
+        </View>
+      )}
+      <RejectOrderModal
+        isVisible={isRejectOpenModal}
+        backOnPress={() => setIsRejectOpenModal(false)}
       />
     </SafeAreaContainer>
   );
@@ -125,15 +151,15 @@ export default ViewOrderScreen;
 
 const styles = StyleSheet.create({
   backRowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: wp(3),
     marginVertical: hp(3),
   },
   backIcons: {
     width: wp(8),
     height: wp(8),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   viewOrder: {
     color: colors.black,
@@ -152,18 +178,18 @@ const styles = StyleSheet.create({
     marginTop: hp(0.3),
   },
   orderInfoRowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: hp(2),
     marginHorizontal: wp(5),
   },
   headerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     backgroundColor: colors.drarkGray_1,
     height: hp(4),
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: wp(5),
     borderRadius: 3,
   },
@@ -216,8 +242,8 @@ const styles = StyleSheet.create({
     width: wp(15),
   },
   itemView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     paddingHorizontal: wp(5),
     paddingVertical: hp(1),
@@ -227,25 +253,32 @@ const styles = StyleSheet.create({
     borderColor: colors.black_100,
   },
   totalView: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginHorizontal: wp(5),
     marginTop: hp(2),
   },
   totalRowView: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: hp(0.3),
-    alignItems: 'center',
+    alignItems: "center",
   },
   total: {
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
     color: colors.black,
     width: wp(25),
-    textAlign: 'right',
+    textAlign: "right",
   },
   amount: {
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
     color: colors.black,
+  },
+  rowView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: wp(50),
+    alignSelf: "center",
+    marginTop: hp(10),
   },
 });

@@ -1,76 +1,88 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import BackIcons from '../../assets/svg/BackIcons';
-import {hp, RFValue, wp} from '../../helper/Responsive';
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import BackIcons from "../../assets/svg/BackIcons";
+import { hp, RFValue, wp } from "../../helper/Responsive";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import {ImagePath} from '../../utils/ImagePath';
-import {colors} from '../../utils/Colors';
-import {FontPath} from '../../utils/FontPath';
-import {useAppSelector} from '../../redux/Store';
-import TextInputField from '../../components/common/TextInputField';
-import {useFormik} from 'formik';
-import {RouteString} from '../../navigation/RouteString';
-import {setPasswordValidationSchema} from '../../utils/ValidationSchema';
-import Button from '../../components/common/Button';
-import {useTranslation} from 'react-i18next';
-import { commonStyle } from '../../utils/commonStyles';
+} from "@react-navigation/native";
+import { ImagePath } from "../../utils/ImagePath";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import { useAppSelector } from "../../redux/Store";
+import TextInputField from "../../components/common/TextInputField";
+import { useFormik } from "formik";
+import { RouteString } from "../../navigation/RouteString";
+import { setPasswordValidationSchema } from "../../utils/ValidationSchema";
+import Button from "../../components/common/Button";
+import { useTranslation } from "react-i18next";
+import { commonStyle } from "../../utils/commonStyles";
+import { UserType } from "../../interfaces/Types";
 
 const SetPasswordScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const {portal} = useAppSelector(state => state.auth);
+  const { portal } = useAppSelector((state) => state.auth);
 
-  const {handleChange, handleBlur, handleSubmit, values, touched, errors} =
+  const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
     useFormik({
-      initialValues: {newPassword: '', passwordConfirmation: ''},
+      initialValues: { newPassword: "", passwordConfirmation: "" },
       validationSchema: setPasswordValidationSchema,
-      onSubmit: values =>
+      onSubmit: (values) =>
         navigation.navigate(RouteString.RegistrationFormScreen),
     });
+
+    const handleNavigation = () => {
+      if(portal === UserType.DEALER || portal === UserType.DISTRIBUTOR){
+        navigation.navigate(RouteString.RegistrationFormScreen)
+      } else if (portal === UserType.ASO){
+        navigation.navigate(RouteString.ASORegistrationScreen)
+      } else if (portal === UserType.ENGINEER || portal === UserType.MASON){
+        navigation.navigate(RouteString.MasonAndEngineerRegistrationScreen)
+      } 
+    }
 
   return (
     <SafeAreaContainer showHeader={false}>
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <Pressable
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.goBack()}
+        >
           <BackIcons />
         </Pressable>
         <Image source={ImagePath.appLogo} style={styles.appLogo} />
         <Text style={styles.portalAccess}>{portal}</Text>
-        <Text style={commonStyle.login}>{t('setPassword.setPassword')}</Text>
+        <Text style={commonStyle.login}>{t("setPassword.setPassword")}</Text>
         <TextInputField
-          title={t('setPassword.newPassword')}
-          placeholder={t('setPassword.newPassword')}
+          title={t("setPassword.newPassword")}
+          placeholder={t("setPassword.newPassword")}
           isPassword={true}
           value={values.newPassword}
-          onChangeText={handleChange('newPassword')}
-          onBlur={handleBlur('newPassword')}
+          onChangeText={handleChange("newPassword")}
+          onBlur={handleBlur("newPassword")}
           touched={touched.newPassword}
           errors={errors.newPassword}
           isRequired={true}
         />
         <TextInputField
-          title={t('setPassword.confirmPassword')}
-          placeholder={t('setPassword.confirmPassword')}
+          title={t("setPassword.confirmPassword")}
+          placeholder={t("setPassword.confirmPassword")}
           isPassword={true}
           value={values.passwordConfirmation}
-          onChangeText={handleChange('passwordConfirmation')}
-          onBlur={handleBlur('passwordConfirmation')}
+          onChangeText={handleChange("passwordConfirmation")}
+          onBlur={handleBlur("passwordConfirmation")}
           touched={touched.passwordConfirmation}
           errors={errors.passwordConfirmation}
           isRequired={true}
         />
         <Button
-          buttonName={t('setPassword.submit')}
+          buttonName={t("setPassword.submit")}
           isLoading={false}
-          onPress={() =>  navigation.navigate(RouteString.RegistrationFormScreen)}
+          onPress={handleNavigation}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>
@@ -86,15 +98,15 @@ const styles = StyleSheet.create({
   appLogo: {
     width: wp(35),
     height: wp(35),
-    resizeMode: 'contain',
-    alignSelf: 'center',
+    resizeMode: "contain",
+    alignSelf: "center",
   },
   portalAccess: {
     color: colors.black,
     fontSize: RFValue(16),
     fontFamily: FontPath.OutfitRegular,
-    textAlign: 'center',
+    textAlign: "center",
     marginVertical: hp(1),
-    lineHeight:hp(3),
-  }
+    lineHeight: hp(3),
+  },
 });

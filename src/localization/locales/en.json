@@ -2,10 +2,12 @@
   "navigationLabel":{
     "Home":"Home",
     "orderApproval":"Order Approval",
-    "orderList":"Order List",
+    "dealars":"Dealars",
     "profile":"Profile",
     "placeOrder":"Place Order",
-    "orderHistory":"Order History"
+    "orderHistory":"Order History",
+    "referralClaim":"Referral Claim",
+    "rewardHistory":"Reward History"
   },
   "onBording": {
     "portalAccress": "Portal Accress",
@@ -101,7 +103,13 @@
     "myLedger":"My Ledger",
     "dealerwiseSales":"Dealerwise Sales",
     "dealerManagemet":"Dealer Managemet",
-    "RunningScheme":"Running Scheme"
+    "RunningScheme":"Running Scheme",
+    "masonManagement":"Mason Management",
+    "engineerManagement":"Engineer Management",
+    "brandingMaterialquery":"Branding Material query",
+    "referralSubmission":"Referral Submission",
+    "rewardStatus":"Reward Status",
+    "rducationalResources":"Educational Resources"
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -122,9 +130,10 @@
     "totalOrderPlaced": "Total Order Placed",
     "totalOrderDispatched": "Total Order Dispatched",
     "totalOutstandingPayment": "Total Outstanding Payment",
+    "totalOrderRejected":"Total Order Rejected",
     "runningScheme": "Running Scheme",
     "salesVolume":"Sales Volume",
-    "outstandingPayment":"Outstanding Payment",
+    "outstandingPayment":"Pending Order",
     "orderApproved":"Order Approved",
     "orderRejected":"Order Rejected",
     "weight":"Weight(MT)",
@@ -139,7 +148,8 @@
     "searchDealer":"Search dealer",
     "rejected":"Rejected",
     "approved":"Approved",
-    "dealerManagement":"Dealer Management"
+    "dealerManagement":"Dealer Management",
+    "totalSalesVolume":"Total Sales Volume"
   },
   "orderPlacement": {
     "orderPlacement": "Order Placement",
@@ -182,7 +192,10 @@
     "selectReason":"Select Reason",
     "remark":"Remark",
     "enterTheDescription":"Enter the description",
-    "rejectOrders":"REJECT ORDER"
+    "rejectOrders":"REJECT ORDER",
+    "orderModified":"Order Modified",
+    "pending":"Pending",
+    "previous":"View Previous"
   },
   "viewOrder": {
     "viewOrder": "ViewOrder",
@@ -192,7 +205,7 @@
     "totalAmount": "Total Amount"
   },
   "invoice": {
-    "invoice": "Invoice",
+    "invoice": "My Invoice",
     "invoiceNo": "Invoice No"
   },
   "filter": {
@@ -237,7 +250,8 @@
     "scheme": "Scheme",
     "myOrder": "My Order(MT)",
     "status": "Status",
-    "remaining": "Remaining"
+    "remaining": "Remaining",
+    "achieved":"Achieved"
   },
   "myProfile": {
     "myProfile": "My Profile",
@@ -286,9 +300,80 @@
     "zipCodeRequired": "The zip code is required",
     "counterAddressRequired": "The counter address is required",
     "remarksRequired": "The Remarks is required",
-    "descriptionRequired": "The Description is required"
+    "descriptionRequired": "The Description is required",
+    "requestTypeRequired" : "The Request Type is required",
+    "validPhoneNumber" : "Please enter a valid phone number",
+    "nameRequired" : "The name is required",
+    "cityRequired" : "The city is required",
+    "masonRequired" : "The mason skill type is required",
+    "addressRequired" : "The address is required",
+    "referralRequired" : "The referral is required",
+    "typeRequired" : "The type is required",
+    "productUsedRequired" : "The product used is required"
   },
   "newDealerOnboard":{
     "newDealerOnboard":"New Dealer Onboard"
+  },
+  "viewDealerDetails":{
+    "viewDealerDetails":"View Dealer Details",
+    "changeDealerStatus":"Change Dealer Status",
+    "name":"Name",
+    "emailAddress":"Email Address",
+    "mobileNo":"Mobile No",
+    "city":"City",
+    "address":"Address",
+    "uplodedDocuments":"Uploded Documents"
+  },
+  "dealerwiseSales":{
+    "dealerwiseSales":"Dealerwise Sales",
+    "dealerNo":"Dealer No"
+  },
+  "ASODealerOnboard" : {
+    "name":"Name",
+    "enterName":"Enter Name",
+    "emailAddress":"Email Address",
+    "enterEmailAddress":"Enter email address",
+    "mobileNo":"Mobile No",
+    "enterMobilNo":"Enter mobil no",
+    "city":"City",
+    "selectCity":"Select City",
+    "address":"Address",
+    "addressDetail":"Address detail"
+  },
+  "masonOnboard":{
+    "masonOnboard":"Mason Onboard",
+    "masonSkillType":"Mason Skill type",
+    "selectMasonSkillType":"Select Mason Skill Type",
+    "changeMasonStatus":"Change Mason Status"
+  },
+  "masonManagement":{
+    "masonId":"Mason ID",
+    "date":"Date",
+    "approvedByDealaer":"Approved By Dealaer",
+    "approvedByASO":"Approved By ASO"
+  },
+ "referralSubmission":{
+    "Referral":"Referral",
+    "enterReferralname":"Enter referral name",
+    "phoneNO":"Phone No",
+    "enterPhoneNumber":"Enter phone number",
+    "type":"Type",
+    "selectProjectType":"Select Project Type",
+    "ProductUsed":"Product Used",
+    "selectProjectUsed":"Select Project used",
+    "enterAddress":"Enter address",
+    "uploadProof":"Upload Proof(pdf,jpg)",
+    "totalReferralClaimed":"Total Referral Claimed",
+    "totalReferralClaimedApproved":"Total Referral Claimed Approved",
+    "totalReferralClaimedRejected":"Total Referral Claimed Rejected"
+  },
+  "rewardStatus":{
+    "viewDetail":"View Detail",
+    "rewardStatusDetail":"Reward Status detail",
+    "proofDocument":"Proof Document"
+  },
+  "engineerOnboard":{
+    "engineerOnboard":"Engineer Onboard",
+    "changeEngineerStatus":"Change Engineer Status"
   }
 }

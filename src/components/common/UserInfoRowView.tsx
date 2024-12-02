@@ -12,7 +12,7 @@ const UserInfoRowView = ({title, userInfo}: UserInfoRowViewProps) => {
         style={[
           styles.title,
           {
-            width: title === 'Counter Address' ? wp(31) : wp(22),
+            width: title === 'Counter Address' ? wp(31) : wp(25),
           },
         ]}>
         {title}

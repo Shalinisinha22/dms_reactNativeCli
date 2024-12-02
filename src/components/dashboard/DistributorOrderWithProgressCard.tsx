@@ -33,6 +33,7 @@ const DistributorOrderWithProgressCard = ({
               <Text style={commonStyle.userNameText}>M</Text>
             </View>
             <View style={styles.textView}>
+              <Text style={styles.name}>XYZ Enterprise</Text>
               <Text style={styles.invoiceNo}>
                 {t('dashboard.orderNo')} : 121124
               </Text>
@@ -104,8 +105,8 @@ const styles = StyleSheet.create({
   },
   invoiceNo: {
     color: colors.black,
-    fontFamily: FontPath.OutfitSemiBold,
-    fontSize: RFValue(16),
+    fontFamily: FontPath.OutfitMedium,
+    fontSize: RFValue(12),
   },
   download: {
     width: wp(7),
@@ -130,4 +131,9 @@ const styles = StyleSheet.create({
     fontSize: RFValue(11),
     marginTop: hp(0.3),
   },
+  name:{
+    color:colors.black,
+    fontFamily:FontPath.OutfitBold,
+    fontSize:RFValue(16)
+  }
 });

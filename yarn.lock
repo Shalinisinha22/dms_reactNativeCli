@@ -2653,6 +2653,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:5.62.0":
+  version: 5.62.0
+  resolution: "@tanstack/query-core@npm:5.62.0"
+  checksum: e071653bd29cfb713dc9f5641d2308e731d195129c5c5382826917573ae963033afa6f97605668824e7deb7aa1349b7355992aef0d8c1cb7da7793ef2ce2011e
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.62.0":
+  version: 5.62.0
+  resolution: "@tanstack/react-query@npm:5.62.0"
+  dependencies:
+    "@tanstack/query-core": 5.62.0
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 5ef06034a415c710b44014a138051d2d15e6a8d4bd9d82988e9b780b90bcd25e78bf64032e2dbbd1ff96351f14a142e5f0d1d3f5b0be1e983c6d5c87535f603d
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -3130,9 +3148,11 @@ __metadata:
     "@react-navigation/native": ^7.0.0
     "@react-navigation/native-stack": ^7.0.0
     "@reduxjs/toolkit": ^2.3.0
+    "@tanstack/react-query": ^5.62.0
     "@types/react": ^18.2.6
     "@types/react-test-renderer": ^18.0.0
     "@types/redux-logger": ^3.0.13
+    axios: ^1.7.8
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     formik: ^2.4.6
@@ -3144,6 +3164,7 @@ __metadata:
     react-i18next: ^15.1.1
     react-native: 0.76.1
     react-native-document-picker: ^9.3.1
+    react-native-dotenv: ^3.4.11
     react-native-gesture-handler: ^2.20.2
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-modal: ^13.0.1
@@ -3151,7 +3172,7 @@ __metadata:
     react-native-otp-entry: ^1.7.3
     react-native-reanimated: ^3.16.1
     react-native-safe-area-context: ^4.14.0
-    react-native-screens: ^4.0.0
+    react-native-screens: ^4.3.0
     react-native-share: ^11.1.0
     react-native-splash-screen: ^3.3.0
     react-native-svg: ^15.8.0
@@ -3482,12 +3503,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"asynckit@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "asynckit@npm:0.4.0"
+  checksum: 7b78c451df768adba04e2d02e63e2d0bf3b07adcd6e42b4cf665cb7ce899bedd344c69a1dcbce355b5f972d597b25aaa1c1742b52cffd9caccb22f348114f6be
+  languageName: node
+  linkType: hard
+
 "available-typed-arrays@npm:^1.0.7":
   version: 1.0.7
   resolution: "available-typed-arrays@npm:1.0.7"
   dependencies:
     possible-typed-array-names: ^1.0.0
   checksum: 1aa3ffbfe6578276996de660848b6e95669d9a95ad149e3dd0c0cda77db6ee1dbd9d1dd723b65b6d277b882dd0c4b91a654ae9d3cf9e1254b7e93e4908d78fd3
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.7.8":
+  version: 1.7.8
+  resolution: "axios@npm:1.7.8"
+  dependencies:
+    follow-redirects: ^1.15.6
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 3d21652faf8e29fb36c47517d2872bb5e2285127a24f5c53ce23082c4eac7f5a88de84dd49d4a1a83068e5301dcfd9067b41e5fbd00b0d20ab7b0a843559273d
   languageName: node
   linkType: hard
 
@@ -4035,6 +4074,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"combined-stream@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "combined-stream@npm:1.0.8"
+  dependencies:
+    delayed-stream: ~1.0.0
+  checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
 "command-exists@npm:^1.2.8":
   version: 1.2.9
   resolution: "command-exists@npm:1.2.9"
@@ -4492,6 +4540,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"delayed-stream@npm:~1.0.0":
+  version: 1.0.0
+  resolution: "delayed-stream@npm:1.0.0"
+  checksum: 46fe6e83e2cb1d85ba50bd52803c68be9bd953282fa7096f51fc29edd5d67ff84ff753c51966061e5ba7cb5e47ef6d36a91924eddb7f3f3483b1c560f77a0020
+  languageName: node
+  linkType: hard
+
 "denodeify@npm:^1.2.1":
   version: 1.2.1
   resolution: "denodeify@npm:1.2.1"
@@ -4589,6 +4644,13 @@ __metadata:
     domelementtype: ^2.3.0
     domhandler: ^5.0.3
   checksum: e5757456ddd173caa411cfc02c2bb64133c65546d2c4081381a3bafc8a57411a41eed70494551aa58030be9e58574fcc489828bebd673863d39924fb4878f416
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
   languageName: node
   linkType: hard
 
@@ -5367,6 +5429,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.9
+  resolution: "follow-redirects@npm:1.15.9"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: 859e2bacc7a54506f2bf9aacb10d165df78c8c1b0ceb8023f966621b233717dab56e8d08baadc3ad3b9db58af290413d585c999694b7c146aaf2616340c3d2a6
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3":
   version: 0.3.3
   resolution: "for-each@npm:0.3.3"
@@ -5383,6 +5455,17 @@ __metadata:
     cross-spawn: ^7.0.0
     signal-exit: ^4.0.1
   checksum: 1989698488f725b05b26bc9afc8a08f08ec41807cd7b92ad85d96004ddf8243fd3e79486b8348c64a3011ae5cc2c9f0936af989e1f28339805d8bc178a75b451
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "form-data@npm:4.0.1"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: ccee458cd5baf234d6b57f349fe9cc5f9a2ea8fd1af5ecda501a18fd1572a6dd3bf08a49f00568afd995b6a65af34cb8dec083cf9d582c4e621836499498dd84
   languageName: node
   linkType: hard
 
@@ -7585,7 +7668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.27, mime-types@npm:~2.1.34":
+"mime-types@npm:^2.1.12, mime-types@npm:^2.1.27, mime-types@npm:~2.1.34":
   version: 2.1.35
   resolution: "mime-types@npm:2.1.35"
   dependencies:
@@ -8407,6 +8490,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-from-env@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "proxy-from-env@npm:1.1.0"
+  checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
+  languageName: node
+  linkType: hard
+
 "punycode@npm:^2.1.0":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
@@ -8553,6 +8643,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-dotenv@npm:^3.4.11":
+  version: 3.4.11
+  resolution: "react-native-dotenv@npm:3.4.11"
+  dependencies:
+    dotenv: ^16.4.5
+  peerDependencies:
+    "@babel/runtime": ^7.20.6
+  checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
+  languageName: node
+  linkType: hard
+
 "react-native-drawer-layout@npm:^4.0.1":
   version: 4.0.1
   resolution: "react-native-drawer-layout@npm:4.0.1"
@@ -8671,16 +8772,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "react-native-screens@npm:4.0.0"
+"react-native-screens@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "react-native-screens@npm:4.3.0"
   dependencies:
     react-freeze: ^1.0.0
     warn-once: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 9da0f394fa26b7ec30f52fc758d6289b7e5123c7e6446bbce654ae31e07ab6d5488e51c0882a906cddc305b18e3cc96f9bc5631671f4fded38da5ef138b53cfa
+  checksum: b43ae4145e264582732ec53c78ba88de678c8ce7f9687b0526bf647c7d1ea8311ee821945848a55fb04f145bf8cae189d2d4e0f49e52571cb23acf083f2df858
   languageName: node
   linkType: hard
 

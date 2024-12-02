@@ -5,13 +5,14 @@ import {colors} from '../../utils/Colors';
 import {IconsPath} from '../../utils/IconPath';
 import {FontPath} from '../../utils/FontPath';
 import {useTranslation} from 'react-i18next';
+import { SearchViewProps } from '../../interfaces/Types';
 
-const SearchView = () => {
+const SearchView = ({searchMainViewStyle}:SearchViewProps ) => {
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
 
   return (
-    <View style={styles.searchMainView}>
+    <View style={[styles.searchMainView, searchMainViewStyle]}>
       <Image source={IconsPath.search} style={styles.search} />
       <TextInput
         value={search}
@@ -46,5 +47,6 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
     marginLeft: wp(2),
+    lineHeight:hp(3)
   },
 });

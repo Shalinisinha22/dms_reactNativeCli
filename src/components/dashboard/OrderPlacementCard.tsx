@@ -27,7 +27,7 @@ const OrderPlacementCard = ({
         </Text>
       </View>
       <View>
-        <Text style={styles.weight}>Weight (MT)</Text>
+        <Text style={styles.weight}>{t('confirmOrder.weight')} (MT)</Text>
         <View style={styles.addUnitView}>
           <TextInput
           placeholder='0'
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   textInput:{
     color:colors.black,
     fontFamily:FontPath.OutfitMedium,
-    fontSize:RFValue(14)
+    fontSize:RFValue(14), 
+    paddingVertical:0
   }
 });

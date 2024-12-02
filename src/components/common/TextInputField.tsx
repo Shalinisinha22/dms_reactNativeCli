@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
     color: colors.black,
+    lineHeight:hp(3),
     flex: 1,
   },
   inputView: {

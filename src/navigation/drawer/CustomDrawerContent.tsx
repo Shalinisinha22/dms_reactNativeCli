@@ -5,60 +5,70 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import React, {useState} from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
+} from "react-native";
+import React, { useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import {
+  asoDrawerOption,
   dealerDrawerOption,
   distributorDrawerOption,
+  masonANdEngineerDrawerOption,
   userProfileImage,
-} from '../../utils/JsonData';
-import {hp, isiPAD, RFValue, wp} from '../../helper/Responsive';
-import {IconsPath} from '../../utils/IconPath';
-import {colors} from '../../utils/Colors';
-import {FontPath} from '../../utils/FontPath';
+} from "../../utils/JsonData";
+import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
+import { IconsPath } from "../../utils/IconPath";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import {RouteString} from '../RouteString';
-import LogoutModal from '../../components/modal/LogoutModal';
-import {useTranslation} from 'react-i18next';
-import {useAppSelector} from '../../redux/Store';
-import {drawerItemType, UserType} from '../../interfaces/Types';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "@react-navigation/native";
+import { RouteString } from "../RouteString";
+import LogoutModal from "../../components/modal/LogoutModal";
+import { useTranslation } from "react-i18next";
+import { useAppSelector } from "../../redux/Store";
+import { drawerItemType, UserType } from "../../interfaces/Types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const CustomDrawerContent = (props: any) => {
-  const {t} = useTranslation();
-  const {portal} = useAppSelector(state => state.auth);
-  const {top} = useSafeAreaInsets();
+  const { t } = useTranslation();
+  const { portal } = useAppSelector((state) => state.auth);
+  const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [isLogOut, setIsLogOut] = useState(false);
 
   const drawer: any =
     portal === UserType.DEALER
       ? dealerDrawerOption
-      : portal === UserType.DISTRIBUTOR && distributorDrawerOption;
+      : portal === UserType.DISTRIBUTOR
+      ? distributorDrawerOption
+      : portal === UserType.ASO
+      ? asoDrawerOption
+      : (portal === UserType.ENGINEER ||
+        portal === UserType.MASON) ? masonANdEngineerDrawerOption : [];
 
   const IdDes =
     portal === UserType.DEALER
-      ? t('drawer.dealerCode')
-      : portal === UserType.DISTRIBUTOR && t('drawer.distributorID');
+      ? t("drawer.dealerCode")
+      : portal === UserType.DISTRIBUTOR
+      ? t("drawer.distributorID")
+      : portal === UserType.ASO ? "ASO ID" : portal === UserType.MASON ? "Mason ID" : "Engineer ID";
 
   return (
-    <View style={{marginTop: top}}>
+    <View style={{ marginTop: top }}>
       <View style={styles.topHeaderView}>
         <View style={styles.imageRowView}>
-          <Image source={{uri: userProfileImage}} style={styles.userProfile} />
+          <Image
+            source={{ uri: userProfileImage }}
+            style={styles.userProfile}
+          />
           <View>
             <Text style={styles.userName}>Rajesh Kumar</Text>
-            <Text style={styles.code}>
-              {IdDes} : BDMDL0001
-            </Text>
+            <Text style={styles.code}>{IdDes} : BDMDL0001</Text>
           </View>
         </View>
-        <Pressable >
+        <Pressable>
           <Image source={IconsPath.edit} style={styles.edit} />
         </Pressable>
       </View>
@@ -72,7 +82,7 @@ const CustomDrawerContent = (props: any) => {
                 navigation.navigate(item.routes, {
                   screen: RouteString.BottomTabNavigator,
                 });
-              } else if (item.name === 'drawer.logOut') {
+              } else if (item.name === "drawer.logOut") {
                 setIsLogOut(true);
               } else if (
                 item.routes === RouteString.PlaceOrderScreen ||
@@ -95,7 +105,8 @@ const CustomDrawerContent = (props: any) => {
                   },
                 });
               }
-            }}>
+            }}
+          >
             <Image
               source={item.icons}
               style={styles.edit}
@@ -119,20 +130,20 @@ const styles = StyleSheet.create({
   userProfile: {
     width: isiPAD ? wp(9) : wp(13),
     height: isiPAD ? wp(9) : wp(13),
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: 100,
     marginRight: wp(2),
   },
   topHeaderView: {
     marginHorizontal: wp(5),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: hp(3),
   },
   imageRowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   userName: {
     color: colors.black,
@@ -147,11 +158,11 @@ const styles = StyleSheet.create({
   edit: {
     width: isiPAD ? wp(4.5) : wp(6),
     height: isiPAD ? wp(4.5) : wp(6),
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: wp(5),
     marginBottom: hp(3),
   },
@@ -159,6 +170,6 @@ const styles = StyleSheet.create({
     fontSize: RFValue(18),
     fontFamily: FontPath.OutfitRegular,
     marginLeft: wp(3),
-    lineHeight:hp(3.5)
+    lineHeight: hp(3.5),
   },
 });

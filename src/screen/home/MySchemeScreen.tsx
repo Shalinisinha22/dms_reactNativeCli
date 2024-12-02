@@ -1,21 +1,21 @@
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {colors} from '../../utils/Colors';
-import {FontPath} from '../../utils/FontPath';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import DealerSchemeView from '../../components/scheme/DealerSchemeView';
-import {ImagePath} from '../../utils/ImagePath';
-import { useTranslation } from 'react-i18next';
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import DealerSchemeView from "../../components/scheme/DealerSchemeView";
+import { ImagePath } from "../../utils/ImagePath";
+import { useTranslation } from "react-i18next";
 
 const MySchemeScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   return (
     <SafeAreaContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.mySchemeView}>
-            <Text style={styles.title}>{t('myScheme.myScheme')}</Text>
+            <Text style={styles.title}>{t("myScheme.myScheme")}</Text>
             <DealerSchemeView />
           </View>
           <DealerSchemeView />
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   schemeImage: {
     width: wp(100),
-    resizeMode: 'contain',
+    resizeMode: "contain",
     height: wp(50),
   },
 });

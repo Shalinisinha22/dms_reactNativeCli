@@ -1,33 +1,32 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import BackIcons from '../../assets/svg/BackIcons';
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import BackIcons from "../../assets/svg/BackIcons";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import VerifyOtpIcons from '../../assets/svg/VerifyOtpIcons';
-import {FontPath} from '../../utils/FontPath';
-import {colors} from '../../utils/Colors';
-import {OtpInput} from 'react-native-otp-entry';
-import Button from '../../components/common/Button';
-import { RouteString } from '../../navigation/RouteString';
-import { useTranslation } from 'react-i18next';
+} from "@react-navigation/native";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import VerifyOtpIcons from "../../assets/svg/VerifyOtpIcons";
+import { FontPath } from "../../utils/FontPath";
+import { colors } from "../../utils/Colors";
+import { OtpInput } from "react-native-otp-entry";
+import Button from "../../components/common/Button";
+import { RouteString } from "../../navigation/RouteString";
+import { useTranslation } from "react-i18next";
 
 const VerifyOTPScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [timer, setTimer] = useState(0); // Timer state
-
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timer > 0) {
       interval = setInterval(() => {
-        setTimer(prev => prev - 1);
+        setTimer((prev) => prev - 1);
       }, 1000);
     }
     return () => clearInterval(interval); // Cleanup interval
@@ -35,7 +34,7 @@ const VerifyOTPScreen = () => {
 
   const handleResendCode = () => {
     setTimer(60); // Start the timer for 60 seconds
-    console.log('Resend code triggered');
+    console.log("Resend code triggered");
     // Trigger API call to resend OTP here
   };
 
@@ -44,19 +43,18 @@ const VerifyOTPScreen = () => {
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <Pressable
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.goBack()}
+        >
           <BackIcons />
         </Pressable>
         <View style={styles.mainView}>
           <VerifyOtpIcons />
-          <Text style={styles.title}>{t('verifyOTP.verifyOTP')}</Text>
-          <Text style={styles.des}>
-            {t('verifyOTP.des')}
-          </Text>
+          <Text style={styles.title}>{t("verifyOTP.verifyOTP")}</Text>
+          <Text style={styles.des}>{t("verifyOTP.des")}</Text>
           <Text style={styles.phoneNumber}>+91 8401272015</Text>
           <OtpInput
             numberOfDigits={6}
-            onTextChange={text => console.log(text)}
+            onTextChange={(text) => console.log(text)}
             theme={{
               filledPinCodeContainerStyle: styles.otpContainer,
               focusedPinCodeContainerStyle: styles.otpContainer,
@@ -67,16 +65,20 @@ const VerifyOTPScreen = () => {
           />
           <View style={styles.changeNoRowView}>
             <Pressable onPress={() => navigation.goBack()}>
-              <Text style={styles.changeNo}>{t('verifyOTP.changeMobileNo')}</Text>
+              <Text style={styles.changeNo}>
+                {t("verifyOTP.changeMobileNo")}
+              </Text>
             </Pressable>
             <Pressable onPress={handleResendCode} disabled={timer > 0}>
               <Text style={[styles.changeNo, timer > 0 && styles.disabledText]}>
-                {timer > 0 ? t('verifyOTP.resendIn', { timer }) : t('verifyOTP.resendCode')}
+                {timer > 0
+                  ? t("verifyOTP.resendIn", { timer })
+                  : t("verifyOTP.resendCode")}
               </Text>
             </Pressable>
           </View>
           <Button
-            buttonName={t('verifyOTP.verifyOTP1')}
+            buttonName={t("verifyOTP.verifyOTP1")}
             isLoading={false}
             onPress={() => navigation.navigate(RouteString.SetPasswordScreen)}
           />
@@ -93,16 +95,16 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(5),
   },
   mainView: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontFamily: FontPath.OutfitBold,
     fontSize: RFValue(26),
     marginVertical: hp(2),
-    lineHeight:hp(5),
+    lineHeight: hp(5),
   },
   des: {
-    textAlign: 'center',
+    textAlign: "center",
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(15),
     color: colors.darkGray,
@@ -132,8 +134,8 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitMedium,
   },
   changeNoRowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: wp(80),
   },
   disabledText: {

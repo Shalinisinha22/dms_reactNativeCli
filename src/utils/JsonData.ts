@@ -44,12 +44,12 @@ export const dealerDrawerOption = [
   },
   {
     name: 'drawer.orderPlacement',
-    icons: IconsPath.placeOrder,
+    icons: IconsPath.placeOrderRed,
     routes: RouteString.PlaceOrderScreen
   },
   {
     name: 'drawer.orderHistory',
-    icons: IconsPath.orderHistory,
+    icons: IconsPath.orderHistoryRed,
     routes:RouteString.OrderHistory
   },
   {
@@ -91,14 +91,9 @@ export const distributorDrawerOption = [
     routes: RouteString.DropDownNavigator
   },
   {
-    name: 'drawer.orderApproval',
-    icons: IconsPath.placeOrder,
-    routes: RouteString.PlaceOrderScreen
-  },
-  {
     name: 'drawer.orderList',
-    icons: IconsPath.orderHistory,
-    routes:RouteString.OrderHistory
+    icons: IconsPath.orderHistoryRed,
+    routes:RouteString.PlaceOrderScreen
   },
   {
     name: 'drawer.myLedger',
@@ -113,12 +108,12 @@ export const distributorDrawerOption = [
   {
     name: 'drawer.dealerwiseSales',
     icons: IconsPath.dealerWiseSales,
-    routes:RouteString.InvoiceScreen
+    routes:RouteString.DealerWiseSalesScreen
   },
   {
     name: 'drawer.dealerManagemet',
     icons: IconsPath.invocie,
-    routes:RouteString.DealerManagementScreen
+    routes:RouteString.OrderHistory
   },
   {
     name: 'drawer.RunningScheme',
@@ -129,6 +124,87 @@ export const distributorDrawerOption = [
     name: 'drawer.brandingRequest',
     icons: IconsPath.branding,
     routes:RouteString.BrandingRequestScreen
+  },
+  {
+    name: 'drawer.support',
+    icons: IconsPath.support,
+    routes:RouteString.SupportRequestScreen
+  },
+  {
+    name: 'drawer.logOut',
+    icons: IconsPath.logOut,
+    routes:''
+  }
+]
+
+export const asoDrawerOption = [
+  {
+    name: 'drawer.dashboard',
+    icons: IconsPath.dashboard,
+    routes: RouteString.DropDownNavigator
+  },
+  {
+    name: 'drawer.orderList',
+    icons: IconsPath.orderHistoryRed,
+    routes:RouteString.PlaceOrderScreen
+  },
+  {
+    name: 'drawer.dealerwiseSales',
+    icons: IconsPath.dealerWiseSales,
+    routes:RouteString.DealerWiseSalesScreen
+  },
+  {
+    name: 'drawer.dealerManagemet',
+    icons: IconsPath.invocie,
+    routes:RouteString.DealerManagementScreen
+  },
+  {
+    name: 'drawer.masonManagement',
+    icons: IconsPath.mason,
+    routes:RouteString.MasonManagementScreen
+  },
+  {
+    name: 'drawer.engineerManagement',
+    icons: IconsPath.engineer,
+    routes:RouteString.EngineerManagementScreen
+  },
+  {
+    name: 'drawer.brandingMaterialquery',
+    icons: IconsPath.brandingMaterial,
+    routes:RouteString.BrandingMaterialQueryScreen
+  },
+  {
+    name: 'drawer.support',
+    icons: IconsPath.support,
+    routes:RouteString.SupportRequestScreen
+  },
+  {
+    name: 'drawer.logOut',
+    icons: IconsPath.logOut,
+    routes:''
+  }
+]
+
+export const masonANdEngineerDrawerOption = [
+  {
+    name: 'drawer.dashboard',
+    icons: IconsPath.dashboard,
+    routes: RouteString.DropDownNavigator
+  },
+  {
+    name: 'drawer.referralSubmission',
+    icons: IconsPath.placeOrderRed,
+    routes: RouteString.PlaceOrderScreen
+  },
+  {
+    name: 'drawer.rewardStatus',
+    icons: IconsPath.orderHistoryRed,
+    routes: RouteString.OrderHistory
+  },
+  {
+    name: 'drawer.RunningScheme',
+    icons: IconsPath.scheme,
+    routes:RouteString.ViewSchemeScreen
   },
   {
     name: 'drawer.support',
@@ -193,32 +269,70 @@ export const brandingRequestItem = [
   }
 ]
 
-export const orderHistoryType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.dispatched']
+export const orderHistoryType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.dispatched', 'orderHistory.pending']
 
 export const orderMoreOption = [
   {
     name: 'dashboard.approveOrder',
     icons: IconsPath.checkRound,
-    routes: ''
+    routes: RouteString.PlaceOrderScreen
   },
   {
     name: 'dashboard.manageOrder',
     icons: IconsPath.placeOrder,
-    routes: ''
+    routes: RouteString.PlaceOrderScreen
   },
   {
     name: 'dashboard.viewLedger',
     icons: IconsPath.easy,
-    routes: ''
+    routes: RouteString.LedgerScreen
   },
   {
     name: 'dashboard.onboardDealer',
     icons: IconsPath.profile,
-    routes: ''
+    routes: RouteString.NewDealerOnboardScreen
   }
 ]
 
-export const dealerManagementType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected']
+export const asoMoreOption = [
+  {
+    name: 'dashboard.approveOrder',
+    icons: IconsPath.checkRound,
+    routes:  RouteString.PlaceOrderScreen
+  },
+  {
+    name: 'dashboard.manageOrder',
+    icons: IconsPath.placeOrder,
+    routes: RouteString.OrderHistory
+  },
+  {
+    name: 'dashboard.viewLedger',
+    icons: IconsPath.easy,
+    routes: RouteString.LedgerScreen
+  },
+]
+
+export const masonAndEngineerMoreOption = [
+  {
+    name: 'drawer.referralSubmission',
+    icons: IconsPath.checkRound,
+    routes:  RouteString.PlaceOrderScreen
+  },
+  {
+    name: 'drawer.rewardStatus',
+    icons: IconsPath.placeOrder,
+    routes: RouteString.OrderHistory
+  },
+  {
+    name: 'drawer.rducationalResources',
+    icons: IconsPath.easy,
+    routes: ''
+  },
+]
+
+export const dealerManagementType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
+export const asorManagementType = ['orderHistory.all', ,'orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
+
 
 export const supportRequestType = [
   {

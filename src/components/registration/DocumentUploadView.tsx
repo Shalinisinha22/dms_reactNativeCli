@@ -9,14 +9,15 @@ const DocumentUploadView = ({
   title,
   icons,
   onPress,
-  fileName
+  fileName,
+  isRequired
 }: DocumentUploadViewProps) => {
   return (
     <Pressable style={styles.button} onPress={onPress}>
       <View>
       <Text style={styles.title}>
         {title}
-        <Text style={{color: colors.primary}}> *</Text>
+       {isRequired && <Text style={{color: colors.primary}}> *</Text>}
       </Text>
      {fileName && <Text>{fileName}</Text>}
       </View>

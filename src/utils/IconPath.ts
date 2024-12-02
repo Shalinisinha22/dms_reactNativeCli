@@ -40,5 +40,10 @@ export const IconsPath = {
     checkRound: require('../assets/icons/checkRound.png'),
     profile: require('../assets/icons/profile.png'),
     search: require('../assets/icons/search.png'),
-    location: require('../assets/icons/location.png')
+    location: require('../assets/icons/location.png'),
+    engineer: require('../assets/icons/engineer.png'),
+    mason: require('../assets/icons/mason.png'),
+    brandingMaterial: require('../assets/icons/brandingMaterial.png'),
+    orderHistoryRed: require('../assets/icons/orderHistoryRed.png'),
+    placeOrderRed: require('../assets/icons/placeOrderRed.png')
 }

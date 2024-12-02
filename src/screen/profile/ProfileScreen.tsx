@@ -5,86 +5,88 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import React, {useState} from 'react';
-import SafeAreaContainer from '../../components/common/SafeAreaContainer';
-import {colors} from '../../utils/Colors';
-import {hp, isiPAD, RFValue, wp} from '../../helper/Responsive';
-import {FontPath} from '../../utils/FontPath';
-import {userProfileImage} from '../../utils/JsonData';
-import UserInfoRowView from '../../components/common/UserInfoRowView';
-import {IconsPath} from '../../utils/IconPath';
-import TextInputFieldOptional from '../../components/common/TextInputFieldOptional';
-import Button from '../../components/common/Button';
-import {useTranslation} from 'react-i18next';
+} from "react-native";
+import React, { useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { colors } from "../../utils/Colors";
+import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
+import { FontPath } from "../../utils/FontPath";
+import { userProfileImage } from "../../utils/JsonData";
+import UserInfoRowView from "../../components/common/UserInfoRowView";
+import { IconsPath } from "../../utils/IconPath";
+import TextInputFieldOptional from "../../components/common/TextInputFieldOptional";
+import Button from "../../components/common/Button";
+import { useTranslation } from "react-i18next";
 
 const ProfileScreen = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [isEdit, setIsEdit] = useState(false);
-  const [birthDate, setBirthDate] = useState('');
-  const [familyName, setFamilyName] = useState('');
-  const [relationShip, setRelationShip] = useState('');
-  const [dob, setDob] = useState('');
+  const [birthDate, setBirthDate] = useState("");
+  const [familyName, setFamilyName] = useState("");
+  const [relationShip, setRelationShip] = useState("");
+  const [dob, setDob] = useState("");
 
   return (
     <SafeAreaContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.redView}>
-          <Text style={styles.myProfile}>{t('myProfile.myProfile')}</Text>
+          <Text style={styles.myProfile}>{t("myProfile.myProfile")}</Text>
           <View style={styles.profileView}>
             <View style={styles.shadowView}>
               <Image
-                source={{uri: userProfileImage}}
+                source={{ uri: userProfileImage }}
                 style={styles.userProfile}
               />
             </View>
             <Text style={styles.userName}>Rajesh Kumar</Text>
-            <Text style={styles.dealerCode}>{t('drawer.dealerCode')} : BDMDL0001</Text>
+            <Text style={styles.dealerCode}>
+              {t("drawer.dealerCode")} : BDMDL0001
+            </Text>
           </View>
         </View>
         {isEdit ? (
-          <View style={{marginTop: hp(15)}}>
+          <View style={{ marginTop: hp(15) }}>
             <Text style={styles.personalInfo}>
-              {t('myProfile.personalInfo')}
+              {t("myProfile.personalInfo")}
             </Text>
             <TextInputFieldOptional
-              title={t('registration.yourBirthDate')}
-              placeholder={t('registration.DDMM')}
+              title={t("registration.yourBirthDate")}
+              placeholder={t("registration.DDMM")}
               value={birthDate}
-              onChangeText={text => setBirthDate(text)}
+              onChangeText={(text) => setBirthDate(text)}
             />
             <View style={styles.moreMemberView}>
               <TextInputFieldOptional
-                title={t('registration.familyMemberName')}
-                placeholder={t('registration.entreFamilyMemberName')}
+                title={t("registration.familyMemberName")}
+                placeholder={t("registration.entreFamilyMemberName")}
                 mainViewStyle={styles.mainViewStyle}
                 labelStyle={styles.labelStyle}
                 InputViewStyle={styles.inputViewStyle}
                 value={familyName}
-                onChangeText={text => setFamilyName(text)}
+                onChangeText={(text) => setFamilyName(text)}
               />
               <TextInputFieldOptional
-                title={t('registration.relationShipWithMember')}
-                placeholder={t('registration.enterRelatioshipWithEmeber')}
+                title={t("registration.relationShipWithMember")}
+                placeholder={t("registration.enterRelatioshipWithEmeber")}
                 labelStyle={styles.labelStyle}
                 InputViewStyle={styles.inputViewStyle}
                 value={relationShip}
-                onChangeText={text => setRelationShip(text)}
+                onChangeText={(text) => setRelationShip(text)}
               />
               <TextInputFieldOptional
-                title={t('registration.birthDate')}
-                placeholder={t('registration.DDMM')}
+                title={t("myProfile.birthData")}
+                placeholder={t("registration.DDMM")}
                 labelStyle={styles.labelStyle}
                 InputViewStyle={styles.inputViewStyle}
                 value={dob}
-                onChangeText={text => setDob(text)}
+                onChangeText={(text) => setDob(text)}
               />
             </View>
             <Button
-              buttonName={t('myProfile.save')}
+              buttonName={t("myProfile.save")}
               isLoading={false}
               onPress={() => setIsEdit(false)}
-              buttonStyle={{marginBottom: hp(2)}}
+              buttonStyle={{ marginBottom: hp(2) }}
             />
           </View>
         ) : (
@@ -95,46 +97,47 @@ const ProfileScreen = () => {
                 {
                   marginTop: hp(15),
                 },
-              ]}>
+              ]}
+            >
               <UserInfoRowView
-                title={t('myProfile.email')}
+                title={t("myProfile.email")}
                 userInfo="Andrewmarcel@gmail.com"
               />
               <UserInfoRowView
-                title={t('myProfile.mobileNo')}
+                title={t("myProfile.mobileNo")}
                 userInfo="+918989898989"
               />
               <UserInfoRowView
-                title={t('myProfile.birthData')}
+                title={t("myProfile.birthData")}
                 userInfo="12 Sept"
               />
               <UserInfoRowView
-                title={t('myProfile.counterAddress')}
+                title={t("myProfile.counterAddress")}
                 userInfo="D-23 Apple Square Building Nr Mater place banglore"
               />
             </View>
             <View style={styles.userInfoCard}>
               <View style={styles.memberRowView}>
-                <Text style={styles.member}>{t('myProfile.member')} 1</Text>
+                <Text style={styles.member}>{t("myProfile.member")} 1</Text>
                 <Pressable onPress={() => setIsEdit(true)}>
                   <Image source={IconsPath.edit} style={styles.edit} />
                 </Pressable>
               </View>
               <View>
                 <Text style={styles.familyName}>
-                  {t('registration.familyMemberName')}
+                  {t("registration.familyMemberName")}
                 </Text>
                 <Text style={styles.name}>Rajesh Shah</Text>
               </View>
-              <View style={{marginVertical: hp(1.5)}}>
+              <View style={{ marginVertical: hp(1.5) }}>
                 <Text style={styles.familyName}>
-                  {t('registration.relationShipWithMember')}
+                  {t("registration.relationShipWithMember")}
                 </Text>
                 <Text style={styles.name}>My Memeber</Text>
               </View>
               <View>
                 <Text style={styles.familyName}>
-                  {t('myProfile.birthData')}
+                  {t("myProfile.birthData")}
                 </Text>
                 <Text style={styles.name}>15 Sept 1954</Text>
               </View>
@@ -162,9 +165,9 @@ const styles = StyleSheet.create({
   },
   profileView: {
     marginTop: hp(8),
-    position: 'absolute',
-    alignSelf: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    alignSelf: "center",
+    alignItems: "center",
   },
   shadowView: {
     shadowColor: colors.black,
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
   userProfile: {
     width: isiPAD ? wp(16) : wp(25),
     height: isiPAD ? wp(16) : wp(25),
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: 100,
     borderWidth: 5,
     borderColor: colors.white,
@@ -213,9 +216,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   memberRowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: hp(1.5),
   },
   member: {
@@ -225,8 +228,8 @@ const styles = StyleSheet.create({
   },
   edit: {
     width: isiPAD ? wp(4.5) : wp(6.5),
-    height:  isiPAD ? wp(4.5) :  wp(6.5),
-    resizeMode: 'contain',
+    height: isiPAD ? wp(4.5) : wp(6.5),
+    resizeMode: "contain",
   },
   familyName: {
     color: colors.black,

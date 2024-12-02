@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from 'react'
 import { colors } from '../../utils/Colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TopHeader from './TopHeader';
+import { hp } from '../../helper/Responsive';
 
 interface SafeAreaContainerProps {
   showHeader?: boolean;
@@ -11,7 +12,7 @@ interface SafeAreaContainerProps {
 const SafeAreaContainer: React.FC<PropsWithChildren<SafeAreaContainerProps>> = ({ children, showHeader = true }) => {
   const { top } = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
+    <View style={[styles.container, { paddingTop: top + hp(showHeader ? 0 : 2) }]}>
       {showHeader && <TopHeader />}
       {children}
     </View>
