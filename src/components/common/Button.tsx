@@ -13,7 +13,7 @@ import {ButtonProps} from '../../interfaces/Types';
 
 const Button = ({buttonName, onPress, isLoading, buttonStyle}: ButtonProps) => {
   return (
-    <Pressable style={[styles.button, buttonStyle]} onPress={onPress}>
+    <Pressable style={[styles.button, buttonStyle]} disabled={isLoading} onPress={onPress}>
       {isLoading ? (
         <ActivityIndicator color={colors.white} />
       ) : (

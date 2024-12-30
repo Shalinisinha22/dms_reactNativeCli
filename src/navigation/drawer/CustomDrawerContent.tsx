@@ -27,16 +27,18 @@ import {
 import { RouteString } from "../RouteString";
 import LogoutModal from "../../components/modal/LogoutModal";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "../../redux/Store";
+import { useAppDispatch, useAppSelector } from "../../redux/Store";
 import { drawerItemType, UserType } from "../../interfaces/Types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { authActions } from "../../redux/slice/AuthSlice";
 
 const CustomDrawerContent = (props: any) => {
   const { t } = useTranslation();
-  const { portal } = useAppSelector((state) => state.auth);
+  const { portal, userInfo } = useAppSelector((state) => state.auth);
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [isLogOut, setIsLogOut] = useState(false);
+  const dispatch = useAppDispatch();
 
   const drawer: any =
     portal === UserType.DEALER
@@ -45,15 +47,31 @@ const CustomDrawerContent = (props: any) => {
       ? distributorDrawerOption
       : portal === UserType.ASO
       ? asoDrawerOption
-      : (portal === UserType.ENGINEER ||
-        portal === UserType.MASON) ? masonANdEngineerDrawerOption : [];
+      : portal === UserType.ENGINEER || portal === UserType.MASON
+      ? masonANdEngineerDrawerOption
+      : [];
 
   const IdDes =
     portal === UserType.DEALER
       ? t("drawer.dealerCode")
       : portal === UserType.DISTRIBUTOR
       ? t("drawer.distributorID")
-      : portal === UserType.ASO ? "ASO ID" : portal === UserType.MASON ? "Mason ID" : "Engineer ID";
+      : portal === UserType.ASO
+      ? "ASO ID"
+      : portal === UserType.MASON
+      ? "Mason ID"
+      : "Engineer ID";
+
+  const handleYesOnPress = () => {
+    dispatch(authActions.setPortal(""));
+    dispatch(authActions.setToken(""));
+    dispatch(authActions.setUserInfo({}));
+    dispatch(authActions.setUserStatus("pending"));
+    navigation.reset({
+      index: 0,
+      routes: [{ name: RouteString.OnBording }],
+    });
+  };
 
   return (
     <View style={{ marginTop: top }}>
@@ -64,11 +82,26 @@ const CustomDrawerContent = (props: any) => {
             style={styles.userProfile}
           />
           <View>
-            <Text style={styles.userName}>Rajesh Kumar</Text>
-            <Text style={styles.code}>{IdDes} : BDMDL0001</Text>
+            <Text style={styles.userName}>{userInfo?.name}</Text>
+            <Text style={styles.code}>
+              {IdDes} :{" "}
+              {userInfo?.distributorNumber ||
+                userInfo?.dealerNumber ||
+                userInfo?.asoNumber ||
+                userInfo?.masonNumber}
+            </Text>
           </View>
         </View>
-        <Pressable>
+        <Pressable
+          onPress={() =>
+            navigation.navigate(RouteString.DropDownNavigator, {
+              screen: RouteString.BottomTabNavigator,
+              params: {
+                screen: RouteString.ProfileScreen,
+              },
+            })
+          }
+        >
           <Image source={IconsPath.edit} style={styles.edit} />
         </Pressable>
       </View>
@@ -119,6 +152,7 @@ const CustomDrawerContent = (props: any) => {
       <LogoutModal
         isVisible={isLogOut}
         backOnPress={() => setIsLogOut(!isLogOut)}
+        yesOnPress={handleYesOnPress}
       />
     </View>
   );

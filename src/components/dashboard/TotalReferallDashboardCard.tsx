@@ -5,22 +5,22 @@ import { hp, RFValue, wp } from '../../helper/Responsive'
 import { FontPath } from '../../utils/FontPath'
 import { useTranslation } from 'react-i18next'
 
-const TotalReferallDashboardCard = () => {
+const TotalReferallDashboardCard = ({item}:{item:any}) => {
     const {t} = useTranslation();
   return (
     <View style={{marginBottom:hp(2)}}>
      <View style={styles.blueBox}>
         <Text style={styles.title}>{t('referralSubmission.totalReferralClaimed')}</Text>
-        <Text style={styles.count}>10</Text>
+        <Text style={styles.count}>{item?.total}</Text>
      </View>
      <View style={styles.secondRowBox}>
         <View style={styles.seoncdBox}>
             <Text style={styles.approved}>{t('referralSubmission.totalReferralClaimedApproved')}</Text>
-            <Text style={styles.count}>10</Text>
+            <Text style={styles.count}>{item?.approved}</Text>
         </View>
         <View style={[styles.seoncdBox,{backgroundColor:colors.primary}]}>
             <Text  style={styles.approved}>{t('referralSubmission.totalReferralClaimedRejected')}</Text>
-            <Text style={styles.count}>10</Text>
+            <Text style={styles.count}>{item?.rejected}</Text>
         </View>
      </View>
     </View>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
      title:{
         color:colors.white,
         fontFamily:FontPath.OutfitMedium,
-        fontSize:RFValue(22),
+        fontSize:RFValue(18),
         lineHeight:hp(4)
     }
 })

@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import BackIcons from "../../assets/svg/BackIcons";
@@ -12,7 +12,7 @@ import {
 import { ImagePath } from "../../utils/ImagePath";
 import { colors } from "../../utils/Colors";
 import { FontPath } from "../../utils/FontPath";
-import { useAppSelector } from "../../redux/Store";
+import { useAppDispatch, useAppSelector } from "../../redux/Store";
 import TextInputField from "../../components/common/TextInputField";
 import { useFormik } from "formik";
 import { RouteString } from "../../navigation/RouteString";
@@ -21,29 +21,50 @@ import Button from "../../components/common/Button";
 import { useTranslation } from "react-i18next";
 import { commonStyle } from "../../utils/commonStyles";
 import { UserType } from "../../interfaces/Types";
+import { useSetPassword } from "../../api/query/AuthService";
+import { authActions } from "../../redux/slice/AuthSlice";
 
 const SetPasswordScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { portal } = useAppSelector((state) => state.auth);
+  const { mutateAsync: createPassword } = useSetPassword();
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
     useFormik({
       initialValues: { newPassword: "", passwordConfirmation: "" },
       validationSchema: setPasswordValidationSchema,
-      onSubmit: (values) =>
-        navigation.navigate(RouteString.RegistrationFormScreen),
+      onSubmit: async (values) => {
+        setIsApiLoading(true);
+        try {
+          const res = await createPassword({
+            new_password: values.newPassword,
+            confirm_password: values.passwordConfirmation,
+          });
+          console.log('res',res)
+          if (res) {
+            setIsApiLoading(false);
+            dispatch(authActions.setToken(res.access_token.token));
+            handleNavigation();
+          }
+        } catch (error) {
+          setIsApiLoading(false);
+          console.log("SetPasswordScreen", error);
+        }
+      },
     });
 
-    const handleNavigation = () => {
-      if(portal === UserType.DEALER || portal === UserType.DISTRIBUTOR){
-        navigation.navigate(RouteString.RegistrationFormScreen)
-      } else if (portal === UserType.ASO){
-        navigation.navigate(RouteString.ASORegistrationScreen)
-      } else if (portal === UserType.ENGINEER || portal === UserType.MASON){
-        navigation.navigate(RouteString.MasonAndEngineerRegistrationScreen)
-      } 
+  const handleNavigation = () => {
+    if ((portal === UserType.DEALER) || (portal === UserType.DISTRIBUTOR)) {
+      navigation.navigate(RouteString.RegistrationFormScreen);
+    } else if (portal === UserType.ASO) {
+      navigation.navigate(RouteString.ASORegistrationScreen);
+    } else if ((portal === UserType.ENGINEER) || (portal === UserType.MASON)) {
+      navigation.navigate(RouteString.MasonAndEngineerRegistrationScreen);
     }
+  };
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -81,8 +102,8 @@ const SetPasswordScreen = () => {
         />
         <Button
           buttonName={t("setPassword.submit")}
-          isLoading={false}
-          onPress={handleNavigation}
+          isLoading={isApiLoading}
+          onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>

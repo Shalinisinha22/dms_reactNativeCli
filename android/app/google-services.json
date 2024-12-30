@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "299988554736",
+    "project_id": "dms-app-95df0",
+    "storage_bucket": "dms-app-95df0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299988554736:android:6f6257e5bd775f41990335",
+        "android_client_info": {
+          "package_name": "com.balmukund"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTeHorRTpddxntFApc8-wrOquDmhW18Y8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

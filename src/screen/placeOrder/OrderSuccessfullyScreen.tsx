@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { IconsPath } from "../../utils/IconPath";
@@ -6,9 +6,12 @@ import { useTranslation } from "react-i18next";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import { colors } from "../../utils/Colors";
 import { FontPath } from "../../utils/FontPath";
+import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
+import { RouteString } from "../../navigation/RouteString";
 
 const OrderSuccessfullyScreen = () => {
   const { t } = useTranslation();
+   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   return (
     <SafeAreaContainer>
       <View style={styles.mainView}>
@@ -22,6 +25,11 @@ const OrderSuccessfullyScreen = () => {
         <Text style={styles.des}>
           {t("success.yourOrderHasBeenPlacedSuccessfullyDes")}
         </Text>
+        <Pressable 
+        onPress={() => navigation.navigate(RouteString.BottomTabNavigator, {screen: RouteString.Home})}
+        style={styles.button}>
+         <Text  style={styles.dashboardText}>{t('dashboard.gotodashboard')}</Text>
+      </Pressable>
       </View>
     </SafeAreaContainer>
   );
@@ -60,4 +68,12 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(18),
   },
+  button: {
+    marginTop:hp(2)
+  },
+  dashboardText:{
+    textAlign:'center',
+    fontFamily:FontPath.OutfitSemiBold,
+    color:colors.primary
+   }
 });

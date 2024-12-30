@@ -25,7 +25,7 @@ const ChoosePortalAccessScreen = () => {
 
   const handleSelectPortal = (name: string) => {
     setIsSelectPortal(name);
-    dispatch(authActions.setPortal(name));
+    dispatch(authActions.setPortal(name?.toLocaleLowerCase()));
     navigation.navigate(RouteString.Auth);
   };
 

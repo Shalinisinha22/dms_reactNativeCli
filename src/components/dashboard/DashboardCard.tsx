@@ -1,16 +1,20 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {IconsPath} from '../../utils/IconPath';
-import OrderTracking from '../common/OrderTracking';
-import {colors} from '../../utils/Colors';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {FontPath} from '../../utils/FontPath';
-import {orderStatusOption} from '../../utils/JsonData';
-import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
-import { useTranslation } from 'react-i18next';
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { IconsPath } from "../../utils/IconPath";
+import OrderTracking from "../common/OrderTracking";
+import { colors } from "../../utils/Colors";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { FontPath } from "../../utils/FontPath";
+import { orderStatusOption } from "../../utils/JsonData";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const DashboardCard = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [isOptionShow, setIsOptionShow] = useState(false);
 
@@ -18,16 +22,19 @@ const DashboardCard = () => {
     <View>
       <Pressable
         style={styles.cardView}
-        onPress={() => setIsOptionShow(!isOptionShow)}>
+        onPress={() => setIsOptionShow(!isOptionShow)}
+      >
         <View style={styles.redView}>
           <View style={styles.redInnerView}>
             <Image source={IconsPath.orderStatus} style={styles.icons} />
           </View>
         </View>
         <View style={styles.textView}>
-          <Text style={styles.newOrder}>{t('dashboard.newOrderStatus')}</Text>
-          <Text style={styles.orderNo}>{t('dashboard.orderNo')} : 121212</Text>
-          <Text style={styles.orderStatus}>{t('dashboard.orderDate')} : 15th Oct 2024</Text>
+          <Text style={styles.newOrder}>{t("dashboard.newOrderStatus")}</Text>
+          <Text style={styles.orderNo}>{t("dashboard.orderNo")} : 121212</Text>
+          <Text style={styles.orderStatus}>
+            {t("dashboard.orderDate")} : 15th Oct 2024
+          </Text>
         </View>
         <OrderTracking selectedStep={2} isCheckIcons={true} />
       </Pressable>
@@ -35,7 +42,11 @@ const DashboardCard = () => {
         <View style={styles.statusUpdateView}>
           {orderStatusOption.map((item, index) => {
             return (
-              <Pressable style={styles.button} key={index} onPress={() => navigation.navigate(item.routes)}>
+              <Pressable
+                style={styles.button}
+                key={index}
+                onPress={() => navigation.navigate(item.routes)}
+              >
                 <Image
                   source={item.icons}
                   style={styles.edit}
@@ -70,10 +81,10 @@ const styles = StyleSheet.create({
     marginBottom: hp(2),
   },
   redView: {
-    position: 'absolute',
+    position: "absolute",
     height: hp(23),
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   redInnerView: {
     width: wp(28),
@@ -84,16 +95,16 @@ const styles = StyleSheet.create({
     top: hp(-4),
     paddingLeft: wp(6),
     paddingTop: hp(3),
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   icons: {
     width: wp(8),
     height: wp(8),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   textView: {
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: hp(2.5),
     marginLeft: wp(3),
   },
@@ -115,8 +126,8 @@ const styles = StyleSheet.create({
     marginTop: hp(0.5),
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginHorizontal: wp(5),
     marginBottom: hp(3),
   },
@@ -129,7 +140,7 @@ const styles = StyleSheet.create({
   edit: {
     width: wp(6),
     height: wp(6),
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   statusUpdateView: {
     backgroundColor: colors.white,

@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -15,43 +22,112 @@ import { useTranslation } from "react-i18next";
 import CustomToggle from "../../components/common/CustomToggle";
 import TextInputField from "../../components/common/TextInputField";
 import { useFormik } from "formik";
-import {
-  masonOnboard,
-} from "../../utils/ValidationSchema";
+import { masonOnboard } from "../../utils/ValidationSchema";
 import DropDownView from "../../components/common/DropDownView";
-import { supportRequestType } from "../../utils/JsonData";
+import { city, masonSkill } from "../../utils/JsonData";
 import DocumentUploadView from "../../components/registration/DocumentUploadView";
 import Button from "../../components/common/Button";
 import { RouteString } from "../../navigation/RouteString";
 import DocumentPicker from "react-native-document-picker";
+import { useNewMasonRegister } from "../../api/query/MasonManagementService";
+import SearchDropDownView from "../../components/common/SearchDropDownView";
+import Toast from "react-native-toast-message";
 
 const AsoNewMasonOnboardScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const [uploadedDocuments, setUploadedDocuments] = useState<any>({}); // State to store documents
+  const [uploadedDocuments, setUploadedDocuments] = useState<any>({
+    aadhaar_card: null,
+    pan_card: null,
+    profile_pic: null,
+  });
+  const { mutateAsync: createNewMasonRegister } = useNewMasonRegister();
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const [isOn, setOn] = useState(false);
 
-  const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
-    useFormik({
-      initialValues: {
-        name: "",
-        email: "",
-        phoneNumber: "",
-        city: "",
-        address: "",
-        masonSkill: "",
-      },
-      validationSchema: masonOnboard,
-      onSubmit: (values) => {},
-    });
+  const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
+
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      phoneNumber: "",
+      city: "",
+      address: "",
+      masonSkill: "",
+    },
+    validationSchema: masonOnboard,
+    onSubmit: async (values) => {
+      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
+        (doc) => doc !== null
+      );
+
+      if (!allDocumentsUploaded) {
+        Toast.show({
+          type: "error",
+          text1: "Please upload all the required documents",
+        });
+        return;
+      }
+
+      try {
+        setIsApiLoading(true);
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("email", values.email);
+        formData.append("mobile_number", values.phoneNumber);
+        formData.append("skill", values.masonSkill);
+        formData.append("work_city", values.city);
+        formData.append("address", values.address);
+        formData.append("status", isOn ? "approved" : "pending");
+        fileFields.forEach((field) => {
+          if (uploadedDocuments[field]) {
+            formData.append(field, {
+              uri: uploadedDocuments[field].uri,
+              type: uploadedDocuments[field].type,
+              name: uploadedDocuments[field].name,
+            });
+          }
+        });
+        const res = await createNewMasonRegister(formData);
+        if (res) {
+          setIsApiLoading(false);
+          navigation.navigate(RouteString.DealerSuccessfullyScreen);
+        }
+      } catch (error:any) {
+        setIsApiLoading(false);
+        if(error.respons?.errors?.name){
+        Toast.show({
+          type: "error",
+          text1: error.respons?.errors?.name,
+        });
+      }
+        console.log("AsoNewMasonOnboardScreen", error.response?.errors);
+      }
+    },
+  });
 
   const handleToggle = (isOn: boolean) => {
-    console.log("Toggle is now:", isOn);
+    setOn(isOn);
   };
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
+    Keyboard.dismiss();
     try {
       const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf], // Restrict to PDFs
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.images,
+          DocumentPicker.types.doc,
+        ],
         presentationStyle: "fullScreen",
       });
 
@@ -84,7 +160,7 @@ const AsoNewMasonOnboardScreen = () => {
         </View>
         <View style={styles.changeStatusRowView}>
           <Text style={styles.changeStatus}>
-            {t("masonManagement.changeMasonStatus")} :
+            {t("masonOnboard.changeMasonStatus")} :
           </Text>
           <CustomToggle initialValue={false} onToggle={handleToggle} />
         </View>
@@ -121,28 +197,30 @@ const AsoNewMasonOnboardScreen = () => {
           touched={touched.phoneNumber}
           errors={errors.phoneNumber}
           isRequired={true}
+          maxLength={10}
         />
         <DropDownView
           zIndex={2}
           label={t("masonOnboard.masonSkillType")}
-          placeHolder={t("masonOnboard.selectMasonSkillType")}
+          placeHolder={
+            values.masonSkill
+              ? values.masonSkill
+              : t("masonOnboard.selectMasonSkillType")
+          }
           mainViewStyle={{ marginTop: hp(3) }}
-          data={supportRequestType}
-          selectedName={function (name: string): void {
-            console.log("name", name);
-          }}
+          data={masonSkill}
+          selectedName={(name) => setFieldValue("masonSkill", name)}
           errors={errors.masonSkill}
         />
-        <DropDownView
+        <SearchDropDownView
           zIndex={1}
           label={t("ASODealerOnboard.city")}
           placeHolder={t("ASODealerOnboard.selectCity")}
-          mainViewStyle={{ marginTop: hp(3) }}
-          data={supportRequestType}
-          selectedName={function (name: string): void {
-            console.log("name", name);
-          }}
+          data={city}
+          selectedName={(value) => setFieldValue("city", value)}
           errors={errors.city}
+          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
+          isRequired={true}
         />
         <TextInputField
           title={t("ASODealerOnboard.address")}
@@ -162,66 +240,42 @@ const AsoNewMasonOnboardScreen = () => {
         </Text>
         <DocumentUploadView
           icons={
-            uploadedDocuments?.aadharCard?.name
+            uploadedDocuments?.aadhaar_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("aadharCard")}
+          onPress={() => handleDocumentSelection("aadhaar_card")}
           title={t("registration.aadharCardUpload")}
-          fileName={uploadedDocuments?.aadharCard?.name}
+          fileName={uploadedDocuments?.aadhaar_card?.name}
           isRequired={false}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.panCard?.name
+            uploadedDocuments?.pan_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("panCard")}
+          onPress={() => handleDocumentSelection("pan_card")}
           title={t("registration.panCardUpload")}
-          fileName={uploadedDocuments?.panCard?.name}
+          fileName={uploadedDocuments?.pan_card?.name}
           isRequired={false}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.gstCertificate?.name
+            uploadedDocuments?.profile_pic?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("gstCertificate")}
-          title={t("registration.GSTCertificateUpload")}
-          fileName={uploadedDocuments?.gstCertificate?.name}
-          isRequired={false}
-        />
-        <DocumentUploadView
-          icons={
-            uploadedDocuments?.photo?.name
-              ? IconsPath.success
-              : IconsPath.upload
-          }
-          onPress={() => handleDocumentSelection("photo")}
+          onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
-          fileName={uploadedDocuments?.photo?.name}
-          isRequired={false}
-        />
-        <DocumentUploadView
-          icons={
-            uploadedDocuments?.signedCheque?.name
-              ? IconsPath.success
-              : IconsPath.upload
-          }
-          onPress={() => handleDocumentSelection("signedCheque")}
-          title={t("registration.signedChequeUpload")}
-          fileName={uploadedDocuments?.signedCheque?.name}
+          fileName={uploadedDocuments?.profile_pic?.name}
           isRequired={false}
         />
         <Button
           buttonName={t("cancelOrder.Submit")}
-          isLoading={false}
+          isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={() =>
-            navigation.navigate(RouteString.DealerSuccessfullyScreen)
-          }
+          onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>

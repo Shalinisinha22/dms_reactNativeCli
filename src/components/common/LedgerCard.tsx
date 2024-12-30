@@ -5,27 +5,28 @@ import {hp, RFValue, wp} from '../../helper/Responsive';
 import {FontPath} from '../../utils/FontPath';
 import {useTranslation} from 'react-i18next';
 import { commonStyle } from '../../utils/commonStyles';
+import moment from 'moment';
 
-const LedgerCard = () => {
+const LedgerCard = ({item}:{item:any}) => {
   const {t} = useTranslation();
   return (
     <View style={styles.cardView}>
       <View style={styles.orderNoView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>M</Text>
+          <Text style={commonStyle.userNameText}>{item?.ledgerName.slice(0,1)}</Text>
         </View>
         <View style={styles.textView}>
           <View>
-            <Text style={styles.salesName}>Sales Ms Road TMT Bar</Text>
-            <Text style={styles.orderNo}>BMS/24-25/286</Text>
+            <Text style={styles.salesName}>{item?.ledgerName}</Text>
+            <Text style={styles.orderNo}>{item?.ledgerCode}</Text>
           </View>
           <View style={styles.dateTextView}>
             <View>
               <Text style={styles.date}>{t('ledger.date')}</Text>
-              <Text style={styles.dateTime}>12 Sept 2024</Text>
+              <Text style={styles.dateTime}>{moment(item?.ledgerDate).format('DD MMM YYYY')}</Text>
             </View>
             <View style={styles.salesView}>
-              <Text style={styles.sales}>{t('ledger.sales')}</Text>
+              <Text style={styles.sales}>{item?.ledgerType}</Text>
             </View>
           </View>
         </View>

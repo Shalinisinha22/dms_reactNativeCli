@@ -9,7 +9,7 @@ import {IconsPath} from '../../utils/IconPath';
 import {FontPath} from '../../utils/FontPath';
 import {useTranslation} from 'react-i18next';
 
-const LogoutModal = ({isVisible, backOnPress}: LogoutModalProps) => {
+const LogoutModal = ({isVisible, backOnPress, yesOnPress}: LogoutModalProps) => {
   const {t} = useTranslation();
   return (
     <Modal
@@ -36,7 +36,7 @@ const LogoutModal = ({isVisible, backOnPress}: LogoutModalProps) => {
               {t('logOut.no')}
             </Text>
           </Pressable>
-          <Pressable style={styles.button}>
+          <Pressable style={styles.button} onPress={yesOnPress}>
             <Text style={styles.buttonName}>{t('logOut.yes')}</Text>
           </Pressable>
         </View>

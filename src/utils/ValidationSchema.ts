@@ -61,6 +61,7 @@ export const dealerValidationSchema = yup.object().shape({
 
 export const cancelationRemarksValidationSchema = yup.object().shape({
   remarks: yup.string().required('error.remarksRequired'),
+  reason: yup.string().required('error.reasonRequired'),
 });
 
 export const supportRequestValidationSchema = yup.object().shape({
@@ -81,13 +82,13 @@ export const newDealerValidationSchema = yup.object().shape({
   .phone('IN', "error.validPhoneNumber")
   .required('error.phoneNumberRequired'),
   workCity: yup.string().required('error.workCityRequired'),
-  zipCode: yup.string().required('error.zipCodeRequired'),
   counterAddress: yup.string().required('error.counterAddressRequired'),
 });
 
 export const asoRegistrationValidationSchema = yup.object().shape({
   workCity: yup.string().required('error.workCityRequired'),
   zipCode: yup.string().required('error.zipCodeRequired'),
+  region: yup.array().required('error.areaRegionRequired')
 })
 
 export const asoNewDealerOnboard = yup.object().shape({
@@ -131,7 +132,6 @@ export const referralSubmission = yup.object().shape({
   .string()
   .phone('IN', "error.validPhoneNumber")
   .required('error.phoneNumberRequired'),
-  type: yup.string().required('error.typeRequired'),
-  productUsed: yup.string().required('error.productUsedRequired'),
+  productUsed: yup.array().required('error.productUsedRequired'),
   address: yup.string().required('error.addressRequired'),
 })

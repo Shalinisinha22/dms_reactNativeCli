@@ -7,26 +7,26 @@ import { FontPath } from '../../utils/FontPath'
 import { useTranslation } from 'react-i18next'
 import { IconsPath } from '../../utils/IconPath'
 
-const DealerWiseSalesCard = () => {
+const DealerWiseSalesCard = ({item}:{item:any}) => {
     const {t} = useTranslation();
   return (
     <View style={styles.cardView}>
     <View style={styles.orderNoView}>
       <View style={commonStyle.profileView}>
-        <Text style={commonStyle.userNameText}>M</Text>
+        <Text style={commonStyle.userNameText}>{item.dealerName.slice(0,1)}</Text>
       </View>
       <View style={styles.textView}>
         <View style={styles.rowView}>
         <View>
-          <Text style={styles.salesName}>Mohit Shah</Text>
-          <Text style={styles.orderNo}>{t('dealerwiseSales.dealerNo')} : 121124</Text>
+          <Text style={styles.salesName}>{item.dealerName}</Text>
+          <Text style={styles.orderNo}>{t('dealerwiseSales.dealerNo')} : {item.dealerNumber}</Text>
         </View>
-        <Text style={styles.amount}>Rs.15,00,000</Text>
+        <Text style={styles.amount}>Rs.{item.totalSale}</Text>
         </View>
         <View style={styles.locationRowView}>
             <Image source={IconsPath.location} style={styles.location} />
             <Text style={styles.locationText}>
-            Gaya
+            {item.city}
             </Text>
           </View>
       </View>

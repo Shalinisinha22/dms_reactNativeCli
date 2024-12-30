@@ -12,7 +12,10 @@ const TextInputFieldOptional = ({
   value,
   onChangeText,
   mainViewStyle,
-  labelStyle
+  labelStyle,
+  maxLength,
+  onTouchStart,
+  editable
 }: TextInputFieldOptionalProps) => {
   return (
     <View style={[styles.mainView, mainViewStyle]}>
@@ -23,8 +26,11 @@ const TextInputFieldOptional = ({
           placeholderTextColor={colors.darkGray}
           style={styles.textInput}
           value={value}
+          editable={editable ?false : true}
           onChangeText={onChangeText}
+          onTouchStart={onTouchStart}
           autoCapitalize="none"
+          maxLength={maxLength}
         />
       </View>
     </View>

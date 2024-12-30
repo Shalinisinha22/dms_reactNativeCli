@@ -9,16 +9,18 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import RunningSchemeCard from "../../components/dashboard/RunningSchemeCard";
+import { useMySchemes } from "../../api/query/DashboardService";
 
 const ViewSchemeScreen = () => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const schemes = useMySchemes()
 
   return (
     <SafeAreaContainer>
       <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
         <Image source={IconsPath.backArrow1} style={styles.backArrow} />
       </Pressable>
-      <RunningSchemeCard />
+      <RunningSchemeCard  data={schemes.data}/>
     </SafeAreaContainer>
   );
 };

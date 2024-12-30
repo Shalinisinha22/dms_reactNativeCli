@@ -6,7 +6,9 @@ import BackIcons from "../../assets/svg/BackIcons";
 import {
   NavigationProp,
   ParamListBase,
+  RouteProp,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import VerifyOtpIcons from "../../assets/svg/VerifyOtpIcons";
@@ -16,11 +18,23 @@ import { OtpInput } from "react-native-otp-entry";
 import Button from "../../components/common/Button";
 import { RouteString } from "../../navigation/RouteString";
 import { useTranslation } from "react-i18next";
+import { useResendOTP, useVerifyOTP } from "../../api/query/AuthService";
+import { ParamsType } from "../../navigation/ParamsType";
+import Toast from "react-native-toast-message";
+import { authActions } from "../../redux/slice/AuthSlice";
+import { useAppDispatch } from "../../redux/Store";
 
 const VerifyOTPScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const routes = useRoute<RouteProp<ParamsType, "VerifyOTPScreen">>();
   const [timer, setTimer] = useState(0); // Timer state
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpError, setOtpError] = useState("");
+  const { mutateAsync: getVerifyOTP } = useVerifyOTP();
+  const { mutateAsync: getResendOTP } = useResendOTP();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -32,10 +46,47 @@ const VerifyOTPScreen = () => {
     return () => clearInterval(interval); // Cleanup interval
   }, [timer]);
 
-  const handleResendCode = () => {
-    setTimer(60); // Start the timer for 60 seconds
-    console.log("Resend code triggered");
-    // Trigger API call to resend OTP here
+  const handleResendCode = async () => {
+    setTimer(60);
+    try {
+      const res = await getResendOTP({
+        mobile_number: routes.params.mobile_number,
+      });
+      if (res) {
+        Toast.show({
+          type: "success",
+          text1: res.message,
+        });
+      }
+    } catch (error) {
+      setTimer(0);
+      console.log("handleResendCode", error);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (otp.length === 0) {
+      setOtpError("Please enter OTP");
+      return;
+    }
+    setIsApiLoading(true);
+    try {
+      const res = await getVerifyOTP({
+        mobile_number: routes.params.mobile_number,
+        otp: otp,
+      });
+      if (res) {
+        setIsApiLoading(false);
+        dispatch(authActions.setToken(res.access_token.token));
+        navigation.navigate(RouteString.SetPasswordScreen);
+      }
+    } catch (error: any) {
+      setIsApiLoading(false);
+      Toast.show({
+        type: "error",
+        text1: error?.response.data.errors.otp || error?.response.data.message,
+      });
+    }
   };
 
   return (
@@ -51,10 +102,14 @@ const VerifyOTPScreen = () => {
           <VerifyOtpIcons />
           <Text style={styles.title}>{t("verifyOTP.verifyOTP")}</Text>
           <Text style={styles.des}>{t("verifyOTP.des")}</Text>
-          <Text style={styles.phoneNumber}>+91 8401272015</Text>
+          <Text style={styles.phoneNumber}>
+            +91 {routes.params.mobile_number}
+          </Text>
           <OtpInput
             numberOfDigits={6}
-            onTextChange={(text) => console.log(text)}
+            onTextChange={(text) => {
+              setOtp(text), setOtpError("");
+            }}
             theme={{
               filledPinCodeContainerStyle: styles.otpContainer,
               focusedPinCodeContainerStyle: styles.otpContainer,
@@ -63,6 +118,7 @@ const VerifyOTPScreen = () => {
               focusStickStyle: styles.focusStickStyle,
             }}
           />
+          {otpError && <Text style={styles.error}>{otpError}</Text>}
           <View style={styles.changeNoRowView}>
             <Pressable onPress={() => navigation.goBack()}>
               <Text style={styles.changeNo}>
@@ -79,8 +135,8 @@ const VerifyOTPScreen = () => {
           </View>
           <Button
             buttonName={t("verifyOTP.verifyOTP1")}
-            isLoading={false}
-            onPress={() => navigation.navigate(RouteString.SetPasswordScreen)}
+            isLoading={isApiLoading}
+            onPress={handleVerifyOTP}
           />
         </View>
       </KeyboardAwareScrollView>
@@ -123,7 +179,7 @@ const styles = StyleSheet.create({
   },
   containerStyle: {
     width: wp(80),
-    marginVertical: hp(2),
+    marginTop: hp(2),
   },
   focusStickStyle: {
     backgroundColor: colors.darkGray,
@@ -137,8 +193,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     width: wp(80),
+    marginTop: hp(2),
   },
   disabledText: {
     color: colors.darkGray, // Adjust this color to indicate disabled state
+  },
+  error: {
+    fontFamily: FontPath.OutfitRegular,
+    fontSize: RFValue(10),
+    marginVertical: hp(1),
+    color: colors.primary,
   },
 });

@@ -1,49 +1,19 @@
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {FontPath} from '../../utils/FontPath';
-import {colors} from '../../utils/Colors';
-import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
-import { RouteString } from '../../navigation/RouteString';
-import { useTranslation } from 'react-i18next';
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { FontPath } from "../../utils/FontPath";
+import { colors } from "../../utils/Colors";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { RouteString } from "../../navigation/RouteString";
+import { useTranslation } from "react-i18next";
+import moment from "moment";
 
-const data = [
-  {
-    id: '1',
-    slab: '60-100',
-    scheme: '150 Per Ton',
-    order: '70',
-    status: 'Achieved',
-    remaining: 0,
-  },
-  {
-    id: '1',
-    slab: '60-100',
-    scheme: '150 Per Ton',
-    order: '70',
-    status: 'Achieved',
-    remaining: 13,
-  },
-  {
-    id: '1',
-    slab: '60-100',
-    scheme: '150 Per Ton',
-    order: '70',
-    status: 'Achieved',
-    remaining: 0,
-  },
-  {
-    id: '1',
-    slab: '60-100',
-    scheme: '150 Per Ton',
-    order: '70',
-    status: 'Achieved',
-    remaining: 0,
-  },
-];
-
-const DealerSchemeView = () => {
-  const {t} = useTranslation();
+const DealerSchemeView = ({ item }: { item: any }) => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   return (
@@ -51,40 +21,48 @@ const DealerSchemeView = () => {
       <View style={styles.schemeView}>
         <View>
           <Text style={styles.dealerScheme}>Dealer’s Annual Scheme </Text>
-          <Text style={styles.date}>1st March 2024 To 28th Feb 2025</Text>
+          <Text style={styles.date}>
+            {moment(item[0]?.startDate).format("DD MMMM YYYY")} To{" "}
+            {moment(item[item?.length]?.endDate).format("DD MMMM YYYY")}
+          </Text>
         </View>
-        <Pressable onPress={() => navigation.navigate(RouteString.ViewSchemeScreen)}>
-          <Text style={styles.viewScheme}>{t('myScheme.viewScheme')}</Text>
+        <Pressable
+          onPress={() => navigation.navigate(RouteString.ViewSchemeScreen)}
+        >
+          <Text style={styles.viewScheme}>{t("myScheme.viewScheme")}</Text>
         </Pressable>
       </View>
       <View style={styles.headerView}>
-        <Text style={styles.headerTitle1}>{t('myScheme.no')}</Text>
-        <Text style={styles.headerTitle2}>{t('myScheme.slab')}</Text>
-        <Text style={styles.headerTitle3}>{t('myScheme.scheme')}</Text>
-        <Text style={styles.headerTitle4}>{t('myScheme.myOrder')}</Text>
-        <Text style={styles.headerTitle5}>{t('myScheme.status')}</Text>
+        <Text style={styles.headerTitle1}>{t("myScheme.no")}</Text>
+        <Text style={styles.headerTitle2}>{t("myScheme.slab")}</Text>
+        <Text style={styles.headerTitle3}>{t("myScheme.scheme")}</Text>
+        <Text style={styles.headerTitle4}>{t("myScheme.myOrder")}</Text>
+        <Text style={styles.headerTitle5}>{t("myScheme.status")}</Text>
       </View>
       <View>
         <FlatList
-          data={data}
+          data={item}
           scrollEnabled={false}
-          renderItem={({item, index}) => {
+          removeClippedSubviews={false} 
+          renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView} key={index}>
-                <Text style={styles.itemText1}>{item.id}</Text>
+                <Text style={styles.itemText1}>{index + 1}</Text>
                 <Text style={styles.itemText2}>{item.slab}</Text>
-                <Text style={styles.itemText3}>{item.scheme}</Text>
-                <View style={{width: wp(23)}}>
-                  <Text style={styles.itemText4}>{item.order}</Text>
-                  {item.remaining > 0 && (
+                <Text style={styles.itemText3}>{item.incentive}</Text>
+                <View style={{ width: wp(23) }}>
+                  <Text style={styles.itemText4}>{item.my_order}</Text>
+                  {item.pending > 0 && (
                     <Text style={styles.remaining}>
                       {' '}
-                      <Text>(</Text>{t('myScheme.remaining')} {item.remaining}
+                      <Text>(</Text>{t('myScheme.remaining')} {item.pending}
                       <Text>)</Text>
                     </Text>
                   )}
                 </View>
-                <Text style={styles.itemText5}>{t('myScheme.achieved')}</Text>
+                <Text style={styles.itemText5}>
+                  {item?.achieved === "yes" ? t("myScheme.achieved") : ""}
+                </Text>
               </View>
             );
           }}
@@ -98,9 +76,9 @@ export default DealerSchemeView;
 
 const styles = StyleSheet.create({
   schemeView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     marginTop: hp(1.5),
   },
@@ -120,12 +98,12 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
   },
   headerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     backgroundColor: colors.primary,
     height: hp(5),
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: wp(3),
     marginTop: hp(2),
     borderRadius: 3,
@@ -161,8 +139,8 @@ const styles = StyleSheet.create({
     width: wp(12),
   },
   itemView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginHorizontal: wp(5),
     paddingHorizontal: wp(3),
     paddingVertical: hp(1),
@@ -202,19 +180,19 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(11),
-    textAlign: 'center',
+    textAlign: "center",
   },
   itemText5: {
     color: colors.green_1,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(11),
     width: wp(18),
-    textAlign: 'right',
+    textAlign: "right",
   },
   remaining: {
     color: colors.primary,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(11),
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

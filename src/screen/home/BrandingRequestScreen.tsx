@@ -8,10 +8,16 @@ import { brandingRequestItem } from "../../utils/JsonData";
 import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
 import { useTranslation } from "react-i18next";
+import { useBranding } from "../../api/query/SupportService";
+import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const BrandingRequestScreen = () => {
   const { t } = useTranslation();
   const [selectedItem, setSelectedItem] = useState<Set<string>>(new Set());
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const { mutateAsync: createBrandingRequest } = useBranding();
+  const navigation = useNavigation();
 
   const handleSelectItem = (name: string) => {
     if (selectedItem.has(name)) {
@@ -21,6 +27,27 @@ const BrandingRequestScreen = () => {
     } else {
       const newSet = new Set(selectedItem);
       setSelectedItem(newSet.add(name));
+    }
+  };
+
+  const handleCreateRequest = async () => {
+    setIsApiLoading(true);
+    try {
+      const formattedData: any = {
+        items: Array.from(selectedItem).toString(),
+      };
+      const res = await createBrandingRequest(formattedData);
+      setIsApiLoading(false);
+      if (res) {
+        setSelectedItem(new Set())
+        Toast.show({
+          type: "success",
+          text1: res.message,
+        });
+      }
+    } catch (error) {
+      setIsApiLoading(false);
+      console.log("handleCreateRequest", error);
     }
   };
 
@@ -47,8 +74,8 @@ const BrandingRequestScreen = () => {
       </View>
       <Button
         buttonName={t("cancelOrder.Submit")}
-        isLoading={false}
-        onPress={() => null}
+        isLoading={isApiLoading}
+        onPress={handleCreateRequest}
       />
     </SafeAreaContainer>
   );
@@ -63,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(20),
     marginHorizontal: wp(5),
     marginVertical: hp(2.5),
-    lineHeight:hp(4)
+    lineHeight: hp(4),
   },
   selectItems: {
     color: colors.black,

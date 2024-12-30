@@ -40,7 +40,7 @@ export const dealerDrawerOption = [
   {
     name: 'drawer.dashboard',
     icons: IconsPath.dashboard,
-    routes: RouteString.DropDownNavigator
+    routes: RouteString.HomeScreen
   },
   {
     name: 'drawer.orderPlacement',
@@ -81,14 +81,14 @@ export const dealerDrawerOption = [
     name: 'drawer.logOut',
     icons: IconsPath.logOut,
     routes:''
-  }
+  },
 ]
 
 export const distributorDrawerOption = [
   {
     name: 'drawer.dashboard',
     icons: IconsPath.dashboard,
-    routes: RouteString.DropDownNavigator
+    routes: RouteString.HomeScreen
   },
   {
     name: 'drawer.orderList',
@@ -134,14 +134,14 @@ export const distributorDrawerOption = [
     name: 'drawer.logOut',
     icons: IconsPath.logOut,
     routes:''
-  }
+  },
 ]
 
 export const asoDrawerOption = [
   {
     name: 'drawer.dashboard',
     icons: IconsPath.dashboard,
-    routes: RouteString.DropDownNavigator
+    routes: RouteString.HomeScreen
   },
   {
     name: 'drawer.orderList',
@@ -182,14 +182,14 @@ export const asoDrawerOption = [
     name: 'drawer.logOut',
     icons: IconsPath.logOut,
     routes:''
-  }
+  },
 ]
 
 export const masonANdEngineerDrawerOption = [
   {
     name: 'drawer.dashboard',
     icons: IconsPath.dashboard,
-    routes: RouteString.DropDownNavigator
+    routes: RouteString.HomeScreen
   },
   {
     name: 'drawer.referralSubmission',
@@ -215,14 +215,14 @@ export const masonANdEngineerDrawerOption = [
     name: 'drawer.logOut',
     icons: IconsPath.logOut,
     routes:''
-  }
+  },
 ]
 
 export const orderStatusOption = [
   {
     name: 'dashboard.placeNewOrder',
     icons: IconsPath.pluse2,
-    routes: RouteString.OrderPlacementScreen
+    routes: RouteString.PlaceOrderScreen
   },
   {
     name: 'dashboard.viewOrderHistory',
@@ -269,7 +269,6 @@ export const brandingRequestItem = [
   }
 ]
 
-export const orderHistoryType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.dispatched', 'orderHistory.pending']
 
 export const orderMoreOption = [
   {
@@ -322,16 +321,14 @@ export const masonAndEngineerMoreOption = [
     name: 'drawer.rewardStatus',
     icons: IconsPath.placeOrder,
     routes: RouteString.OrderHistory
-  },
-  {
-    name: 'drawer.rducationalResources',
-    icons: IconsPath.easy,
-    routes: ''
-  },
+  }
 ]
-
+export const orderHistoryType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.dispatched', 'orderHistory.pending']
 export const dealerManagementType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
-export const asorManagementType = ['orderHistory.all', ,'orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
+export const asorManagementType = ['orderHistory.all', 'orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
+export const rewardType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected']
+export const dealerManagementType1 = ['orderHistory.all', 'orderHistory.pending']
+
 
 
 export const supportRequestType = [
@@ -349,5 +346,75 @@ export const supportRequestType = [
   },
   {
     name: 'Others'
+  }
+]
+
+export const city = [
+  {
+    name: 'delhi'
+  },
+  {
+    name: 'mumbai'
+  },
+]
+
+
+export const areaType = [
+  {
+    id:1,
+    name: 'Motihari'
+  },
+  {
+    id:2,
+    name: 'South Bihar'
+  },
+  {
+    id:3,
+    name: 'Siwan'
+  },
+  {
+    id:4,
+    name: 'Bettiah'
+  },
+  {
+    id:5,
+    name: 'Purnia'
+  },
+  {
+    id:6,
+    name: 'Begusarai'
+  },
+  {
+    id:7,
+    name: 'Samastipur/ Sitamarhi'
+  },
+  {
+    id:8,
+    name: 'Muzaffarpur'
+  },
+  {
+    id:9,
+    name: 'Others'
+  }
+]
+
+export const masonSkill = [
+  {
+    name: 'masonSkill.bricklayingAndBlocklaying'
+  },
+  {
+    name: 'masonSkill.ConcreteAndCementWork'
+  },
+  {
+    name: 'masonSkill.TileSetting'
+  },
+  {
+    name: 'masonSkill.StoneMasonry'
+  },
+  {
+    name: 'masonSkill.BlueprintReadingAndInterpretation'
+  },
+  {
+    name: 'masonSkill.Others'
   }
 ]

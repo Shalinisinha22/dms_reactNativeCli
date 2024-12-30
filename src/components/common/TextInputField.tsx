@@ -1,11 +1,11 @@
-import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {FontPath} from '../../utils/FontPath';
-import {colors} from '../../utils/Colors';
-import {TextInputFieldProps} from '../../interfaces/Types';
-import EasyOffIcons from '../../assets/svg/EasyOffIcons';
-import { useTranslation } from 'react-i18next';
+import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
+import { FontPath } from "../../utils/FontPath";
+import { colors } from "../../utils/Colors";
+import { TextInputFieldProps } from "../../interfaces/Types";
+import EasyOffIcons from "../../assets/svg/EasyOffIcons";
+import { useTranslation } from "react-i18next";
 
 const TextInputField = ({
   title,
@@ -21,22 +21,23 @@ const TextInputField = ({
   InputViewStyle,
   multiline,
   mainViewStyle,
-  isRequired
+  isRequired,
+  textInputStyle
 }: TextInputFieldProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 
   return (
     <View style={[styles.mainView, mainViewStyle]}>
       <Text style={styles.label}>
         {title}
-      {isRequired &&  <Text style={styles.required}>*</Text>}
+        {isRequired && <Text style={styles.required}>*</Text>}
       </Text>
       <View style={[styles.inputView, InputViewStyle]}>
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={colors.darkGray}
-          style={styles.textInput}
+          style={[styles.textInput, textInputStyle]}
           value={value}
           secureTextEntry={isPassword && !passwordVisible}
           onChangeText={onChangeText}
@@ -49,7 +50,7 @@ const TextInputField = ({
         />
         {isPassword && (
           <Pressable onPress={() => setPasswordVisible(!passwordVisible)}>
-            <EasyOffIcons />
+            <EasyOffIcons width={isiPAD ? wp(5) : wp(8)} height={isiPAD ? wp(5) : wp(8)} />
           </Pressable>
         )}
       </View>
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(14),
-    lineHeight:hp(3),
+    lineHeight: hp(3),
     marginBottom: hp(1),
   },
   required: {
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
     color: colors.black,
-    lineHeight:hp(3),
+    height: Platform.OS === 'android' ? hp(5) : hp(4),
     flex: 1,
   },
   inputView: {
@@ -87,14 +88,14 @@ const styles = StyleSheet.create({
     height: hp(6),
     paddingHorizontal: wp(5),
     borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   error: {
     color: colors.primary,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    lineHeight:hp(3),
+    lineHeight: hp(3),
   },
 });

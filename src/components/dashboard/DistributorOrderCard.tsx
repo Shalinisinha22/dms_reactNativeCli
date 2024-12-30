@@ -1,62 +1,86 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {colors} from '../../utils/Colors';
-import {FontPath} from '../../utils/FontPath';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {useTranslation} from 'react-i18next';
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { useTranslation } from "react-i18next";
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import ApproveButton from '../common/ApproveButton';
-import RejectButton from '../common/RejectButton';
-import { commonStyle } from '../../utils/commonStyles';
+} from "@react-navigation/native";
+import ApproveButton from "../common/ApproveButton";
+import RejectButton from "../common/RejectButton";
+import { commonStyle } from "../../utils/commonStyles";
+import moment from "moment";
 
-const DistributorOrderCard = () => {
-  const {t} = useTranslation();
+const DistributorOrderCard = ({
+  item,
+  approveOnPress,
+  rejectOnPress,
+}: {
+  item: any;
+  approveOnPress: () => void;
+  rejectOnPress: () => void;
+}) => {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [isOptionShow, setIsOptionShow] = useState(false);
+
+  const totalQty = item?.products.reduce((acc: number, item: any) => {
+    const weight = parseFloat(item.quantity) || 0;
+    return acc + weight;
+  }, 0);
+
+  const totalAmount = item?.products.reduce((acc: number, item: any) => {
+    const amount = parseFloat(item.amount) || 0;
+    return acc + amount;
+  }, 0);
 
   return (
     <>
       <Pressable
         style={styles.cardView}
-        onPress={() => setIsOptionShow(!isOptionShow)}>
+        onPress={() => setIsOptionShow(!isOptionShow)}
+      >
         <View style={styles.headerNoRowView}>
           <View>
             <View style={styles.orderNoView}>
               <View style={commonStyle.profileView}>
-                <Text style={commonStyle.userNameText}>M</Text>
+                <Text style={commonStyle.userNameText}>
+                  {item?.dealer_name.slice(0, 1)}
+                </Text>
               </View>
               <View style={styles.textView}>
                 <Text style={styles.invoiceNo}>
-                  {t('dashboard.orderNo')} : 121124
+                  {t("dashboard.orderNo")} : {item?.orderNumber}
                 </Text>
               </View>
             </View>
             <View style={styles.orderInfoRowView}>
               <View>
-                <Text style={styles.orderinfoText}>{t('ledger.date')}</Text>
-                <Text style={styles.orderInfoDes}>12 Sept 2024</Text>
+                <Text style={styles.orderinfoText}>{t("ledger.date")}</Text>
+                <Text style={styles.orderInfoDes}>
+                  {moment(item?.orderDate).format("DD MMM YYYY")}
+                </Text>
               </View>
               <View>
                 <Text style={styles.orderinfoText}>
-                  {t('dashboard.weight')}
+                  {t("dashboard.weight")}
                 </Text>
-                <Text style={styles.orderInfoDes}>12000</Text>
+                <Text style={styles.orderInfoDes}>{totalQty}</Text>
               </View>
               <View>
                 <Text style={styles.orderinfoText}>
-                  {t('confirmOrder.amount')}
+                  {t("confirmOrder.amount")}
                 </Text>
-                <Text style={styles.orderInfoDes}>Rs.12,0000</Text>
+                <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
               </View>
             </View>
           </View>
           <View>
-            <ApproveButton onPress={() => null} />
-            <RejectButton onPress={() => null} />
+            <ApproveButton onPress={approveOnPress} />
+            <RejectButton onPress={rejectOnPress} />
           </View>
         </View>
       </Pressable>
@@ -84,13 +108,13 @@ const styles = StyleSheet.create({
     paddingVertical: hp(2),
   },
   headerNoRowView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   orderNoView: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   orderNo: {
     color: colors.black,
@@ -108,11 +132,11 @@ const styles = StyleSheet.create({
   download: {
     width: wp(7),
     height: wp(7),
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   orderInfoRowView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     width: wp(55),
     marginTop: hp(2),
     marginHorizontal: wp(3),
@@ -127,5 +151,6 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(11),
     marginTop: hp(0.3),
+    textAlign:'center'
   },
 });

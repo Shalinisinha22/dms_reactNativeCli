@@ -2,12 +2,12 @@
 import {Dimensions, PixelRatio, Platform, StatusBar} from 'react-native';
 
 // Retrieve initial screen's width
-let screenWidth = Dimensions.get('screen').width;
+let screenWidth = Dimensions.get('window').width;
 
 // Retrieve initial screen's height
-let screenHeight = Dimensions.get('screen').height;
+let screenHeight = Dimensions.get('window').height;
 
-export const isiPAD = screenHeight / screenWidth < 1.6;
+export const isiPAD = screenHeight / screenWidth < 2.6 && Math.max(screenHeight, screenWidth) >= 850
 export const isTablet = screenHeight / screenWidth < 1.6;
 
 export const WINDOW_WIDTH = screenWidth;
@@ -34,7 +34,6 @@ export function isIphoneXorAbove() {
         dimen.width === 428 ||
         dimen.height === 852 ||
         dimen.width === 393 ||
-        dimen.height === 932 ||
         dimen.width === 932)
     );
   }

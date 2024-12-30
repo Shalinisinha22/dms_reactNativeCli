@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 const OrderPlacementCard = ({
   productName,
   value,
-  onChangeText
+  onChangeText,
+  mt
 }: OrderPlacementCardProps) => {
   const {t} = useTranslation();
   // const [unit, setUnit] = useState(0);
@@ -20,10 +21,10 @@ const OrderPlacementCard = ({
       <View>
         <Text style={styles.productName}>{productName}</Text>
         <Text style={styles.mrp}>
-          MRP : <Text style={styles.unit}>12,000/MT</Text>
+          MRP : <Text style={styles.unit}>{mt}/MT</Text>
         </Text>
         <Text style={styles.mrp}>
-          {t('orderPlacement.amount')} ₹ : <Text style={styles.unit}>1,00,00</Text>
+          {t('orderPlacement.amount')} ₹ : <Text style={styles.unit}>{(mt * value)}</Text>
         </Text>
       </View>
       <View>

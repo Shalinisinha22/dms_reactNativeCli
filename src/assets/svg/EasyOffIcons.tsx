@@ -1,13 +1,14 @@
 import React from 'react';
-import Svg, {ClipPath, Defs, G, Mask, Path, Rect} from 'react-native-svg';
+import Svg, {ClipPath, Defs, G, Mask, Path, Rect, SvgProps} from 'react-native-svg';
 
-const EasyOffIcons = () => {
+const EasyOffIcons = (props: SvgProps) => {
   return (
     <Svg
       width="26"
       height="24"
       viewBox="0 0 26 24"
       fill="none"
+      {...props}
       >
       <Mask
         id="mask0_44_500"

@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import { colors } from "../../utils/Colors";
@@ -15,33 +15,42 @@ import { FontPath } from "../../utils/FontPath";
 import {
   NavigationProp,
   ParamListBase,
+  RouteProp,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { commonStyle } from "../../utils/commonStyles";
 import Share from "react-native-share";
-const data = [
-  {
-    id: "1",
-    description: "TMT Bar 8mm",
-    weight: "12 MT",
-    amount: "2,000.00",
-  },
-  {
-    id: "2",
-    description: "TMT Bar 6mm",
-    weight: "12 MT",
-    amount: "2,000.00",
-  },
-];
+import { generateInvoicePDF } from "../../utils/commonFunctions";
+import { ParamsType } from "../../navigation/ParamsType";
+import { useMyInvoiceDetils } from "../../api/query/InvoiceService";
+import moment from "moment";
+import { useAppSelector } from "../../redux/Store";
+import { useGetProductList } from "../../api/query/OrderPlacementService";
+import RNFS from "react-native-fs";
 
 const InvoiceDetailScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const routes = useRoute<RouteProp<ParamsType, "InvoiceDetailScreen">>();
+  const { mutateAsync: getMyInvoiceDetils, data } = useMyInvoiceDetils();
+  const {userInfo} = useAppSelector((state) => state.auth);
+  const productList = useGetProductList();
+  
+  useEffect(()=>{
+    if(routes.params?.id){
+      getMyInvoiceDetils({invoiceId:routes.params?.id })
+    }
+  },[routes.params?.id])
+
 
   const handleShare = () => {
+    const destinationPath = `${RNFS.DownloadDirectoryPath}/invoice_${data?.invoiceNumber}.pdf`;
     Share.open({
-      message: "Hello",
+      title: 'Share invoice',
+      message: 'Hello, here is the invoice.',
+       url: `file://${destinationPath}`,
     })
       .then((res) => {
         console.log(res);
@@ -50,6 +59,18 @@ const InvoiceDetailScreen = () => {
         err && console.log(err);
       });
   };
+
+
+
+  const combinedResult = data?.products?.map((product: { productId: any }) => {
+    const matchingDetail = productList.data?.find(
+      (detail: { id: any }) => detail.id === product.productId
+    );
+    return {
+      ...product,
+      name: matchingDetail ? matchingDetail.name : "",
+    };
+  });
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -68,9 +89,9 @@ const InvoiceDetailScreen = () => {
       </View>
       <View style={styles.rowView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>M</Text>
+          <Text style={commonStyle.userNameText}>{userInfo?.name.slice(0,1)}</Text>
         </View>
-        <Pressable style={styles.downloadButton}>
+        <Pressable style={styles.downloadButton} onPress={() => generateInvoicePDF(userInfo, data, combinedResult)}>
           <Image
             source={IconsPath.downlaod}
             tintColor={colors.white}
@@ -81,34 +102,34 @@ const InvoiceDetailScreen = () => {
       </View>
       <View style={styles.rowView1}>
         <View>
-          <Text style={styles.name}>My Private Limited</Text>
+          <Text style={styles.name}>{userInfo?.company}</Text>
           <Text style={styles.address}>
-            A 672 Mstercaslrd place New Banglore
+           {userInfo?.address}
           </Text>
-          <Text style={styles.zipcode}>434343</Text>
+          <Text style={styles.zipcode}>{userInfo?.zipcode}</Text>
         </View>
         <View>
           <Text style={styles.invoice}>{t("invoiceDetail.invoice")}</Text>
-          <Text style={styles.invoiceNo}>120002</Text>
+          <Text style={styles.invoiceNo}>{data?.invoiceNumber}</Text>
           <Text style={styles.balanceDue}>{t("invoiceDetail.balanceDue")}</Text>
-          <Text style={styles.amount}>Rs.12,000.00</Text>
+          <Text style={styles.amount}>Rs.{data?.totalAmount}</Text>
         </View>
       </View>
       <View style={styles.rowView1}>
         <View>
           <Text style={styles.billTO}>{t("invoiceDetail.billTo")}</Text>
-          <Text style={styles.invoiceName}>Rajesh Kumar</Text>
+          <Text style={styles.invoiceName}>{data?.customerNameOnBill}</Text>
           <Text style={styles.address}>
-            A 672 Kalyan Nagar, HRBR Layout, Banglore
+            {data?.address}, {data?.state}, {data?.country}
           </Text>
-          <Text style={styles.zipcode}>434343</Text>
+          <Text style={styles.zipcode}>{data?.zipcode}</Text>
         </View>
         <View>
           <View style={styles.totalRowView}>
             <Text style={styles.invoiceDate}>
               {t("invoiceDetail.invoiceDate")} :{" "}
             </Text>
-            <Text style={styles.date}> 12 Sept 2024</Text>
+            <Text style={styles.date}> {moment(data?.invoiceDate).format('DD MMM YYYY')}</Text>
           </View>
           <View
             style={[
@@ -121,7 +142,7 @@ const InvoiceDetailScreen = () => {
             <Text style={styles.invoiceDate}>
               {t("invoiceDetail.dueDate")} :{" "}
             </Text>
-            <Text style={styles.date}> 25 Sept 2024</Text>
+            <Text style={styles.date}> {moment(data?.dueDate).format('DD MMM YYYY')}</Text>
           </View>
         </View>
       </View>
@@ -130,18 +151,19 @@ const InvoiceDetailScreen = () => {
         <Text style={styles.headerTitle2}>
           {t("confirmOrder.productDecription")}
         </Text>
-        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")}</Text>
-        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")}</Text>
+        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")} (MT)</Text>
+        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")} (₹)</Text>
       </View>
       <View>
         <FlatList
-          data={data}
+          data={combinedResult}
+          removeClippedSubviews={false} 
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView}>
-                <Text style={styles.itemText1}>{item.id}</Text>
-                <Text style={styles.itemText2}>{item.description}</Text>
-                <Text style={styles.itemText3}>{item.weight}</Text>
+                <Text style={styles.itemText1}>{index + 1}</Text>
+                <Text style={styles.itemText2}>{item.name}</Text>
+                <Text style={styles.itemText3}>{item.quantity}</Text>
                 <Text style={styles.itemText4}>{item.amount}</Text>
               </View>
             );
@@ -151,7 +173,7 @@ const InvoiceDetailScreen = () => {
       <View style={styles.totalView}>
         <View style={styles.totalRowView}>
           <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
-          <Text style={styles.subAmount}> 4,000.00</Text>
+          <Text style={styles.subAmount}> ₹{data?.totalAmount}</Text>
         </View>
         <View
           style={[
@@ -162,7 +184,7 @@ const InvoiceDetailScreen = () => {
           ]}
         >
           <Text style={styles.total}>{t("confirmOrder.total")} : </Text>
-          <Text style={styles.totalAmount}> 4,000.00</Text>
+          <Text style={styles.totalAmount}>₹{data?.totalAmount}</Text>
         </View>
       </View>
     </SafeAreaContainer>
@@ -332,13 +354,13 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    width: wp(40),
+    width: wp(25),
   },
   itemText3: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    width: wp(15),
+    width: wp(20),
   },
   itemText4: {
     color: colors.black,
@@ -356,19 +378,19 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(35),
+    width: wp(25),
   },
   headerTitle3: {
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(15),
+    width: wp(21),
   },
   headerTitle4: {
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(15),
+    width: wp(21),
   },
   itemView: {
     flexDirection: "row",

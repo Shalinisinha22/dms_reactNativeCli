@@ -1,4 +1,12 @@
-import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -21,34 +29,121 @@ import DocumentUploadView from "../../components/registration/DocumentUploadView
 import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
 import { RouteString } from "../../navigation/RouteString";
+import SearchDropDownView from "../../components/common/SearchDropDownView";
+import { city } from "../../utils/JsonData";
+import {
+  useEngineerRegister,
+  useMasonRegister,
+} from "../../api/query/RegistrationService";
+import { useAppDispatch, useAppSelector } from "../../redux/Store";
+import { UserType } from "../../interfaces/Types";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useGetUser } from "../../api/query/ProfileService";
+import { authActions } from "../../redux/slice/AuthSlice";
+import Toast from "react-native-toast-message";
+import { useSendFCMToken } from "../../api/query/NotificationService";
 
 const MasonAndEngineerRegistrationScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const [uploadedDocuments, setUploadedDocuments] = useState<any>({}); // State to store documents
+  const [uploadedDocuments, setUploadedDocuments] = useState<any>({
+    aadhaar_card: null,
+    pan_card: null,
+    profile_pic: null,
+  });
   const [birthDate, setBirthDate] = useState("");
   const [isCheck, setIsCheck] = useState(false);
-  const [familyMembers, setFamilyMembers] = useState([
-    { id: Date.now(), name: "", relationship: "", birthDate: "" },
-  ]);
+  const { portal, FCMToken } = useAppSelector((state) => state.auth);
 
-  const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
-    useFormik({
-      initialValues: {
-        workCity: "",
-        zipCode: "",
-        counterAddress: "",
-      },
-      validationSchema: masonAndEngineerRegistration,
-      onSubmit: (values) => {
-        console.log("--->", values);
-      },
-    });
+  const [familyMembers, setFamilyMembers] = useState([
+    { id: Date.now(), name: "", relationship: "", dob: "" },
+  ]);
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedMemberId, setSelectedMemberId] = useState<any>("");
+  const { mutateAsync: createMasonRegister } = useMasonRegister();
+  const { mutateAsync: createEngineerRegister } = useEngineerRegister();
+  const { mutateAsync: sendFCMToken } = useSendFCMToken();
+
+  const dispatch = useAppDispatch();
+
+  const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
+
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      workCity: "",
+      zipCode: "",
+      counterAddress: "",
+    },
+    validationSchema: masonAndEngineerRegistration,
+    onSubmit: async (values) => {
+      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
+        (doc) => doc !== null
+      );
+
+      if (!allDocumentsUploaded) {
+        Toast.show({
+          type: "error",
+          text1: "Please upload all the required documents",
+        });
+        return;
+      }
+      setIsApiLoading(true);
+      try {
+        const updatedFamilyMembers = familyMembers.map(
+          ({ id, ...rest }) => rest
+        );
+        const formData = new FormData();
+        formData.append("work_city", values.workCity);
+        formData.append("zipcode", values.zipCode);
+        formData.append("address", values.counterAddress);
+        formData.append("dob", birthDate);
+        formData.append(
+          "member",
+          updatedFamilyMembers[0]?.name === "" ? [] : updatedFamilyMembers
+        );
+        fileFields.forEach((field) => {
+          if (uploadedDocuments[field]) {
+            formData.append(field, {
+              uri: uploadedDocuments[field].uri,
+              type: uploadedDocuments[field].type,
+              name: uploadedDocuments[field].name,
+            });
+          }
+        });
+        const res =
+          portal === UserType.MASON
+            ? await createMasonRegister(formData)
+            : await createEngineerRegister(formData);
+        if (res) {
+          await sendFCMToken({ firebaseToken: FCMToken });
+          setIsApiLoading(false);
+          navigation.navigate(RouteString.CompletingRegistrationScreen);
+        }
+      } catch (error) {
+        setIsApiLoading(false);
+        console.log("MasonAndEngineerRegistrationScreen", error);
+      }
+    },
+  });
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
+    Keyboard.dismiss();
     try {
       const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf], // Restrict to PDFs
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.images,
+          DocumentPicker.types.doc,
+        ],
         presentationStyle: "fullScreen",
       });
 
@@ -88,13 +183,47 @@ const MasonAndEngineerRegistrationScreen = () => {
     setFamilyMembers(familyMembers.filter((member) => member.id !== id));
   };
 
-    // Handler to add a new member form
-    const addMember = () => {
-        setFamilyMembers([
-          ...familyMembers,
-          { id: Date.now(), name: "", relationship: "", birthDate: "" },
-        ]);
-      };
+  // Handler to add a new member form
+  const addMember = () => {
+    setFamilyMembers([
+      ...familyMembers,
+      { id: Date.now(), name: "", relationship: "", dob: "" },
+    ]);
+  };
+
+  const handleConfirm = (date: any) => {
+    const formattedDate = date.toISOString().split("T")[0];
+
+    // Calculate the cutoff date for 18 years ago
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    // Check if the selected date is before or equal to the cutoff date
+    if (date > eighteenYearsAgo) {
+      Toast.show({
+        type: "error",
+        text1: `${t("error.AgeMustBeOrAbove")}`,
+      });
+      setDatePickerVisibility(false);
+      return;
+    } else {
+      if (selectedMemberId) {
+        handleInputChange(selectedMemberId, "dob", formattedDate);
+      } else {
+        setBirthDate(formattedDate);
+      }
+    }
+    setDatePickerVisibility(false);
+  };
+
+  const showDatePickerForMember = (id: number) => {
+    setDatePickerVisibility(true);
+    setSelectedMemberId(id);
+  };
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -106,15 +235,14 @@ const MasonAndEngineerRegistrationScreen = () => {
         <Text style={styles.title}>
           {t("registration.completeRegistration")}
         </Text>
-        <TextInputField
-          title={t("registration.workCity")}
-          placeholder={t("registration.enterWorkCity")}
-          isPassword={false}
-          value={values.workCity}
-          onChangeText={handleChange("workCity")}
-          onBlur={handleBlur("workCity")}
-          touched={touched.workCity}
+        <SearchDropDownView
+          zIndex={1}
+          label={t("registration.workCity")}
+          placeHolder={t("registration.enterWorkCity")}
+          data={city}
+          selectedName={(value) => setFieldValue("workCity", value)}
           errors={errors.workCity}
+          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
           isRequired={true}
         />
         <TextInputField
@@ -139,6 +267,7 @@ const MasonAndEngineerRegistrationScreen = () => {
           touched={touched.counterAddress}
           errors={errors.counterAddress}
           InputViewStyle={styles.inputView}
+          textInputStyle={{ height:hp(15)}}
           multiline
           isRequired={true}
         />
@@ -149,7 +278,13 @@ const MasonAndEngineerRegistrationScreen = () => {
           title={t("registration.yourBirthDate")}
           placeholder={t("registration.DDMM")}
           value={birthDate}
-          onChangeText={(text) => setBirthDate(text)}
+          maxLength={5}
+          onChangeText={() => null}
+          editable
+          onTouchStart={() => {
+            setDatePickerVisibility(true);
+            setSelectedMemberId("");
+          }}
         />
         {familyMembers.map((member, index) => (
           <View style={styles.moreMemberView}>
@@ -185,9 +320,10 @@ const MasonAndEngineerRegistrationScreen = () => {
               placeholder={t("registration.DDMM")}
               labelStyle={styles.labelStyle}
               InputViewStyle={styles.inputViewStyle}
-              value={member.birthDate}
+              value={member.dob}
+              onTouchStart={() => showDatePickerForMember(member.id)}
               onChangeText={(value) =>
-                handleInputChange(member.id, "birthDate", value)
+                handleInputChange(member.id, "dob", value)
               }
             />
           </View>
@@ -200,35 +336,35 @@ const MasonAndEngineerRegistrationScreen = () => {
         </Pressable>
         <DocumentUploadView
           icons={
-            uploadedDocuments?.aadharCard?.name
+            uploadedDocuments?.aadhaar_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("aadharCard")}
+          onPress={() => handleDocumentSelection("aadhaar_card")}
           title={t("registration.aadharCardUpload")}
-          fileName={uploadedDocuments?.aadharCard?.name}
+          fileName={uploadedDocuments?.aadhaar_card?.name}
           isRequired={true}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.panCard?.name
+            uploadedDocuments?.pan_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("panCard")}
+          onPress={() => handleDocumentSelection("pan_card")}
           title={t("registration.panCardUpload")}
-          fileName={uploadedDocuments?.panCard?.name}
+          fileName={uploadedDocuments?.pan_card?.name}
           isRequired={true}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.photo?.name
+            uploadedDocuments?.profile_pic?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("photo")}
+          onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
-          fileName={uploadedDocuments?.photo?.name}
+          fileName={uploadedDocuments?.profile_pic?.name}
           isRequired={true}
         />
         <View style={styles.termsView}>
@@ -252,13 +388,17 @@ const MasonAndEngineerRegistrationScreen = () => {
         </View>
         <Button
           buttonName={t("registration.submitForApproval")}
-          isLoading={false}
+          isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={() =>
-            navigation.navigate(RouteString.CompletingRegistrationScreen)
-          }
+          onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
     </SafeAreaContainer>
   );
 };

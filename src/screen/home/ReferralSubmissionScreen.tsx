@@ -1,50 +1,117 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import SafeAreaContainer from '../../components/common/SafeAreaContainer'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { hp, RFValue, wp } from '../../helper/Responsive'
-import { IconsPath } from '../../utils/IconPath'
-import { useTranslation } from 'react-i18next'
-import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native'
-import { colors } from '../../utils/Colors'
-import { FontPath } from '../../utils/FontPath'
-import { useFormik } from 'formik'
+import {
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import SafeAreaContainer from "../../components/common/SafeAreaContainer";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { IconsPath } from "../../utils/IconPath";
+import { useTranslation } from "react-i18next";
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from "@react-navigation/native";
+import { colors } from "../../utils/Colors";
+import { FontPath } from "../../utils/FontPath";
+import { useFormik } from "formik";
 import DocumentPicker from "react-native-document-picker";
-import { referralSubmission } from '../../utils/ValidationSchema'
-import TextInputField from '../../components/common/TextInputField'
-import DropDownView from '../../components/common/DropDownView'
-import { supportRequestType } from '../../utils/JsonData'
-import DocumentUploadView from '../../components/registration/DocumentUploadView'
-import Button from '../../components/common/Button'
-import { RouteString } from '../../navigation/RouteString'
+import { referralSubmission } from "../../utils/ValidationSchema";
+import TextInputField from "../../components/common/TextInputField";
+import DocumentUploadView from "../../components/registration/DocumentUploadView";
+import Button from "../../components/common/Button";
+import { useReferralRegister } from "../../api/query/RegistrationService";
+import MultipulSelectDropDown from "../../components/common/MultipulSelectDropDown";
+import { useGetProductList } from "../../api/query/OrderPlacementService";
+import Toast from "react-native-toast-message";
 
 const ReferralSubmissionScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [uploadedDocuments, setUploadedDocuments] = useState<any>({}); // State to store documents
+  const { mutateAsync: createReferralRegister } = useReferralRegister();
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const [productList, setProductList] = useState([]);
+  const [productId, setProductId] = useState([]);
+  const { data } = useGetProductList();
 
+  const fileFields = ["proof"];
 
-  const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
-    useFormik({
-      initialValues: {
-        referral: "",
-        phoneNumber: "",
-        type: "",
-        productUsed: "",
-        address: "",
-      },
-      validationSchema: referralSubmission,
-      onSubmit: (values) => {},
-    });
+  useEffect(() => {
+    if (data) {
+      const updatedData: any = data?.map((item: any) => ({
+        id: item.id,
+        name: item.name,
+      }));
+      setProductList(updatedData);
+      setUploadedDocuments({})
+    }
+  }, [data]);
 
-  const handleToggle = (isOn: boolean) => {
-    console.log("Toggle is now:", isOn);
-  };
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      referral: "",
+      phoneNumber: "",
+      productUsed: [],
+      address: "",
+    },
+    validationSchema: referralSubmission,
+    onSubmit: async (values) => {
+      try {
+        setIsApiLoading(true);
+        const formData = new FormData();
+        formData.append("referral_name", values.referral);
+        formData.append("mobile_number", values.phoneNumber);
+        formData.append("referral_type", "tes");
+        formData.append("products", productId);
+        formData.append("address", values.address);
+        fileFields.forEach((field) => {
+          if (uploadedDocuments[field]) {
+            formData.append(field, {
+              uri: uploadedDocuments[field].uri,
+              type: uploadedDocuments[field].type,
+              name: uploadedDocuments[field].name,
+            });
+          }
+        });
+        const res = await createReferralRegister(formData);
+        if (res) {
+          setIsApiLoading(false);
+          setFieldValue("referral", "");
+          setFieldValue("phoneNumber", "");
+          setFieldValue("productUsed", []);
+          setFieldValue("address", "");
+          setUploadedDocuments({});
+          Toast.show({
+            type: "success",
+            text1: res.message,
+          });
+        }
+      } catch (error) {
+        setIsApiLoading(false);
+        console.log("ReferralSubmissionScreen", error);
+      }
+    },
+  });
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
+    Keyboard.dismiss();
     try {
       const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf], // Restrict to PDFs
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images, DocumentPicker.types.doc], 
         presentationStyle: "fullScreen",
       });
 
@@ -65,20 +132,18 @@ const ReferralSubmissionScreen = () => {
   return (
     <SafeAreaContainer>
       <KeyboardAwareScrollView
-      showsVerticalScrollIndicator={false}
-      automaticallyAdjustKeyboardInsets
-      extraScrollHeight={hp(-10)} // Adjust as needed
-      contentContainerStyle={{ paddingBottom: hp(5) }}
-    >
-       <View style={styles.backRowView}>
-        {/* <Pressable onPress={() => navigation.goBack()}>
+        showsVerticalScrollIndicator={false}
+        automaticallyAdjustKeyboardInsets
+        extraScrollHeight={hp(-10)} // Adjust as needed
+        contentContainerStyle={{ paddingBottom: hp(5) }}
+      >
+        <View style={styles.backRowView}>
+          {/* <Pressable onPress={() => navigation.goBack()}>
           <Image source={IconsPath.backArrow} style={styles.backIcons} />
         </Pressable> */}
-        <Text style={styles.title}>
-          {t("drawer.referralSubmission")}
-        </Text>
-      </View>
-      <TextInputField
+          <Text style={styles.title}>{t("drawer.referralSubmission")}</Text>
+        </View>
+        <TextInputField
           title={t("referralSubmission.Referral")}
           placeholder={t("referralSubmission.enterReferralname")}
           isPassword={false}
@@ -89,7 +154,7 @@ const ReferralSubmissionScreen = () => {
           errors={errors.referral}
           isRequired={true}
         />
-         <TextInputField
+        <TextInputField
           title={t("referralSubmission.phoneNO")}
           placeholder={t("referralSubmission.enterPhoneNumber")}
           isPassword={false}
@@ -98,32 +163,21 @@ const ReferralSubmissionScreen = () => {
           onBlur={handleBlur("phoneNumber")}
           touched={touched.phoneNumber}
           errors={errors.phoneNumber}
-          keyboardType='number-pad'
+          keyboardType="number-pad"
           isRequired={true}
+          maxLength={10}
         />
-         <DropDownView
+        <MultipulSelectDropDown
           zIndex={2}
-          label={t("referralSubmission.type")}
-          placeHolder={t("referralSubmission.selectProjectType")}
-          mainViewStyle={{ marginTop: hp(3) }}
-          data={supportRequestType}
-          selectedName={function (name: string): void {
-            console.log("name", name);
-          }}
-          errors={errors.type}
-        />
-        <DropDownView
-          zIndex={1}
           label={t("referralSubmission.ProductUsed")}
           placeHolder={t("referralSubmission.selectProjectUsed")}
-          mainViewStyle={{ marginTop: hp(3) }}
-          data={supportRequestType}
-          selectedName={function (name: string): void {
-            console.log("name", name);
-          }}
+          data={productList}
+          selectedName={(value) => setFieldValue("productUsed", value)}
+          selectedId={(value) => setProductId(value)}
           errors={errors.productUsed}
+          mainViewStyle={{ marginTop: hp(3) }}
         />
-         <TextInputField
+        <TextInputField
           title={t("ASODealerOnboard.address")}
           placeholder={t("referralSubmission.enterAddress")}
           isPassword={false}
@@ -133,34 +187,33 @@ const ReferralSubmissionScreen = () => {
           touched={touched.address}
           errors={errors.address}
           InputViewStyle={styles.inputView}
+          mainViewStyle={{ marginBottom: hp(2) }}
           multiline
           isRequired={true}
         />
-         <DocumentUploadView
+        <DocumentUploadView
           icons={
-            uploadedDocuments?.photo?.name
+            uploadedDocuments?.proof?.name
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("photo")}
+          onPress={() => handleDocumentSelection("proof")}
           title={t("referralSubmission.uploadProof")}
-          fileName={uploadedDocuments?.photo?.name}
+          fileName={uploadedDocuments?.proof?.name}
           isRequired={false}
-        /> 
+        />
         <Button
-        buttonName={t("cancelOrder.Submit")}
-        isLoading={false}
-        buttonStyle={{ marginTop: 0 }}
-        onPress={() =>
-          navigation.navigate(RouteString.DealerSuccessfullyScreen)
-        }
-      />
+          buttonName={t("cancelOrder.Submit")}
+          isLoading={isApiLoading}
+          buttonStyle={{ marginTop: 0 }}
+          onPress={handleSubmit}
+        />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>
-  )
-}
+  );
+};
 
-export default ReferralSubmissionScreen
+export default ReferralSubmissionScreen;
 
 const styles = StyleSheet.create({
   title: {
@@ -183,6 +236,5 @@ const styles = StyleSheet.create({
     height: hp(15),
     alignItems: "flex-start",
     paddingVertical: hp(2),
-    marginBottom:hp(2)
   },
-})
+});

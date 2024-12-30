@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import BackIcons from "../../assets/svg/BackIcons";
@@ -18,16 +18,35 @@ import { forgotPasswordValidationSchema } from "../../utils/ValidationSchema";
 import { RouteString } from "../../navigation/RouteString";
 import Button from "../../components/common/Button";
 import { useTranslation } from "react-i18next";
+import { useResetPasswordOTP } from "../../api/query/AuthService";
 
 const ForgotPasswordScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { mutateAsync: resetPasswordOTP } = useResetPasswordOTP();
+  const [isApiLoading, setIsApiLoading] = useState(false);
 
   const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
     useFormik({
       initialValues: { phoneNumber: "" },
       validationSchema: forgotPasswordValidationSchema,
-      onSubmit: (values) => navigation.navigate(RouteString.VerifyOTPScreen),
+      onSubmit: async (values) => {
+        setIsApiLoading(true);
+        try {
+          const res = await resetPasswordOTP({
+            mobile_number: values.phoneNumber,
+          });
+          if (res) {
+            setIsApiLoading(false);
+            navigation.navigate(RouteString.VerifyOTPScreen, {
+              mobile_number: values.phoneNumber,
+            });
+          }
+        } catch (error) {
+          setIsApiLoading(false);
+          console.log("ForgotPasswordScreen", error);
+        }
+      },
     });
 
   return (
@@ -59,8 +78,8 @@ const ForgotPasswordScreen = () => {
         />
         <Button
           buttonName={t("signUp.sendOtp")}
-          isLoading={false}
-          onPress={() => navigation.navigate(RouteString.VerifyOTPScreen)}
+          isLoading={isApiLoading}
+          onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>

@@ -12,10 +12,16 @@ import Button from "../../components/common/Button";
 import SuccessModal from "../../components/modal/SuccessModal";
 import { useTranslation } from "react-i18next";
 import { supportRequestType } from "../../utils/JsonData";
+import { useSupport } from "../../api/query/SupportService";
+import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const SupportRequestScreen = () => {
   const { t } = useTranslation();
   const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
+  const [isApiLoading, setIsApiLoading] = useState(false);
+  const { mutateAsync: createSupportRequest } = useSupport();
+  const navigation = useNavigation();
 
   const {
     handleChange,
@@ -31,7 +37,26 @@ const SupportRequestScreen = () => {
       type: "",
     },
     validationSchema: supportRequestValidationSchema,
-    onSubmit: (values) => console.log("==>", values),
+    onSubmit: async (values) => {
+      setIsApiLoading(true);
+      try {
+        const res = await createSupportRequest({
+          requestType:values.type,
+          description: values.description,
+        });
+        if(res){
+          setIsApiLoading(false);
+          navigation.goBack();
+          Toast.show({
+            type: "success",
+            text1: res.message,
+          });
+        }
+      } catch (error) {
+        setIsApiLoading(false);
+        console.log("SupportRequestScreen", error);
+      }
+    },
   });
 
   return (
@@ -62,7 +87,7 @@ const SupportRequestScreen = () => {
       />
       <Button
         buttonName={t("cancelOrder.Submit")}
-        isLoading={false}
+        isLoading={isApiLoading}
         onPress={handleSubmit}
       />
       <SuccessModal
@@ -82,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: RFValue(20),
     marginHorizontal: wp(5),
     marginVertical: hp(2.5),
-    lineHeight:hp(4)
+    lineHeight: hp(4),
   },
   inputView: {
     height: hp(15),

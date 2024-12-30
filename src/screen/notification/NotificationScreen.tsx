@@ -18,39 +18,51 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { useGetNotificationUnRead } from "../../api/query/NotificationService";
+import moment from "moment";
 
 const NotificationScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const getNotificationUnRead = useGetNotificationUnRead();
 
-  const notificationData = [
-    {
-      title: "24th nOV",
-      data: [
-        {
-          id: "1",
-          des: "Win a trip to, complete 60 MT order by 30th dec.",
-          isNew: true,
-          time: "8:30 Am",
-          colors: "#8BD399",
-        },
-        {
-          id: "2",
-          des: "Win a trip to, complete 60 MT order by 30th dec.",
-          isNew: false,
-          time: "8:30 Am",
-          colors: "#F5F6F8",
-        },
-        {
-          id: "3",
-          des: "Win a trip to, complete 60 MT order by 30th dec.",
-          isNew: false,
-          time: "8:30 Am",
-          colors: "#B5B0F7",
-        },
-      ],
+  const notificationDatas = getNotificationUnRead?.data?.reduce(
+    (
+      acc: any[],
+      item: { createdAt: moment.MomentInput; id: any; body: any; isRead: any }
+    ) => {
+      if (!item?.createdAt) return acc; // Skip if createdAt is invalid
+  
+      const formattedDate = moment(item.createdAt).format("DD MMM");
+  
+      // Check if the date already exists in the accumulator
+      let existingDate = acc.find(
+        (entry: { title: string }) => entry.title === formattedDate
+      );
+  
+      // If it doesn't exist, create a new entry
+      if (!existingDate) {
+        existingDate = {
+          title: formattedDate, // Format date as required
+          data: [],
+        };
+        acc.push(existingDate);
+      }
+  
+      // Push the notification item into the corresponding data array
+      existingDate.data.push({
+        id: item.id,
+        des: item.body,
+        isNew: item.isRead,
+        time: moment(item.createdAt).format("h:mm A"), // Format time
+        colors: item.isRead ? "#F5F6F8" : "#8BD399", // Use different colors based on read status
+      });
+  
+      return acc;
     },
-  ];
+    [] // Correct initialization of the accumulator
+  ) || [];
+  
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -82,8 +94,10 @@ const NotificationScreen = () => {
         />
       </View> */}
       <SectionList
-        sections={notificationData}
+        sections={notificationDatas}
         keyExtractor={(item) => item.id}
+        stickyHeaderHiddenOnScroll
+        stickySectionHeadersEnabled
         renderItem={({ item }) => {
           return (
             <View

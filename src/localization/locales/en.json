@@ -63,7 +63,7 @@
     "enterCounterAddress": "Enter Counter Address",
     "personalInfo": "Personal Info(Optional)",
     "yourBirthDate": "Your Birth Date",
-    "DDMM": "DD/MM",
+    "DDMM": "YYY-MM-DD",
     "familyMemberName": "Family Member Name",
     "entreFamilyMemberName": "Entre family member name",
     "relationShipWithMember": "Relation Ship with member",
@@ -79,7 +79,9 @@
     "submitForApproval": "SUBMIT FOR APPROVAL",
     "fullName":"Full Name (As in Aadhar)",
     "selectCity":"Select City",
-    "uplaodDocuments":"Uplaod Documents"
+    "uplaodDocuments":"Uplaod Documents",
+    "areaRegionName":"Area/ Region Name",
+    "selectAreaRegionName":"Select Area/ Region Name"
   },
   "completingRegistration": {
     "thankYouForCompletingTheRegistration": "Thank You for completing the Registration.",
@@ -109,10 +111,12 @@
     "brandingMaterialquery":"Branding Material query",
     "referralSubmission":"Referral Submission",
     "rewardStatus":"Reward Status",
-    "rducationalResources":"Educational Resources"
+    "rducationalResources":"Educational Resources",
+    "deleteAccount": "Delete Account"
   },
   "dashboard": {
     "dashboard": "Dashboard",
+    "gotodashboard": "Go To Dashboard",
     "seeAllOrder": "See All Order",
     "newOrderStatus": "New Order Status",
     "orderNo": "Order No",
@@ -120,6 +124,10 @@
     "ordered": "Ordered",
     "approvedByDisctributor": "Approved By Disctributor",
     "approvedByASO": "Approved By ASO",
+    "approvedByAdmin": "Approved By Admin",
+    "rejectByDisctributor": "Rejected By Disctributor",
+    "rejectByASO": "Rejected By ASO",
+    "rejectByAdmin": "Rejected By Admin",
     "orderDispatched": "Order Dispatched",
     "placeNewOrder": "Place New Order",
     "viewOrderHistory": "View Order History",
@@ -142,7 +150,7 @@
     "pendingOrder":"Pending Order",
     "viewAll":"View All",
     "approveOrder":"Approve Order",
-    "manageOrder":"Manage Order",
+    "manageOrder":"Manage Dealers",
     "viewLedger":"View Ledger",
     "onboardDealer":"Onboard Dealer",
     "searchDealer":"Search dealer",
@@ -160,7 +168,7 @@
   },
   "confirmOrder": {
     "confirmOrder": "Confirm Order",
-    "productDecription": "Product Decription",
+    "productDecription": "Product Name",
     "weight": "Weight",
     "amount": "Amount",
     "subTotal": "Sub Total",
@@ -266,6 +274,7 @@
   "logOut": {
     "areYouSure": "Are You Sure?",
     "des": " Are you sure you want to log out of this portal?",
+    "deleteDes": "If you will Delete your account, all data related to this account will be deleted and no longer you will be able to access those data.",
     "no": "NO",
     "yes": "YES"
   },
@@ -309,7 +318,11 @@
     "addressRequired" : "The address is required",
     "referralRequired" : "The referral is required",
     "typeRequired" : "The type is required",
-    "productUsedRequired" : "The product used is required"
+    "productUsedRequired" : "The product used is required",
+    "areaRegionRequired" : "The Area / Region is required",
+    "reasonRequired": "The Reason is required",
+    "noDocumentFound":"No Document Found",
+    "AgeMustBeOrAbove":"Age must be 18 or above"
   },
   "newDealerOnboard":{
     "newDealerOnboard":"New Dealer Onboard"
@@ -375,5 +388,13 @@
   "engineerOnboard":{
     "engineerOnboard":"Engineer Onboard",
     "changeEngineerStatus":"Change Engineer Status"
+  },
+  "masonSkill":{
+    "bricklayingAndBlocklaying":"Bricklaying and Blocklaying",
+    "ConcreteAndCementWork":"Concrete and Cement Work",
+    "TileSetting":"Tile Setting",
+    "StoneMasonry":"Stone Masonry",
+    "BlueprintReadingAndInterpretation":"Blueprint Reading and Interpretation",
+    "Others":"Others"
   }
 }

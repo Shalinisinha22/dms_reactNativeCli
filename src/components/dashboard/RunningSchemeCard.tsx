@@ -5,8 +5,10 @@ import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
 import Animated from "react-native-reanimated";
 import { useTranslation } from "react-i18next";
+import DotView from "../common/DotView";
+import { IMAGE_URL } from "@env";
 
-const RunningSchemeCard = () => {
+const RunningSchemeCard = ({ data }: { data: any }) => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -26,10 +28,11 @@ const RunningSchemeCard = () => {
   return (
     <View style={styles.mainView}>
       <Text style={styles.scheme}>
-        {t("dashboard.runningScheme")} <Text style={styles.number}>(3)</Text>
+        {t("dashboard.runningScheme")}{" "}
+        <Text style={styles.number}>({data?.length})</Text>
       </Text>
       <Animated.FlatList
-        data={[1, 2, 3]}
+        data={data}
         horizontal
         pagingEnabled
         initialScrollIndex={0}
@@ -47,37 +50,20 @@ const RunningSchemeCard = () => {
             <View key={index}>
               <Image
                 source={{
-                  uri: "https://images.unsplash.com/photo-1728327511297-948650da8ed9?q=80&w=1528&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  uri: IMAGE_URL + item?.scheme_pic?.file_path,
                 }}
                 style={styles.image}
               />
-              <Text style={styles.title}>Sales Ms Road TMT Bar</Text>
-              <Text style={styles.des}>
+              <Text style={styles.title}>{item?.name}</Text>
+              {/* <Text style={styles.des}>
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry lorem.
-              </Text>
+              </Text> */}
             </View>
           );
         }}
       />
-      <View style={styles.dotView}>
-        {[1, 2, 3].map((item, index) => {
-          const isActive = index === currentPage;
-          return (
-            <View
-              style={[
-                styles.outerView,
-                {
-                  backgroundColor: isActive ? colors.white : colors.lightGray_1,
-                  shadowColor: isActive ? colors.black : colors.white,
-                },
-              ]}
-            >
-              {isActive && <View style={styles.innerView} />}
-            </View>
-          );
-        })}
-      </View>
+      <DotView data={data} currentPage={currentPage} />
     </View>
   );
 };
@@ -115,8 +101,8 @@ const styles = StyleSheet.create({
   },
   image: {
     width: wp(80),
-    height: hp(40),
-    resizeMode: "cover",
+    height: hp(50),
+    resizeMode: "contain",
     borderRadius: 10,
   },
   title: {
@@ -133,31 +119,5 @@ const styles = StyleSheet.create({
     width: wp(70),
     marginHorizontal: wp(2),
     marginBottom: hp(2),
-  },
-  dotView: {
-    flexDirection: "row",
-    alignSelf: "center",
-    width: isiPAD ? wp(13) : wp(18),
-    justifyContent: "space-between",
-  },
-  outerView: {
-    width: isiPAD ? wp(3) : wp(4),
-    height: isiPAD ? wp(3) : wp(4),
-    borderRadius: 50,
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 2.65,
-    elevation: 8,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  innerView: {
-    width: isiPAD ? wp(2) : wp(2.5),
-    height: isiPAD ? wp(2) : wp(2.5),
-    borderRadius: 50,
-    backgroundColor: colors.primary,
   },
 });

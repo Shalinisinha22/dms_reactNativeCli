@@ -1,7 +1,7 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { colors } from "../../utils/Colors";
-import { hp, RFValue, wp } from "../../helper/Responsive";
+import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
 import {
   NavigationProp,
@@ -9,6 +9,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import { RouteString } from "../../navigation/RouteString";
 
 const DashboardActionCard = ({ data }: { data: any }) => {
   const { t } = useTranslation();
@@ -21,7 +22,13 @@ const DashboardActionCard = ({ data }: { data: any }) => {
           <Pressable
             style={styles.button}
             key={index}
-            onPress={() => navigation.navigate(item.routes)}
+            onPress={() => {
+              if(item.name === 'dashboard.approveOrder'){
+                navigation.navigate(item.routes,{ type : 'orderHistory.pending'})
+              } else {
+                navigation.navigate(item.routes)
+              }
+            }}
           >
             <Image
               source={item.icons}
@@ -68,8 +75,8 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   edit: {
-    width: wp(6),
-    height: wp(6),
+    width: isiPAD? wp(4) : wp(6),
+    height:  isiPAD? wp(4) : wp(6),
     resizeMode: "cover",
   },
 });

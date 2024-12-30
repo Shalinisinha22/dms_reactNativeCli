@@ -12,7 +12,7 @@ interface SafeAreaContainerProps {
 const SafeAreaContainer: React.FC<PropsWithChildren<SafeAreaContainerProps>> = ({ children, showHeader = true }) => {
   const { top } = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: top + hp(showHeader ? 0 : 2) }]}>
+    <View style={[styles.container, { paddingTop: top }]}>
       {showHeader && <TopHeader />}
       {children}
     </View>

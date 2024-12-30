@@ -7,18 +7,20 @@ import { hp, RFValue, wp } from "../../helper/Responsive";
 import DealerSchemeView from "../../components/scheme/DealerSchemeView";
 import { ImagePath } from "../../utils/ImagePath";
 import { useTranslation } from "react-i18next";
+import { useMySchemes } from "../../api/query/DashboardService";
 
 const MySchemeScreen = () => {
   const { t } = useTranslation();
+  const schemes = useMySchemes()
+
   return (
     <SafeAreaContainer>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           <View style={styles.mySchemeView}>
             <Text style={styles.title}>{t("myScheme.myScheme")}</Text>
-            <DealerSchemeView />
+            <DealerSchemeView item={schemes.data} />
           </View>
-          <DealerSchemeView />
         </View>
         <Image source={ImagePath.scheme} style={styles.schemeImage} />
       </ScrollView>

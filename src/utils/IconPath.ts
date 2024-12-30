@@ -45,5 +45,8 @@ export const IconsPath = {
     mason: require('../assets/icons/mason.png'),
     brandingMaterial: require('../assets/icons/brandingMaterial.png'),
     orderHistoryRed: require('../assets/icons/orderHistoryRed.png'),
-    placeOrderRed: require('../assets/icons/placeOrderRed.png')
+    placeOrderRed: require('../assets/icons/placeOrderRed.png'),
+    trash: require('../assets/icons/trash.png'),
+    whiteClose: require('../assets/icons/whiteClose.png'),
+    user: require('../assets/icons/user.png')
 }

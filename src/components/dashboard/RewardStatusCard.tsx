@@ -11,33 +11,62 @@ import {
 } from "@react-navigation/native";
 import { RouteString } from "../../navigation/RouteString";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
-const RewardStatusCard = () => {
+const RewardStatusCard = ({ item }: { item: any }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const isApprove = item?.status === "approved";
+  const isPending = item?.status === "pending";
+
   return (
     <View style={styles.cardView}>
       <View style={styles.orderNoView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>M</Text>
+          <Text style={commonStyle.userNameText}>
+            {item?.referral_name?.slice(0, 1)}
+          </Text>
         </View>
         <View style={styles.textView}>
-          <Text style={styles.salesName}>Mohin Shah</Text>
-          <Text style={styles.orderNo}>Claim No : 121124</Text>
+          <Text style={styles.salesName}>{item?.referral_name}</Text>
+          <Text style={styles.orderNo}>Claim No : {item?.claim_number}</Text>
         </View>
       </View>
       <View style={styles.dateRowView}>
         <View>
-          <Text style={styles.date}>{t('masonManagement.date')}</Text>
-          <Text style={styles.value}>12 Sept 2024</Text>
+          <Text style={styles.date}>{t("masonManagement.date")}</Text>
+          <Text style={styles.value}>
+            {moment(item?.referral_date).format("DD MMM YYYY")}
+          </Text>
         </View>
         <View>
           <Text style={styles.date}>Referral Products</Text>
           <Text style={styles.value}>TMT Bar 8mm</Text>
         </View>
         <View style={{ alignItems: "center" }}>
-          <View style={styles.salesView}>
-            <Text style={styles.sales}>{t('dashboard.approved')}</Text>
+          <View
+            style={[
+              styles.salesView,
+              {
+                backgroundColor: isApprove ? colors.green_100 : colors.red_100,
+              },
+            ]}
+          >
+            <Text
+              style={[
+                styles.sales,
+                {
+                  color: isApprove ? colors.green_1 : colors.primary,
+                },
+              ]}
+            >
+              {isApprove
+                ? t("dashboard.approved")
+                : isPending
+                ? t("orderHistory.pending")
+                : t("dashboard.rejected")}
+            </Text>
           </View>
           <Pressable
             style={{ marginTop: hp(1) }}
@@ -45,7 +74,9 @@ const RewardStatusCard = () => {
               navigation.navigate(RouteString.RewardStatusdetailScreen)
             }
           >
-            <Text style={styles.viewDetail}>{t('rewardStatus.viewDetail')}</Text>
+            <Text style={styles.viewDetail}>
+              {t("rewardStatus.viewDetail")}
+            </Text>
           </Pressable>
         </View>
       </View>
@@ -90,7 +121,6 @@ const styles = StyleSheet.create({
     marginTop: hp(0.5),
   },
   salesView: {
-    backgroundColor: colors.green_100,
     width: wp(20),
     height: hp(3.5),
     justifyContent: "center",
@@ -98,7 +128,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   sales: {
-    color: colors.green_1,
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(11),
   },

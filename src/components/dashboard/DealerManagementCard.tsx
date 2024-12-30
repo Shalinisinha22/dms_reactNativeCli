@@ -5,7 +5,7 @@ import { colors } from "../../utils/Colors";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import { useTranslation } from "react-i18next";
 import { IconsPath } from "../../utils/IconPath";
-import { DealerManagementCardProps } from "../../interfaces/Types";
+import { DealerManagementCardProps, UserType } from "../../interfaces/Types";
 import { commonStyle } from "../../utils/commonStyles";
 import {
   NavigationProp,
@@ -13,58 +13,81 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { RouteString } from "../../navigation/RouteString";
+import TwoStepOrderTracking from "../common/TwoStepOrderTracking";
+import ApproveButton from "../common/ApproveButton";
+import RejectButton from "../common/RejectButton";
 
-const DealerManagementCard = ({ isApproved }: DealerManagementCardProps) => {
+const DealerManagementCard = ({
+  item,
+  ApproveOnPress,
+  RejectOnPress,
+}: DealerManagementCardProps) => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const isApproveButton = item?.status?.by_aso === "pending";
 
   return (
     <Pressable
       style={styles.cardView}
-      onPress={() => navigation.navigate(RouteString.ViewDealerDetailScreen)}
+      onPress={() =>
+        navigation.navigate(RouteString.ViewDealerDetailScreen, {
+          type: UserType.DEALER,
+          id: item.dealerId,
+        })
+      }
     >
       <View style={styles.orderNoView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>M</Text>
+          <Text style={commonStyle.userNameText}>{item.name.slice(0, 1)}</Text>
         </View>
         <View style={styles.mainTextView}>
           <View style={styles.textView}>
             <View>
-              <Text style={styles.salesName}>Mohin Shah</Text>
+              <Text style={styles.salesName}>{item.name}</Text>
               <Text style={styles.orderNo}>
-                {t("dealerwiseSales.dealerNo")} : 121124
+                {t("dealerwiseSales.dealerNo")} : {item.dealerNumber}
               </Text>
             </View>
             <View
-              style={[
-                styles.salesView,
-                {
-                  backgroundColor: isApproved
-                    ? colors.green_100
-                    : colors.red_100,
-                },
-              ]}
+              style={{
+                marginTop: hp(2),
+                marginRight: wp(8),
+              }}
             >
-              <Text
-                style={[
-                  styles.sales,
-                  {
-                    color: isApproved ? colors.green_1 : colors.primary,
-                  },
-                ]}
-              >
-                {isApproved ? t("dashboard.approved") : t("dashboard.rejected")}
-              </Text>
+              <TwoStepOrderTracking
+                selectedStep={1}
+                isCheckIcons
+                asoIcons={
+                  item?.status?.by_aso === "approved"
+                    ? IconsPath.check
+                    : item?.status?.by_aso === "pending"
+                    ? null
+                    : IconsPath.whiteClose
+                }
+                dealerIcons={
+                  item?.status?.by_distributor === "approved"
+                    ? IconsPath.check
+                    : item?.status?.by_distributor === "pending"
+                    ? null
+                    : IconsPath.whiteClose
+                }
+                containerStyle={{ bottom: hp(2) }}
+              />
             </View>
           </View>
           <View style={styles.locationRowView}>
             <Image source={IconsPath.location} style={styles.location} />
-            <Text style={styles.locationText}>
-              123 . Apple Square Complex Donzle Park
-            </Text>
+            <Text style={styles.locationText}>{item.address}</Text>
           </View>
         </View>
       </View>
+      {isApproveButton && (
+        <View style={styles.buttonRowView}>
+          <ApproveButton onPress={ApproveOnPress} />
+          <RejectButton onPress={RejectOnPress} />
+        </View>
+      )}
     </Pressable>
   );
 };
@@ -93,7 +116,7 @@ const styles = StyleSheet.create({
   orderNo: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
-    fontSize: RFValue(12),
+    fontSize: RFValue(9),
     marginTop: hp(0.5),
   },
   textView: {
@@ -135,5 +158,12 @@ const styles = StyleSheet.create({
   mainTextView: {
     flex: 1,
     marginLeft: wp(3),
+  },
+  buttonRowView: {
+    flexDirection: "row",
+    marginTop: hp(1),
+    marginLeft: wp(10),
+    justifyContent: "space-between",
+    width: wp(46),
   },
 });

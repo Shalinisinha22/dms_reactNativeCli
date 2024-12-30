@@ -19,7 +19,7 @@ const DocumentUploadView = ({
         {title}
        {isRequired && <Text style={{color: colors.primary}}> *</Text>}
       </Text>
-     {fileName && <Text>{fileName}</Text>}
+     {fileName && <Text style={{width:wp(50)}} numberOfLines={1}>{fileName}</Text>}
       </View>
       <Image source={icons} style={styles.icons} />
     </Pressable>

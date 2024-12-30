@@ -1,7 +1,10 @@
 import { Image, Pressable, StyleSheet, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "@react-navigation/native";
 import { RouteString } from "./RouteString";
 import ChooseLanguageScreen from "../screen/onBording/ChooseLanguageScreen";
 import ChoosePortalAccessScreen from "../screen/onBording/ChoosePortalAccessScreen";
@@ -36,7 +39,7 @@ import MySchemeScreen from "../screen/home/MySchemeScreen";
 import ViewSchemeScreen from "../screen/home/ViewSchemeScreen";
 import NotificationScreen from "../screen/notification/NotificationScreen";
 import ForgotPasswordScreen from "../screen/auth/ForgotPasswordScreen";
-import { useAppSelector } from "../redux/Store";
+import { useAppDispatch, useAppSelector } from "../redux/Store";
 import { UserType } from "../interfaces/Types";
 import { useTranslation } from "react-i18next";
 import DealerManagementScreen from "../screen/dealerManagement/DealerManagementScreen";
@@ -46,7 +49,6 @@ import OrderSuccessfullyScreen from "../screen/placeOrder/OrderSuccessfullyScree
 import ViewDealerDetailScreen from "../screen/dealerManagement/ViewDealerDetailScreen";
 import DealerWiseSalesScreen from "../screen/dealerManagement/DealerWiseSalesScreen";
 import ASORegistrationScreen from "../screen/auth/ASORegistrationScreen";
-import AsoNewDealerOnboardScreen from "../screen/dealerManagement/AsoNewDealerOnboardScreen";
 import AsoNewMasonOnboardScreen from "../screen/masonMangement/AsoNewMasonOnboardScreen";
 import AsoNewEngineerOnboardScreen from "../screen/engineerManagement/AsoNewEngineerOnboardScreen";
 import EngineerManagementScreen from "../screen/engineerManagement/EngineerManagementScreen";
@@ -56,39 +58,53 @@ import MasonAndEngineerRegistrationScreen from "../screen/auth/MasonAndEngineerR
 import ReferralSubmissionScreen from "../screen/home/ReferralSubmissionScreen";
 import RewardStatusScreen from "../screen/home/RewardStatusScreen";
 import RewardStatusdetailScreen from "../screen/home/RewardStatusdetailScreen";
+import { authActions } from "../redux/slice/AuthSlice";
+import messaging from "@react-native-firebase/messaging";
+import { IMAGE_URL } from "@env";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const BottomTab = createBottomTabNavigator();
+export const navigationRef = createNavigationContainerRef();
 
 const Routes = () => {
+  const { user_approval_status } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    getFCMToken();
+  }, []);
+
+  const getFCMToken = async () => {
+    const token = await messaging().getToken();
+    dispatch(authActions.setFCMToken(token));
+    console.log("token", token);
+  };
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={RouteString.OnBording} component={OnBording} />
-        <Stack.Screen name={RouteString.Auth} component={Auth} />
-        <Stack.Screen
-          name={RouteString.DropDownNavigator}
-          component={DropDownNavigator}
-        />
-        <Stack.Screen
-          name={RouteString.InvoiceDetailScreen}
-          component={InvoiceDetailScreen}
-        />
-        <Stack.Screen
-          name={RouteString.NotificationScreen}
-          component={NotificationScreen}
-        />
-        <Stack.Screen
-          name={RouteString.NewDealerOnboardScreen}
-          component={NewDealerOnboardScreen}
-        />
-        <Stack.Screen
-          name={RouteString.AsoNewDealerOnboardScreen}
-          component={AsoNewDealerOnboardScreen}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={
+        user_approval_status == "approved"
+          ? RouteString.DropDownNavigator
+          : RouteString.OnBording
+      }
+    >
+      <Stack.Screen name={RouteString.OnBording} component={OnBording} />
+      <Stack.Screen name={RouteString.Auth} component={Auth} />
+      <Stack.Screen
+        name={RouteString.DropDownNavigator}
+        component={DropDownNavigator}
+      />
+      <Stack.Screen
+        name={RouteString.InvoiceDetailScreen}
+        component={InvoiceDetailScreen}
+      />
+      <Stack.Screen
+        name={RouteString.NotificationScreen}
+        component={NotificationScreen}
+      />
+    </Stack.Navigator>
   );
 };
 
@@ -182,8 +198,13 @@ function DropDownNavigator() {
 }
 
 function BottomTabNavigator() {
-  const { portal } = useAppSelector((state) => state.auth);
+  const { portal, userInfo } = useAppSelector((state) => state.auth);
   const { t } = useTranslation();
+  const [isError, setIsError] = useState(false);
+
+  const imageUrl = userInfo.profile_pic?.file_path
+    ? { uri: `${IMAGE_URL}${userInfo.profile_pic.file_path}` }
+    : null;
 
   return (
     <BottomTab.Navigator
@@ -205,13 +226,14 @@ function BottomTabNavigator() {
           }
           const icons =
             route.name === RouteString.ProfileScreen
-              ? {
-                  uri: userProfileImage,
-                }
+              ? isError || !imageUrl
+                ? IconsPath.user
+                : imageUrl
               : iconName;
           return (
             <Image
               source={icons}
+              onError={() => setIsError(true)}
               tintColor={
                 route.name === RouteString.ProfileScreen
                   ? "trtransparent"
@@ -316,6 +338,10 @@ function Home() {
         component={AsoNewMasonOnboardScreen}
       />
       <Stack.Screen
+        name={RouteString.DealerManagementScreen}
+        component={DealerManagementScreen}
+      />
+      <Stack.Screen
         name={RouteString.AsoNewEngineerOnboardScreen}
         component={AsoNewEngineerOnboardScreen}
       />
@@ -343,6 +369,14 @@ function Home() {
         name={RouteString.RewardStatusdetailScreen}
         component={RewardStatusdetailScreen}
       />
+      <Stack.Screen
+        name={RouteString.NewDealerOnboardScreen}
+        component={NewDealerOnboardScreen}
+      />
+      <Stack.Screen
+        name={RouteString.ViewDealerDetailScreen}
+        component={ViewDealerDetailScreen}
+      />
     </Stack.Navigator>
   );
 }
@@ -354,6 +388,7 @@ function OrderHistory() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen
         name={RouteString.OrderHistoryScreen}
+        initialParams={{ type: undefined }}
         component={
           portal === UserType.DISTRIBUTOR || portal === UserType.ASO
             ? DealerManagementScreen
@@ -369,6 +404,10 @@ function OrderHistory() {
       <Stack.Screen
         name={RouteString.ViewDealerDetailScreen}
         component={ViewDealerDetailScreen}
+      />
+      <Stack.Screen
+        name={RouteString.NewDealerOnboardScreen}
+        component={NewDealerOnboardScreen}
       />
     </Stack.Navigator>
   );

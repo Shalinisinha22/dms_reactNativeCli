@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { FontPath } from "../../utils/FontPath";
 import { colors } from "../../utils/Colors";
@@ -15,36 +15,50 @@ import Button from "../../components/common/Button";
 import {
   NavigationProp,
   ParamListBase,
+  RouteProp,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 import { IconsPath } from "../../utils/IconPath";
 import { useTranslation } from "react-i18next";
 import { RouteString } from "../../navigation/RouteString";
-
-const data = [
-  {
-    id: "1",
-    description: "MS Rod TMT Bar 8mm MRP: 20000",
-    weight: "12 MT",
-    amount: "2,000.00",
-  },
-  {
-    id: "2",
-    description: "MS Rod TMT Bar 8mm MRP: 20000",
-    weight: "12 MT",
-    amount: "2,000.00",
-  },
-  {
-    id: "3",
-    description: "MS Rod TMT Bar 8mm MRP: 20000",
-    weight: "12 MT",
-    amount: "2,000.00",
-  },
-];
+import { ParamsType } from "../../navigation/ParamsType";
+import { useNewOrder } from "../../api/query/OrderPlacementService";
 
 const ConfirmOrderScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const routes = useRoute<RouteProp<ParamsType, "ConfirmOrderScreen">>();
+  const [isApiLoading, setIsApiLoading] = useState(false);
+
+  const {mutateAsync: createNewOrder} = useNewOrder();
+
+  const totalAmount = routes.params.order.reduce((acc: number, item: any) => {
+    const weight = parseFloat(item.value) || 0; 
+    const pricePerMt = parseFloat(item.price_per_mt) || 0;
+    return acc + weight * pricePerMt; 
+  }, 0);
+
+  const handleCreateOrder = async() => {
+    setIsApiLoading(true)
+    try {
+      const formattedData: any = {
+        products: routes.params.order.map((item) => ({
+          productId: item.id || item?.productId,
+          quantity: item.value,
+        })),
+      };
+      const res = await createNewOrder(formattedData)
+      if(res){
+        setIsApiLoading(false)
+         navigation.navigate(RouteString.OrderSuccessfullyScreen)
+      }
+    } catch (error) {
+      setIsApiLoading(false)
+      console.log('handleCreateOrder', error.response.data.errors.products)
+    }
+  }
+
   return (
     <SafeAreaContainer>
       <View style={styles.backRowView}>
@@ -58,19 +72,20 @@ const ConfirmOrderScreen = () => {
         <Text style={styles.headerTitle2}>
           {t("confirmOrder.productDecription")}
         </Text>
-        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")}</Text>
-        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")}</Text>
+        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")} (MT)</Text>
+        <Text style={styles.headerTitle4}>{t("confirmOrder.amount")} (₹)</Text>
       </View>
       <View>
         <FlatList
-          data={data}
+          data={routes.params.order}
+          removeClippedSubviews={false} 
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView}>
-                <Text style={styles.itemText1}>{item.id}</Text>
-                <Text style={styles.itemText2}>{item.description}</Text>
-                <Text style={styles.itemText3}>{item.weight}</Text>
-                <Text style={styles.itemText4}>{item.amount}</Text>
+                <Text style={styles.itemText1}>{index + 1}</Text>
+                <Text style={styles.itemText2}>{item.name}</Text>
+                <Text style={styles.itemText3}>{item.value}</Text>
+                <Text style={styles.itemText4}>{Number(item?.value) * item.price_per_mt}</Text>
               </View>
             );
           }}
@@ -79,11 +94,11 @@ const ConfirmOrderScreen = () => {
       <View style={styles.totalView}>
         <View style={styles.totalRowView}>
           <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
-          <Text style={styles.amount}> 4,000.00</Text>
+          <Text style={styles.amount}> ₹{totalAmount}</Text>
         </View>
         <View style={styles.totalRowView}>
           <Text style={styles.total}>GST @18% : </Text>
-          <Text style={styles.amount}> 720</Text>
+          <Text style={styles.amount}> ₹{(totalAmount * 18) / 100}</Text>
         </View>
         <View style={styles.totalRowView}>
           <Text style={[styles.total, { fontFamily: FontPath.OutfitBold }]}>
@@ -91,15 +106,15 @@ const ConfirmOrderScreen = () => {
           </Text>
           <Text style={[styles.amount, { fontFamily: FontPath.OutfitBold }]}>
             {" "}
-            4,720.00
+            ₹{totalAmount + (totalAmount * 18) / 100}
           </Text>
         </View>
       </View>
       <Button
         buttonName={t("confirmOrder.PlaceOrder")}
-        isLoading={false}
+        isLoading={isApiLoading}
         buttonStyle={{ marginBottom: hp(4) }}
-        onPress={() => navigation.navigate(RouteString.OrderSuccessfullyScreen)}
+        onPress={handleCreateOrder}
       />
     </SafeAreaContainer>
   );
@@ -128,25 +143,25 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(10),
+    width: wp(3),
   },
   headerTitle2: {
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(35),
+    width: wp(25),
   },
   headerTitle3: {
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(15),
+    width: wp(21),
   },
   headerTitle4: {
     color: colors.white,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
-    width: wp(15),
+    width: wp(21),
   },
   headerView: {
     flexDirection: "row",
@@ -173,19 +188,20 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    width: wp(10),
+    width: wp(4),
   },
   itemText2: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    width: wp(40),
+    width: wp(20),
   },
   itemText3: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
-    width: wp(15),
+    textAlign:'center',
+    width: wp(18),
   },
   itemText4: {
     color: colors.black,

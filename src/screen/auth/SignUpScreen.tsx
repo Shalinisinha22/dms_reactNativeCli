@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { hp, RFValue, wp } from "../../helper/Responsive";
@@ -21,30 +21,54 @@ import Button from "../../components/common/Button";
 import { useTranslation } from "react-i18next";
 import { commonStyle } from "../../utils/commonStyles";
 import { useSignUp } from "../../api/query/AuthService";
+import Toast from "react-native-toast-message";
 
 const SignUpScreen = () => {
   const { t } = useTranslation();
   const { portal } = useAppSelector((state) => state.auth);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { mutateAsync: createSignUp } = useSignUp();
+  const { mutateAsync: createSignUp} = useSignUp();
+  const [isApiLoading, setIsApiLoading] = useState(false);
+
+  const capitalizeFirstLetter = (word: string) => {
+    if (!word) return '';
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  };
+  
+  const capitalizedWord = capitalizeFirstLetter(portal);
 
   const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
     useFormik({
-      initialValues: { fullname: "dixit test", email: "dixitwork013@gmail.com", phoneNumber: "9879439697" },
+      initialValues: {
+        fullname: "",
+        email: "",
+        phoneNumber: "",
+      },
       validationSchema: signUpValidationSchema,
       onSubmit: async (values) => {
         try {
+          setIsApiLoading(true)
           const res = await createSignUp({
             email: values.email,
             mobile_number: values.phoneNumber,
             name: values.fullname,
             role: portal,
           });
-          console.log('res',res)
-          // navigation.navigate(RouteString.VerifyOTPScreen)
-        } catch (error) {
-          console.log('SignUpScreen==>', error)
+          if (res) {
+            setIsApiLoading(false)
+            console.log("res", res);
+            navigation.navigate(RouteString.VerifyOTPScreen, {
+              mobile_number: values.phoneNumber,
+            });
+          }
+        } catch (error: any) {
+          setIsApiLoading(false)
+          Toast.show({
+            type: 'error',
+            text1: error?.response.data.message,
+          });
         }
+       
       },
     });
 
@@ -58,7 +82,7 @@ const SignUpScreen = () => {
           <BackIcons />
         </Pressable>
         <Image source={ImagePath.appLogo} style={commonStyle.appLogo} />
-        <Text style={styles.portalAccess}>{portal}</Text>
+        <Text style={styles.portalAccess}>{capitalizedWord}</Text>
         <Text style={commonStyle.login}>{t("signUp.singUpAccessPortal")}</Text>
         <TextInputField
           title={t("signUp.fullName")}
@@ -96,7 +120,7 @@ const SignUpScreen = () => {
         />
         <Button
           buttonName={t("signUp.sendOtp")}
-          isLoading={false}
+          isLoading={isApiLoading}
           onPress={handleSubmit}
         />
         <View style={styles.haveAccountRowView}>

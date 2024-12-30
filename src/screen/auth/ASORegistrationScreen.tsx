@@ -20,29 +20,98 @@ import { IconsPath } from "../../utils/IconPath";
 import DocumentPicker from "react-native-document-picker";
 import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
+import SearchDropDownView from "../../components/common/SearchDropDownView";
+import { areaType, city } from "../../utils/JsonData";
+import { useAsoRegister } from "../../api/query/RegistrationService";
+import MultipulSelectDropDown from "../../components/common/MultipulSelectDropDown";
+import { useAppDispatch, useAppSelector } from "../../redux/Store";
+import Toast from "react-native-toast-message";
+import { useSendFCMToken } from "../../api/query/NotificationService";
 
 const ASORegistrationScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const [uploadedDocuments, setUploadedDocuments] = useState<any>({}); // State to store documents
+  const { FCMToken } = useAppSelector((state) => state.auth);
+  
+  const [uploadedDocuments, setUploadedDocuments] = useState<any>({
+    aadhaar_card: null,
+    pan_card: null,
+    profile_pic: null,
+  });
   const [isCheck, setIsCheck] = useState(false);
+  const { mutateAsync: createAsoRegister } = useAsoRegister();
+    const { mutateAsync: sendFCMToken } = useSendFCMToken();
+  
+  const [isApiLoading, setIsApiLoading] = useState(false);
 
-  const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
-    useFormik({
-      initialValues: {
-        workCity: "",
-        zipCode: "",
-      },
-      validationSchema: asoRegistrationValidationSchema,
-      onSubmit: (values) => {
-        console.log("--->", values);
-      },
-    });
+  const dispatch = useAppDispatch();
+
+  const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
+
+  const {
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values,
+    touched,
+    errors,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      workCity: "",
+      zipCode: "",
+      region: [],
+    },
+    validationSchema: asoRegistrationValidationSchema,
+    onSubmit: async (values) => {
+      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
+        (doc) => doc !== null
+      );
+
+      if (!allDocumentsUploaded) {
+        Toast.show({
+          type: "error",
+          text1: "Please upload all the required documents",
+        });
+        return;
+      }
+      setIsApiLoading(true);
+      try {
+        const formData = new FormData();
+        formData.append("work_city", values.workCity);
+        formData.append("zipcode", values.zipCode);
+        formData.append("region", values.region);
+        console.log("uploadedDocuments", uploadedDocuments);
+        fileFields.forEach((field) => {
+          if (uploadedDocuments[field]) {
+            formData.append(field, {
+              uri: uploadedDocuments[field].uri,
+              type: uploadedDocuments[field].type,
+              name: uploadedDocuments[field].name,
+            });
+          }
+        });
+        const res = await createAsoRegister(formData);
+        if (res) {
+          await sendFCMToken({firebaseToken: FCMToken})
+          setIsApiLoading(false);
+          navigation.navigate(RouteString.CompletingRegistrationScreen);
+        }
+      } catch (error) {
+        setIsApiLoading(false);
+        console.log("ASORegistrationScreen", error);
+      }
+    },
+  });
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
     try {
       const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf], // Restrict to PDFs
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.images,
+          DocumentPicker.types.doc,
+        ],
         presentationStyle: "fullScreen",
       });
 
@@ -70,15 +139,23 @@ const ASORegistrationScreen = () => {
         <Text style={styles.title}>
           {t("registration.completeRegistration")}
         </Text>
-        <TextInputField
-          title={t("registration.workCity")}
-          placeholder={t("registration.enterWorkCity")}
-          isPassword={false}
-          value={values.workCity}
-          onChangeText={handleChange("workCity")}
-          onBlur={handleBlur("workCity")}
-          touched={touched.workCity}
+        <MultipulSelectDropDown
+          zIndex={2}
+          label={t("registration.areaRegionName")}
+          placeHolder={t("registration.selectAreaRegionName")}
+          data={areaType}
+          selectedName={(value) => setFieldValue("region", value)}
+          errors={errors.region}
+          mainViewStyle={{ marginTop: hp(2) }}
+        />
+        <SearchDropDownView
+          zIndex={1}
+          label={t("registration.workCity")}
+          placeHolder={t("registration.enterWorkCity")}
+          data={city}
+          selectedName={(value) => setFieldValue("workCity", value)}
           errors={errors.workCity}
+          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
           isRequired={true}
         />
         <TextInputField
@@ -100,7 +177,7 @@ const ASORegistrationScreen = () => {
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("aadharCard")}
+          onPress={() => handleDocumentSelection("aadhaar_card")}
           title={t("registration.aadharCardUpload")}
           fileName={uploadedDocuments?.aadharCard?.name}
           isRequired={true}
@@ -111,7 +188,7 @@ const ASORegistrationScreen = () => {
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("panCard")}
+          onPress={() => handleDocumentSelection("pan_card")}
           title={t("registration.panCardUpload")}
           fileName={uploadedDocuments?.panCard?.name}
           isRequired={true}
@@ -122,7 +199,7 @@ const ASORegistrationScreen = () => {
               ? IconsPath.success
               : IconsPath.upload
           }
-          onPress={() => handleDocumentSelection("photo")}
+          onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
           fileName={uploadedDocuments?.photo?.name}
           isRequired={true}
@@ -148,11 +225,9 @@ const ASORegistrationScreen = () => {
         </View>
         <Button
           buttonName={t("registration.submitForApproval")}
-          isLoading={false}
+          isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={() =>
-            navigation.navigate(RouteString.CompletingRegistrationScreen)
-          }
+          onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>

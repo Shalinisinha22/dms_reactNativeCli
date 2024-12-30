@@ -13,15 +13,34 @@ import { RouteString } from "../../navigation/RouteString";
 import { useTranslation } from "react-i18next";
 import { OrderCardProps } from "../../interfaces/Types";
 import { commonStyle } from "../../utils/commonStyles";
+import moment from "moment";
+import { IconsPath } from "../../utils/IconPath";
 
-const OrderCard = ({ isShowButton, orderModifiedOnPress, perviouseOnPress }: OrderCardProps) => {
+const OrderCard = ({
+  isShowButton,
+  orderModifiedOnPress,
+  perviouseOnPress,
+  item,
+}: OrderCardProps) => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const totalQty = item?.products.reduce((acc: number, item: any) => {
+    const weight = parseFloat(item.quantity) || 0;
+    return acc + weight;
+  }, 0);
+
+  const totalAmount = item?.products.reduce((acc: number, item: any) => {
+    const amount = parseFloat(item.amount) || 0;
+    return acc + amount;
+  }, 0);
 
   return (
     <Pressable
       style={styles.cardView}
-      onPress={() => navigation.navigate(RouteString.ViewOrderScreen)}
+      onPress={() =>
+        navigation.navigate(RouteString.ViewOrderScreen, { id: item?.id })
+      }
     >
       <View style={styles.headerNoRowView}>
         <View style={styles.orderNoView}>
@@ -30,11 +49,14 @@ const OrderCard = ({ isShowButton, orderModifiedOnPress, perviouseOnPress }: Ord
           </View>
           <View style={{ marginLeft: wp(3) }}>
             <Text style={styles.orderNo}>
-              {t("orderHistory.orderNo")} : 121124
+              {t("orderHistory.orderNo")} : {item?.orderNumber}
             </Text>
-            <Text style={styles.dispatchDate}>
-              {t("orderHistory.dispatchDate")} : 16 Spt 2024
-            </Text>
+            {item?.dispatchDate && (
+              <Text style={styles.dispatchDate}>
+                {t("orderHistory.dispatchDate")} :{" "}
+                {moment(item?.dispatchDate).format("DD MMM YYYY")}
+              </Text>
+            )}
           </View>
         </View>
         {/* <Pressable
@@ -45,7 +67,9 @@ const OrderCard = ({ isShowButton, orderModifiedOnPress, perviouseOnPress }: Ord
         {isShowButton && (
           <Pressable
             style={styles.cancelOrderButton}
-            onPress={() => navigation.navigate(RouteString.PlaceOrderScreen)}
+            onPress={() =>
+              navigation.navigate(RouteString.PlaceOrderScreen, { item: item })
+            }
           >
             <Text style={styles.cancelOrder}>{t("orderHistory.reorder")}</Text>
           </Pressable>
@@ -56,31 +80,31 @@ const OrderCard = ({ isShowButton, orderModifiedOnPress, perviouseOnPress }: Ord
           <Text style={styles.orderinfoText}>
             {t("orderHistory.orderDate")}
           </Text>
-          <Text style={styles.orderInfoDes}>12 Sept 2024</Text>
+          <Text style={styles.orderInfoDes}>
+            {moment(item?.orderDate).format("DD MMM YYYY")}
+          </Text>
         </View>
         <View>
           <Text style={styles.orderinfoText}>
             {t("orderHistory.totalWeight")}
           </Text>
-          <Text style={styles.orderInfoDes}>10 MT</Text>
+          <Text style={styles.orderInfoDes}>{totalQty} MT</Text>
         </View>
         <View>
           <Text style={styles.orderinfoText}>
             {t("orderHistory.totalAmount")}
           </Text>
-          <Text style={styles.orderInfoDes}>Rs.12,0000</Text>
+          <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
         </View>
         {isShowButton && (
           <View>
             <Pressable onPress={orderModifiedOnPress}>
               <Text style={styles.orderModified}>
-                {t("orderHistory.orderModified")} 
+                {t("orderHistory.orderModified")}
               </Text>
             </Pressable>
             <Pressable onPress={perviouseOnPress}>
-              <Text style={styles.previous}>
-                {t("orderHistory.previous")}
-              </Text>
+              <Text style={styles.previous}>{t("orderHistory.previous")}</Text>
             </Pressable>
           </View>
         )}
@@ -89,6 +113,38 @@ const OrderCard = ({ isShowButton, orderModifiedOnPress, perviouseOnPress }: Ord
         selectedStep={1}
         containerStyle={{ marginTop: 0 }}
         isCheckIcons={true}
+        admin={item?.status?.by_admin === "approved" ? true : false}
+        orderIcons={IconsPath.check}
+        distributorIcons={
+          item?.status?.by_distributor === "approved"
+            ? IconsPath.check
+            : item?.status?.by_distributor === "pending"
+            ? null
+            : IconsPath.whiteClose
+        }
+        asoIcons={
+          item?.status?.by_aso === "approved"
+            ? IconsPath.check
+            : item?.status?.by_aso === "pending"
+            ? null
+            : IconsPath.whiteClose
+        }
+        dispatchedIcons={
+          item?.status?.by_admin === "approved" ||
+          item?.status?.by_admin === "dispatched"
+            ? IconsPath.check
+            : item?.status?.by_admin === "pending"
+            ? null
+            : IconsPath.whiteClose
+        }
+        adminIcon={
+          item?.status?.by_admin === "approved" ||
+          item?.status?.by_admin === "dispatched"
+            ? IconsPath.check
+            : item?.status?.by_admin === "pending"
+            ? null
+            : IconsPath.whiteClose
+        }
       />
     </Pressable>
   );
@@ -156,6 +212,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(11),
     marginTop: hp(0.3),
+    textAlign:'center'
   },
   orderInfoRowView: {
     flexDirection: "row",
@@ -170,11 +227,11 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitBold,
     fontSize: RFValue(9),
   },
-  previous:{
+  previous: {
     color: colors.black,
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(9),
-    textAlign:'right',
-    marginTop:hp(0.5)
-  }
+    textAlign: "right",
+    marginTop: hp(0.5),
+  },
 });

@@ -1,4 +1,4 @@
-package com.dms
+package com.balmukund
 
 import android.os.Bundle
 import com.facebook.react.ReactActivity

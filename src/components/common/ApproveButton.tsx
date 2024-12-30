@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     approve:{
         color:colors.white,
         fontFamily:FontPath.OutfitSemiBold,
-        fontSize:RFValue(11),
+        fontSize:RFValue(10),
         marginLeft:wp(1),
         width:wp(13)
     }

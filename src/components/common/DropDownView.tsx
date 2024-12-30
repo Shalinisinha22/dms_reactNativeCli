@@ -49,9 +49,9 @@ const DropDownView = ({
             return (
               <Pressable
                 key={index}
-                onPress={() => handleSelectItem(item.name)}
+                onPress={() => handleSelectItem(t(`${item.name}`))}
               >
-                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.name}>{t(`${item.name}`)}</Text>
               </Pressable>
             );
           })}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.lightGray,
-    height: hp(5),
+    height: hp(6),
     borderRadius: 5,
     paddingHorizontal: wp(4),
     marginHorizontal: wp(5),

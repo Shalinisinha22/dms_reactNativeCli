@@ -1,13 +1,13 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {colors} from '../../utils/Colors';
 import {hp, isiPAD, RFValue, wp} from '../../helper/Responsive';
 import {FontPath} from '../../utils/FontPath';
 import { TotalOrderCardProps } from '../../interfaces/Types';
 
-const TotalOrderCard = ({source,title, total }:TotalOrderCardProps) => {
+const TotalOrderCard = ({source,title, total, onPress }:TotalOrderCardProps) => {
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={onPress}>
       <View style={styles.redView}>
         <View style={styles.redInnerView}>
           <Image source={source} style={styles.icons} tintColor={colors.white} />
@@ -17,7 +17,7 @@ const TotalOrderCard = ({source,title, total }:TotalOrderCardProps) => {
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.total}>{total}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
