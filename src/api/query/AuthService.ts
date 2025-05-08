@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "../ApiService";
 import { API_ENDPOINT } from "../ApiEndPoint";
 import {
@@ -83,6 +83,17 @@ export const useDeleteAccount = () => {
       const response = await axiosInstance.delete(
         API_ENDPOINT.DELETE_ACCOUNT + `${payload.userId}/delete`
       );
+      return response.data;
+    },
+  });
+};
+
+
+export const useGetRegionsList = () => {
+  return useQuery({
+    queryKey: ["useGetRegionsList"],
+    queryFn: async () => {
+      const response = await axiosInstance.get(API_ENDPOINT.GET_REGIONS);
       return response.data;
     },
   });

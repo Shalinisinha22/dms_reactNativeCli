@@ -31,7 +31,16 @@ export type ResetPasswordOTPPayload = {
 export type MyOrdersPayload = {
   startDate: string;
   endDate: string;
+  page: number;
+  status?:string
 };
+
+export type MyInvoiceGSTPayload = {
+  gst: string
+  startDate: string;
+  endDate: string;
+  page: number;
+}
 
 export type GetUserDetailsByIDPayload = {
   role:string
@@ -55,6 +64,19 @@ export type NewOrderPayload = {
   }[];
 };
 
+export type GetDistributorListPayload = {
+  regions:string
+}
+
+export type NotificationUnReadPayload = {
+  page: number
+}
+
+export type BrandingListProps = {
+  page: number
+}
+
+
 export type SupportPayload = {
   requestType: string;
   description: string;
@@ -71,6 +93,7 @@ export type InvoiceDetilsPayload = {
 export type GetUserRolePayload = {
   role: string;
   status:string
+  page: number
 };
 
 export type GetDealerStatusPayload = {
@@ -109,4 +132,12 @@ export type GetRewardStatusPayload = {
 
 export type GetOrdersDetailsPayload = {
   orderId:string
+}
+
+export type ReferralDetailsPayload = {
+  referralId:string
+}
+
+export type DownloadPdfPayload = {
+  invoiceId:string
 }

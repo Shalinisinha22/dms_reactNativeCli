@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Image,
   Pressable,
   SectionList,
@@ -6,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { IconsPath } from "../../utils/IconPath";
 import { hp, RFValue, wp } from "../../helper/Responsive";
@@ -15,6 +16,7 @@ import { colors } from "../../utils/Colors";
 import {
   NavigationProp,
   ParamListBase,
+  useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -25,44 +27,94 @@ const NotificationScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const getNotificationUnRead = useGetNotificationUnRead();
+  const [data, setData] = React.useState<any>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [nextPage, setNextPage] = useState<any>(null);
+  const [curPage, setCurPage] = useState(1);
+  const isFoused = useIsFocused();
+  const [isFetching, setIsFetching] = useState(false);
 
-  const notificationDatas = getNotificationUnRead?.data?.reduce(
-    (
-      acc: any[],
-      item: { createdAt: moment.MomentInput; id: any; body: any; isRead: any }
-    ) => {
-      if (!item?.createdAt) return acc; // Skip if createdAt is invalid
-  
-      const formattedDate = moment(item.createdAt).format("DD MMM");
-  
-      // Check if the date already exists in the accumulator
-      let existingDate = acc.find(
-        (entry: { title: string }) => entry.title === formattedDate
-      );
-  
-      // If it doesn't exist, create a new entry
-      if (!existingDate) {
-        existingDate = {
-          title: formattedDate, // Format date as required
-          data: [],
-        };
-        acc.push(existingDate);
+  useEffect(() => {
+    if (isFoused) {
+      getunReadNotification();
+      setCurPage(1);
+      setTotalPage(0);
+      setNextPage(null);
+    }
+  }, [isFoused]);
+
+  const getunReadNotification = async () => {
+    try {
+      const res = await getNotificationUnRead.mutateAsync({ page: curPage });
+      if (nextPage >= curPage && nextPage != null) {
+        setIsFetching(true);
       }
-  
-      // Push the notification item into the corresponding data array
-      existingDate.data.push({
-        id: item.id,
-        des: item.body,
-        isNew: item.isRead,
-        time: moment(item.createdAt).format("h:mm A"), // Format time
-        colors: item.isRead ? "#F5F6F8" : "#8BD399", // Use different colors based on read status
-      });
-  
-      return acc;
-    },
-    [] // Correct initialization of the accumulator
-  ) || [];
-  
+      if (res?.data) {
+        const notificationDatas =
+          res?.data.reduce(
+            (
+              acc: any[],
+              item: {
+                createdAt: moment.MomentInput;
+                id: any;
+                body: any;
+                isRead: any;
+              }
+            ) => {
+              if (!item?.createdAt) return acc; // Skip if createdAt is invalid
+
+              const formattedDate = moment(item.createdAt).format("DD MMM");
+
+              // Check if the date already exists in the accumulator
+              let existingDate = acc.find(
+                (entry: { title: string }) => entry.title === formattedDate
+              );
+
+              // If it doesn't exist, create a new entry
+              if (!existingDate) {
+                existingDate = {
+                  title: formattedDate, // Format date as required
+                  data: [],
+                };
+                acc.push(existingDate);
+              }
+
+              // Push the notification item into the corresponding data array
+              existingDate.data.push({
+                id: item.id,
+                des: item.body,
+                isNew: item.isRead,
+                time: moment(item.createdAt).format("h:mm A"), // Format time
+                colors: item.isRead ? "#F5F6F8" : "#8BD399", // Use different colors based on read status
+              });
+
+              return acc;
+            },
+            [] // Correct initialization of the accumulator
+          ) || [];
+        setData((prevData: any) =>
+          curPage === 1
+            ? notificationDatas
+            : [...prevData, ...notificationDatas]
+        );
+        if (res?.hasMore) {
+          setTotalPage(res.totalPage);
+          setNextPage(res.nextPage);
+        }
+        setIsFetching(false);
+      }
+    } catch (error) {
+      setIsFetching(false);
+      console.log("getunReadNotification", error);
+    }
+  };
+
+  const onEndReached = () => {
+    if (nextPage <= totalPage && nextPage != null) {
+      setCurPage(curPage + 1);
+      getunReadNotification();
+    }
+  };
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -94,13 +146,22 @@ const NotificationScreen = () => {
         />
       </View> */}
       <SectionList
-        sections={notificationDatas}
-        keyExtractor={(item) => item.id}
+        sections={data}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
         stickyHeaderHiddenOnScroll
         stickySectionHeadersEnabled
-        renderItem={({ item }) => {
+        showsVerticalScrollIndicator={false}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() =>
+          isFetching ? (
+            <ActivityIndicator size="small" color={colors.primary} />
+          ) : null
+        }
+        renderItem={({ item, index }) => {
           return (
             <View
+              key={index}
               style={[
                 styles.cardView,
                 {
@@ -198,6 +259,7 @@ const styles = StyleSheet.create({
   title: {
     marginHorizontal: wp(5),
     marginBottom: hp(2),
+    color:colors.black,
     fontFamily: FontPath.OutfitBold,
     fontSize: RFValue(14),
   },

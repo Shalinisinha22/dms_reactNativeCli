@@ -33,13 +33,24 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 500) {
       return Promise.reject(new Error("Server error. Please try again later."));
     }
-    if(error.response?.status === 403){
-      if (navigationRef.isReady()) {
-        navigationRef.reset({ index: 0, routes: [{ name: RouteString.Auth }] });
-        store.dispatch(authActions.setPortal(""));
-        store.dispatch(authActions.setToken(""));
-        store.dispatch(authActions.setUserInfo({}));
-        store.dispatch(authActions.setUserStatus("pending"));
+    if (error.response?.status === 403) {
+      const token = store.getState()?.auth?.token;
+      
+      // Only logout if there's an existing valid token
+      if (token) {
+        if (navigationRef.isReady()) {
+          // Clear auth state
+          store.dispatch(authActions.setPortal(""));
+          store.dispatch(authActions.setToken(""));
+          store.dispatch(authActions.setUserInfo({}));
+          store.dispatch(authActions.setUserStatus("pending"));
+          
+          // Redirect to auth screen
+          navigationRef.reset({
+            index: 0,
+            routes: [{ name: RouteString.Auth }],
+          });
+        }
       }
     }
     return Promise.reject(error);

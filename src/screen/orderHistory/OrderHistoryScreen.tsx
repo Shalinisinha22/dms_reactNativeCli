@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -36,67 +37,93 @@ import {
   useMyOrders,
 } from "../../api/query/DashboardService";
 import moment from "moment";
-import { orderFilter } from "../../utils/commonFunctions";
 import Toast from "react-native-toast-message";
 import { ParamsType } from "../../navigation/ParamsType";
 
 const OrderHistoryScreen = () => {
   const { t } = useTranslation();
   const { portal } = useAppSelector((state) => state.auth);
+
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const routes = useRoute<RouteProp<ParamsType, "OrderHistoryScreen">>();
+  const isFoused = useIsFocused();
+
   const [isRejectOpenModal, setIsRejectOpenModal] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isPerviousOrderModal, setIsPerviousOrderModal] = useState(false);
   const [isStartDate, setStartDate] = useState("");
   const [isEndDate, setEndDate] = useState("");
-  const [isSelectType, setSelectType] = useState("All");
-  const { mutateAsync: getMyOrders } = useMyOrders();
-  const [orderList, setOrderList] = useState([]);
-  const [orderListFilter, setOrderListFilter] = useState([]);
-  const isFoused = useIsFocused();
-  const { mutateAsync: aprroveOrders } = useAprroveOrders();
+  const [isSelectType, setSelectType] = useState("orderHistory.all");
+  const [orderList, setOrderList] = useState<any>([]);
   const [orderId, setOrderId] = useState("");
+  const [totalPage, setTotalPage] = useState(0);
+  const [nextPage, setNextPage] = useState<any>(null);
+  const [curPage, setCurPage] = useState(1);
+  const [isFetching, setIsFetching] = useState(false);
+
+  const { mutateAsync: aprroveOrders } = useAprroveOrders();
+  const { mutateAsync: getMyOrders } = useMyOrders();
 
   useEffect(() => {
-    if(routes.params?.type === undefined){
-      setSelectType('All')
+    if (routes.params?.type === undefined) {
+      setSelectType("orderHistory.all");
+      handleGetOrderList();
+      setCurPage(1);
+      setTotalPage(0);
+      setNextPage(null);
+    }
+  }, [isStartDate, isEndDate]);
+
+  useEffect(() => {
+    if (isFoused && portal) {
+      setSelectType(
+        routes.params?.type ? "orderHistory.pending" : "orderHistory.all"
+      );
+      setCurPage(1);
+      setTotalPage(0);
+      setNextPage(null);
       handleGetOrderList();
     }
-  }, [isStartDate, isEndDate, isFoused]);
+  }, [isFoused]);
 
   useEffect(() => {
-    setOrderList([])
-    handleFilter()
-    const datafilter: any = orderFilter(isSelectType, orderListFilter);
-    if (datafilter?.length === 0 && isSelectType === "orderHistory.all") {
+    if(isSelectType && portal){
       handleGetOrderList();
-    } else {
-      setOrderList(datafilter);
     }
   }, [isSelectType]);
-
-  const handleFilter = async() => {
-    const res = await getMyOrders({
-      startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
-      endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
-    });
-    if(res){
-      setOrderListFilter(res?.reverse());
-    }
-  }
 
   const handleGetOrderList = async () => {
     try {
       const res = await getMyOrders({
         startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
         endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
+        page: curPage,
+        status:
+          isSelectType === "orderHistory.all"
+            ? ""
+            : isSelectType === "orderHistory.approved"
+            ? "approved"
+            : isSelectType === "orderHistory.rejected"
+            ? "rejected"
+            : isSelectType === "orderHistory.dispatched"
+            ? "dispatched"
+            : "pending",
       });
-      if (res) {
-        setOrderList(res);
-        setOrderListFilter(res?.reverse());
+      if (nextPage >= curPage && nextPage != null) {
+        setIsFetching(true);
       }
+      if (res?.data) {
+        setOrderList((prevData: any) =>
+          curPage === 1 ? res?.data : [...prevData, ...res?.data]
+        );
+        if (res?.hasMore) {
+          setTotalPage(res.totalPage);
+          setNextPage(res.nextPage);
+        }
+      }
+      setIsFetching(false);
     } catch (error) {
+      setIsFetching(false);
       console.log("handleGetOrderList", error);
     }
   };
@@ -107,8 +134,8 @@ const OrderHistoryScreen = () => {
       : (portal === UserType.DISTRIBUTOR || portal === UserType.ASO) &&
         t("drawer.orderList");
 
-  const handleOrderModifiedOnPress = () => {
-    navigation.navigate(RouteString.OrderPlacementScreen);
+  const handleOrderModifiedOnPress = (item: any) => {
+    navigation.navigate(RouteString.OrderPlacementScreen, { item: item });
   };
 
   const perviouseOnPress = () => {
@@ -123,6 +150,11 @@ const OrderHistoryScreen = () => {
           type: "success",
           text1: res.message,
         });
+        setSelectType("orderHistory.all");
+        setOrderList([]);
+        setCurPage(1);
+        setTotalPage(0);
+        setNextPage(null);
         handleGetOrderList();
       }
     } catch (error) {
@@ -133,6 +165,19 @@ const OrderHistoryScreen = () => {
   const handleRejectOrder = (id: string) => {
     setOrderId(id);
     setIsRejectOpenModal(true);
+  };
+
+  const onEndReached = () => {
+    if (nextPage <= totalPage && nextPage != null) {
+      setCurPage(curPage + 1);
+      handleGetOrderList();
+    }
+  };
+
+  const ListFooterComponent = () => {
+    return isFetching ? (
+      <ActivityIndicator size="small" color={colors.primary} />
+    ) : null;
   };
 
   return (
@@ -156,12 +201,21 @@ const OrderHistoryScreen = () => {
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingTop: hp(2) }}
+          onEndReached={onEndReached}
+          keyExtractor={(item, index) => `${item.id}_${index}`}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={ListFooterComponent}
+          ListEmptyComponent={() => (
+            <Text style={styles.noOrder}>
+              {t("orderHistory.noOrderavailable")}
+            </Text>
+          )}
           renderItem={({ item, index }) => (
             <OrderCard
               key={index}
               item={item}
               isShowButton={true}
-              orderModifiedOnPress={handleOrderModifiedOnPress}
+              orderModifiedOnPress={() => handleOrderModifiedOnPress(item)}
               perviouseOnPress={perviouseOnPress}
             />
           )}
@@ -172,6 +226,15 @@ const OrderHistoryScreen = () => {
           data={orderList}
           removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
+          onEndReached={onEndReached}
+          keyExtractor={(item, index) => `${item.id}_${index}`}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={ListFooterComponent}
+          ListEmptyComponent={() => (
+            <Text style={styles.noOrder}>
+              {t("orderHistory.noOrderavailable")}
+            </Text>
+          )}
           contentContainerStyle={{ paddingTop: hp(2) }}
           renderItem={({ item, index }: any) => (
             <DistributorOrderWithProgressCard
@@ -222,5 +285,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: wp(5),
     marginTop: hp(2.5),
+  },
+  noOrder: {
+    color: colors.black,
+    textAlign: "center",
+    fontFamily: FontPath.OutfitMedium,
   },
 });

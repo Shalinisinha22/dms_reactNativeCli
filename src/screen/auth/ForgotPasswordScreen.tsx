@@ -40,6 +40,7 @@ const ForgotPasswordScreen = () => {
             setIsApiLoading(false);
             navigation.navigate(RouteString.VerifyOTPScreen, {
               mobile_number: values.phoneNumber,
+              from: "forgotPassword",
             });
           }
         } catch (error) {
@@ -74,6 +75,7 @@ const ForgotPasswordScreen = () => {
           touched={touched.phoneNumber}
           errors={errors.phoneNumber}
           title={""}
+          keyboardType="numeric"
           isRequired={false}
         />
         <Button
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FontPath.OutfitBold,
+    color:colors.black,
     fontSize: RFValue(26),
     marginVertical: hp(2),
     alignSelf: "center",

@@ -1,4 +1,12 @@
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { useTranslation } from "react-i18next";
@@ -17,22 +25,45 @@ const RewardStatusScreen = () => {
   const { t } = useTranslation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSelectType, setSelectType] = useState("all");
-  const { mutateAsync: getRewardStatus, data } = useGetRewardStatus();
+  const { mutateAsync: getRewardStatus } = useGetRewardStatus();
   const [isStartDate, setStartDate] = useState("");
   const [isEndDate, setEndDate] = useState("");
 
-  useEffect(() => {
+  const [data, setData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [nextPage, setNextPage] = useState<any>(null);
+  const [curPage, setCurPage] = useState(1);
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {  
     handleGetRewardStatus();
+    setCurPage(1);
+    setTotalPage(0);
+    setNextPage(null);
   }, [isSelectType, isStartDate, isEndDate]);
 
   const handleGetRewardStatus = async () => {
     try {
-      await getRewardStatus({
+      const res = await getRewardStatus({
         startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
         endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
         status: isSelectType,
       });
+      if (nextPage >= curPage && nextPage != null) {
+        setIsFetching(true);
+      }
+      if (res?.data) {
+        setData((prev: any) =>
+          curPage === 1 ? res.data : [...prev, ...res.data]
+        );
+        setIsFetching(false);
+      }
+      if (res?.hasMore) {
+        setTotalPage(res.totalPage);
+        setNextPage(res.nextPage);
+      }
     } catch (error) {
+      setIsFetching(false);
       console.log("handleGetRewardStatus", error);
     }
   };
@@ -43,8 +74,21 @@ const RewardStatusScreen = () => {
     } else if (id === "orderHistory.approved") {
       setSelectType("approved");
     } else if (id === "orderHistory.rejected") {
-      setSelectType("rejected");
+      setSelectType("declined");
     }
+  };
+
+  const onEndReached = () => {
+    if (nextPage <= totalPage && nextPage != null) {
+      setCurPage(curPage + 1);
+      handleGetRewardStatus();
+    }
+  };
+
+  const ListFooterComponent = () => {
+    return isFetching ? (
+      <ActivityIndicator size="small" color={colors.primary} />
+    ) : null;
   };
 
   return (
@@ -60,12 +104,16 @@ const RewardStatusScreen = () => {
       </View>
       <FilterStatueType selectedId={handleType} />
       <FlatList
-      data={data}
-      showsVerticalScrollIndicator={false}
-      removeClippedSubviews={false} 
-      renderItem={({ item , index}) => (
-       <RewardStatusCard key={index} item={item} />
-      )}
+        data={data}
+        showsVerticalScrollIndicator={false}
+        removeClippedSubviews={false}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
+        onEndReached={onEndReached}
+        ListFooterComponent={ListFooterComponent}
+        onEndReachedThreshold={16}
+        renderItem={({ item, index }) => (
+          <RewardStatusCard key={index} item={item} />
+        )}
       />
       <FilterModal
         isVisible={isFilterOpen}

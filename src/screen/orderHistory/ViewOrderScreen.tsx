@@ -34,6 +34,7 @@ import { ParamsType } from "../../navigation/ParamsType";
 import moment from "moment";
 import { useGetProductList } from "../../api/query/OrderPlacementService";
 import Toast from "react-native-toast-message";
+import { abbreviateNumber } from "../../utils/commonFunctions";
 
 const ViewOrderScreen = () => {
   const { t } = useTranslation();
@@ -52,15 +53,13 @@ const ViewOrderScreen = () => {
   }, [routes.params.id]);
 
   const totalQty = data?.products.reduce((acc: number, item: any) => {
-    const weight = parseFloat(item.quantity) || 0;
-    return acc + weight;
+    return  acc != 0 ? Number(acc) + Number(item.quantity) : Number(item.quantity)
   }, 0);
 
   const totalAmount = data?.products.reduce((acc: number, item: any) => {
-    const amount = parseFloat(item.amount) || 0;
-    return acc + amount;
-  }, 0);
-
+    return Number(acc) + Number(item.amount);
+}, 0);
+  
   const isAllApprove =
     data?.status?.by_distributor === "approved" ||
     data?.status?.by_distributor === "declined";
@@ -88,7 +87,7 @@ const ViewOrderScreen = () => {
   };
 
   const combinedResult = data?.products?.map((product: { productId: any }) => {
-    const matchingDetail = productList.data?.find(
+    const matchingDetail = productList.data?.data?.find(
       (detail: { id: any }) => detail.id === product.productId
     );
     return {
@@ -130,7 +129,7 @@ const ViewOrderScreen = () => {
         </View>
         <View>
           <Text style={styles.orderinfoText}>{t("viewOrder.totalAmount")}</Text>
-          <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
+          <Text style={styles.orderInfoDes}>Rs.{abbreviateNumber(Number(totalAmount || 0).toFixed(2))}</Text>
         </View>
       </View>
       <View style={styles.headerView}>
@@ -138,7 +137,7 @@ const ViewOrderScreen = () => {
         <Text style={styles.headerTitle2}>
           {t("confirmOrder.productDecription")}
         </Text>
-        <Text style={styles.headerTitle3}>{t("confirmOrder.weight")} (MT)</Text>
+        <Text style={styles.headerTitle3}>MT</Text>
         <Text style={styles.headerTitle4}>{t("confirmOrder.amount")} (₹)</Text>
       </View>
       <View>
@@ -151,31 +150,33 @@ const ViewOrderScreen = () => {
                 <Text style={styles.itemText1}>{index + 1}</Text>
                 <Text style={styles.itemText2}>{item.name}</Text>
                 <Text style={styles.itemText3}>{item.quantity}</Text>
-                <Text style={styles.itemText4}>{item.amount}</Text>
+                <Text style={styles.itemText4}>
+                  {abbreviateNumber(Number(item.amount))}
+                </Text>
               </View>
             );
           }}
         />
       </View>
       <View style={styles.totalView}>
-        <View style={styles.totalRowView}>
+        {/* <View style={styles.totalRowView}>
           <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
           <Text style={styles.amount}> ₹{totalAmount}</Text>
-        </View>
-        <View style={styles.totalRowView}>
+        </View> */}
+        {/* <View style={styles.totalRowView}>
           <Text style={styles.total}>GST @18% : </Text>
           <Text style={styles.amount}>
             {" "}
-            ₹{(totalAmount * data?.gstRate) / 100}
+            ₹{totalAmount}
           </Text>
-        </View>
+        </View> */}
         <View style={styles.totalRowView}>
           <Text style={[styles.total, { fontFamily: FontPath.OutfitBold }]}>
             {t("confirmOrder.total")} :{" "}
           </Text>
           <Text style={[styles.amount, { fontFamily: FontPath.OutfitBold }]}>
             {" "}
-            ₹{totalAmount + (totalAmount * 18) / 100}
+            ₹{abbreviateNumber(Number(totalAmount || 0).toFixed(2))}
           </Text>
         </View>
       </View>
@@ -183,7 +184,12 @@ const ViewOrderScreen = () => {
         selectedStep={1}
         containerStyle={{ marginTop: hp(4) }}
         isCheckIcons={true}
-        admin={data?.status?.by_admin === "approved" ? true : false}
+        admin={
+          data?.status?.by_admin === "approved" ||
+          data?.status?.by_admin === "dispatched"
+            ? true
+            : false
+        }
         orderIcons={IconsPath.check}
         distributorIcons={
           data?.status?.by_distributor === "approved"
@@ -200,20 +206,19 @@ const ViewOrderScreen = () => {
             : IconsPath.whiteClose
         }
         dispatchedIcons={
-          data?.status?.by_admin === "approved" ||
           data?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : data?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose
+            : data?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
         }
         adminIcon={
           data?.status?.by_admin === "approved" ||
           data?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : data?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose
+            : data?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
         }
       />
       {portal === UserType.DISTRIBUTOR && !isAllApprove && (
@@ -255,6 +260,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitBold,
     fontSize: RFValue(11),
+    lineHeight:hp(2)
   },
   orderInfoDes: {
     color: colors.black,
@@ -295,8 +301,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
     width: wp(20),
-    textAlign:'center'
-
+    textAlign: "center",
   },
   itemText4: {
     color: colors.black,
@@ -321,6 +326,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(12),
     width: wp(21),
+    textAlign: "center",
   },
   headerTitle4: {
     color: colors.white,

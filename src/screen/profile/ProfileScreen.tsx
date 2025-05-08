@@ -6,12 +6,11 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { colors } from "../../utils/Colors";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
-import { userProfileImage } from "../../utils/JsonData";
 import UserInfoRowView from "../../components/common/UserInfoRowView";
 import { IconsPath } from "../../utils/IconPath";
 import TextInputFieldOptional from "../../components/common/TextInputFieldOptional";
@@ -20,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/Store";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useGetUser, useUpdateProfile } from "../../api/query/ProfileService";
+import {  useGetUser, useUpdateProfile } from "../../api/query/ProfileService";
 import { authActions } from "../../redux/slice/AuthSlice";
 import { UserType } from "../../interfaces/Types";
 import { useDeleteAccount } from "../../api/query/AuthService";
@@ -106,6 +105,7 @@ const ProfileScreen = () => {
     }
   };
 
+
   const handleConfirm = (date: any) => {
     const formattedDate = date.toISOString().split("T")[0];
     // Calculate the cutoff date for 18 years ago
@@ -169,7 +169,8 @@ const ProfileScreen = () => {
           <View style={styles.profileView}>
             <View style={styles.shadowView}>
               <Image
-               source={isError || !imageUrl ? IconsPath.user : imageUrl}
+              //  source={isError || !imageUrl ? IconsPath.user : imageUrl}
+               source={IconsPath.user}
                 style={styles.userProfile}
                 onError={() => setIsError(true)}
               />
@@ -184,7 +185,7 @@ const ProfileScreen = () => {
             </Text>
           </View>
         </View>
-        {isEdit ? (
+        {isEdit! ? (
           <View style={{ marginTop: hp(15) }}>
             <Text style={styles.personalInfo}>
               {t("myProfile.personalInfo")}
@@ -259,16 +260,28 @@ const ProfileScreen = () => {
                 title={t("myProfile.mobileNo")}
                 userInfo={userInfo?.mobile_number || ""}
               />
-              <UserInfoRowView
+             {userInfo?.dob && <UserInfoRowView
                 title={t("myProfile.birthData")}
                 userInfo={
-                  userInfo?.dob ? moment(userInfo?.dob).format("DD MMM") : ""
+                  userInfo?.dob ? moment(userInfo?.dob).format("DD MMM YYYY") : ""
                 }
-              />
-              <UserInfoRowView
+              />}
+             {userInfo?.address && <UserInfoRowView
                 title={t("myProfile.counterAddress")}
                 userInfo={userInfo?.address || ""}
-              />
+              />}
+               {userInfo?.region?.length > 0 && <UserInfoRowView
+                title={t("myProfile.AreaRegion")}
+                userInfo={userInfo?.region?.join(' , ') || ""}
+              />}
+               {userInfo?.gst_number && <UserInfoRowView
+                title={t("registration.GSTNumber")}
+                userInfo={userInfo?.gst_number}
+              />}
+               {userInfo?.firm_name && <UserInfoRowView
+                title={t("myProfile.firmName")}
+                userInfo={userInfo?.firm_name}
+              />}
             </View>
             {members?.map((member: any, index: number) => (
               <View style={styles.userInfoCard} key={index}>

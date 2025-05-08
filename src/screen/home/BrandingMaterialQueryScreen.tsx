@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { useTranslation } from "react-i18next";
 import { commonStyle } from "../../utils/commonStyles";
@@ -10,36 +10,30 @@ import { FontPath } from "../../utils/FontPath";
 import SearchView from "../../components/common/SearchView";
 import BrandingMaterialRequestTable from "../../components/common/BrandingMaterialRequestTable";
 import { useBrandingList } from "../../api/query/SupportService";
+import { useIsFocused } from "@react-navigation/native";
 
 const BrandingMaterialQueryScreen = () => {
   const { t } = useTranslation();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isStartDate, setStartDate] = useState("");
   const [isEndDate, setEndDate] = useState("");
-  const [search, setSearch] = useState("");
-  const {data} = useBrandingList();
 
-  console.log('data',data)
-
+  
   return (
     <SafeAreaContainer>
       <View style={styles.headerRowView}>
         <Text style={styles.title}>
           {t("dashboard.brandingMaterialRequest")}
         </Text>
-        <Pressable
+        {/* <Pressable
           style={commonStyle.filterButton}
           onPress={() => setIsFilterOpen(!isFilterOpen)}
         >
           <Image source={IconsPath.filter} style={commonStyle.filter} />
-        </Pressable>
+        </Pressable> */}
       </View>
-      <SearchView
-        placeholder="Search By Dealer, Distributor"
-        value={search}
-        onChangeText={(text) => setSearch(text)}
-      />
-      <BrandingMaterialRequestTable/>
+     
+      <BrandingMaterialRequestTable />
     </SafeAreaContainer>
   );
 };

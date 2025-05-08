@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(15),
+    color:colors.black,
     lineHeight: hp(3),
     marginTop: hp(0.8),
   },

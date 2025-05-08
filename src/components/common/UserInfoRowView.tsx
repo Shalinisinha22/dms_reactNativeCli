@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   dot: {
     fontFamily: FontPath.OutfitMedium,
+    color:colors.black,
     fontSize: RFValue(16),
   },
   userInfo: {

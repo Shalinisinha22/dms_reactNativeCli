@@ -65,7 +65,9 @@ const DocumentViewModal = ({
         )}
         {imageError && (
           <View style={styles.noDocument}>
-            <Text>{t('error.noDocumentFound')}</Text>
+            <Text style={{
+              color:colors.black,
+            }}>{t('error.noDocumentFound')}</Text>
           </View>
         )}
       </View>

@@ -1,5 +1,5 @@
 import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
 import { colors } from "../../utils/Colors";
@@ -22,10 +22,15 @@ const TextInputField = ({
   multiline,
   mainViewStyle,
   isRequired,
-  textInputStyle
+  textInputStyle,
+  inputRef,
+  onTouchStart,
+  editable
 }: TextInputFieldProps) => {
+
   const { t } = useTranslation();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+
 
   return (
     <View style={[styles.mainView, mainViewStyle]}>
@@ -35,6 +40,7 @@ const TextInputField = ({
       </Text>
       <View style={[styles.inputView, InputViewStyle]}>
         <TextInput
+         ref={inputRef}
           placeholder={placeholder}
           placeholderTextColor={colors.darkGray}
           style={[styles.textInput, textInputStyle]}
@@ -43,10 +49,16 @@ const TextInputField = ({
           onChangeText={onChangeText}
           onFocus={onBlur}
           // onBlur={onBlur}
+          editable={editable}
+          onTouchStart={onTouchStart}
           autoCapitalize="none"
           keyboardType={keyboardType}
           maxLength={maxLength}
           multiline={multiline}
+          textContentType="oneTimeCode" // Prevents password autofill
+          autoComplete="off" // Disables autofill suggestions
+          autoCorrect={false} // Disables auto-correction
+          spellCheck={false} // Disables spell check
         />
         {isPassword && (
           <Pressable onPress={() => setPasswordVisible(!passwordVisible)}>
@@ -80,7 +92,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
     color: colors.black,
-    height: Platform.OS === 'android' ? hp(5) : hp(4),
+    height: Platform.OS === 'android' ? hp(6) : hp(4),
     flex: 1,
   },
   inputView: {

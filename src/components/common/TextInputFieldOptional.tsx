@@ -1,9 +1,9 @@
-import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React from 'react';
-import {hp, RFValue, wp} from '../../helper/Responsive';
-import {FontPath} from '../../utils/FontPath';
-import {colors} from '../../utils/Colors';
-import {TextInputFieldOptionalProps} from '../../interfaces/Types';
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import React from "react";
+import { hp, RFValue, wp } from "../../helper/Responsive";
+import { FontPath } from "../../utils/FontPath";
+import { colors } from "../../utils/Colors";
+import { TextInputFieldOptionalProps } from "../../interfaces/Types";
 
 const TextInputFieldOptional = ({
   title,
@@ -15,18 +15,22 @@ const TextInputFieldOptional = ({
   labelStyle,
   maxLength,
   onTouchStart,
-  editable
+  editable,
+  isRequired = false,
 }: TextInputFieldOptionalProps) => {
   return (
     <View style={[styles.mainView, mainViewStyle]}>
-      <Text style={[styles.label, labelStyle]}>{title}</Text>
+      <Text style={[styles.label, labelStyle]}>
+        {title}
+        {isRequired && <Text style={styles.required}>*</Text>}
+      </Text>
       <View style={[styles.inputView, InputViewStyle]}>
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={colors.darkGray}
           style={styles.textInput}
           value={value}
-          editable={editable ?false : true}
+          editable={editable ? false : true}
           onChangeText={onChangeText}
           onTouchStart={onTouchStart}
           autoCapitalize="none"
@@ -49,7 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(14),
     marginBottom: hp(2),
-    lineHeight:hp(3)
+    lineHeight: hp(3),
   },
   required: {
     color: colors.primary,

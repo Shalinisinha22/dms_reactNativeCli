@@ -4,9 +4,8 @@ import { API_ENDPOINT } from "../ApiEndPoint";
 import { UpdateProfilePayload } from "../ApiPayloadType";
 
 export const useGetProfile = () => {
-  return useQuery({
-    queryKey: ["useGetProfile"],
-    queryFn: async () => {
+  return useMutation({
+    mutationFn: async () => {
       const response = await axiosInstance.get(API_ENDPOINT.GET_PROFILE);
       return response.data;
     },

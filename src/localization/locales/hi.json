@@ -79,7 +79,11 @@
     "selectCity":"शहर चुनें",
     "uplaodDocuments":"डॉक्यूमेंट अपलोड करें",
     "areaRegionName":"क्षेत्र का नाम",
-    "selectAreaRegionName":"चुनना क्षेत्र का नाम"
+    "selectAreaRegionName":"चुनना क्षेत्र का नाम",
+    "GSTNumber":"जीएसटी नंबर",
+    "EnterGSTNumber":"जीएसटी नंबर दर्ज करें",
+    "SelectAnyOneAreaRegion":"किसी एक क्षेत्र का चयन करें",
+    "SelectAreaRegion":"क्षेत्र का चयन करें"
   },
   "completingRegistration": {
     "thankYouForCompletingTheRegistration": "पंजीकरण पूरा करने के लिए धन्यवाद।",
@@ -110,7 +114,7 @@
     "referralSubmission":"रेफरल सबमिशन",
     "rewardStatus":"रिवॉर्ड स्टेटस",
     "rducationalResources":"एजुकेशनल रिसोर्सेस",
-    "deleteAccount": "खाता हटा दो"
+    "deleteAccount": "डिलीट अकाउंट"
   },
   "dashboard": {
     "dashboard": "डैशबोर्ड",
@@ -155,14 +159,18 @@
     "rejected":"अप्रूव्ड",
     "approved":"रिजेक्ट",
     "dealerManagement":"डीलर मैनेजमेंट",
-    "totalSalesVolume":"कुल बिक्री वॉल्यूम"
+    "totalSalesVolume":"कुल बिक्री वॉल्यूम",
+    "requirement":"मांग",
+    "SearchByDealerDistributor":"डीलर, वितरक द्वारा खोजें"
   },
   "orderPlacement": {
     "orderPlacement": "ऑर्डर करें",
     "amount": "Amount",
     "totalWeight": "कुल वजन",
     "totalAmount": "कुल राशि",
-    "orderPreview": "ऑर्डर प्रीव्यू"
+    "orderPreview": "ऑर्डर प्रीव्यू",
+    "selectDistributor":"अपने डिस्ट्रीब्यूटर से वितरक का चयन करें",
+    "selectDistributor1":"डिस्ट्रीब्यूटर चुनें"
   },
   "confirmOrder": {
     "confirmOrder": "ऑर्डर की पुष्टि करें",
@@ -201,18 +209,21 @@
     "rejectOrders":"रिजेक्ट ऑर्डर",
     "orderModified":"ऑर्डर में परिवर्तन किया गया",
     "pending":"लंबित",
-    "previous":"पहले का देखें"
+    "previous":"पहले का देखें",
+    "noOrderavailable":"कोई ऑर्डर उपलब्ध नहीं"
   },
   "viewOrder": {
     "viewOrder": "आर्डर देखें",
     "orderDate": "ऑर्डर तिथि",
     "dispatchDate": "भेजने की तिथि",
-    "totalWeight": "कुल वजन",
-    "totalAmount": "कुल राशि"
+    "totalWeight": "कुल MT",
+    "totalAmount": "कुल राशि",
+    "invoiceDate":"इनवॉइस तिथि"
   },
   "invoice": {
     "invoice": "मेरा इनवॉइस",
-    "invoiceNo": "इनवॉइस नं"
+    "invoiceNo": "इनवॉइस नं",
+    "noIvoiceavailable":"कोई चालान उपलब्ध नहीं है"
   },
   "filter": {
     "filter": "फ़िल्टर करें",
@@ -267,7 +278,9 @@
     "mobileNo": "मोबाइल नंबर",
     "birthData": "जन्म तिथि",
     "counterAddress": "काउंटर पता",
-    "member": "सदस्य"
+    "member": "सदस्य",
+    "AreaRegion":"क्षेत्र",
+    "firmName": "उद्यम / फर्म नाम"
   },
   "logOut": {
     "areYouSure": "क्या आप सुनिश्चित हैं?",
@@ -297,6 +310,8 @@
     "firmNameRequired": "उद्यम / फर्म का नाम आवश्यक है।",
     "workCityRequired": "कार्य स्थल शहर आवश्यक है।",
     "zipCodeRequired": "जिप कोड आवश्यक है।",
+    "gstRequired": "जीएसटी नंबर आवश्यक है",
+    "invalidGSTNumber":"जीएसटी नंबर अमान्य है",
     "counterAddressRequired": "काउंटर का पता आवश्यक है।",
     "remarksRequired": "टिप्पणियाँ आवश्यक हैं।",
     "descriptionRequired": "डिस्क्रिप्शन आवश्यक हैं।",
@@ -312,7 +327,10 @@
     "areaRegionRequired" : "क्षेत्र आवश्यक है",
     "reasonRequired": "कारण आवश्यक है",
     "noDocumentFound":"कोई दस्तावेज़ नहीं मिला",
-    "AgeMustBeOrAbove":"आयु 18 वर्ष या उससे अधिक होनी चाहिए"
+    "AgeMustBeOrAbove":"आयु 18 वर्ष या उससे अधिक होनी चाहिए",
+    "distributorIsRequired":"डिस्ट्रीब्यूटर आवश्यक है।",
+    "NoDistributorInYourArea":"आपके क्षेत्र में कोई वितरक नहीं",
+    "NoDataAvailable":"कोई डेटा मौजूद नहीं"
   },
   "newDealerOnboard":{
     "newDealerOnboard":"नए डीलर का पंजीकरण"

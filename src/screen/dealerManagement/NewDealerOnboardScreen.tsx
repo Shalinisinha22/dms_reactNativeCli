@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback,  useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { hp, RFValue, wp } from "../../helper/Responsive";
@@ -25,12 +25,12 @@ import {
   ParamListBase,
   useNavigation,
 } from "@react-navigation/native";
-import { RouteString } from "../../navigation/RouteString";
-import { city } from "../../utils/JsonData";
 import { useNewDealerRegister } from "../../api/query/DealerManagementService";
 import CustomToggle from "../../components/common/CustomToggle";
-import SearchDropDownView from "../../components/common/SearchDropDownView";
 import Toast from "react-native-toast-message";
+import TextInputFieldOptional from "../../components/common/TextInputFieldOptional";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useAppSelector } from "../../redux/Store";
 
 const NewDealerOnboardScreen = () => {
   const { t } = useTranslation();
@@ -45,6 +45,9 @@ const NewDealerOnboardScreen = () => {
   const { mutateAsync: createNewDealerRegister } = useNewDealerRegister();
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [isOn, setOn] = useState(false);
+  const [birthDate, setBirthDate] = useState("");
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const { userInfo } = useAppSelector((state) => state.auth);
 
   const fileFields = [
     "aadhaar_card",
@@ -53,6 +56,7 @@ const NewDealerOnboardScreen = () => {
     "profile_pic",
     "cheque",
   ];
+  const requiredDocuments = ["aadhaar_card", "pan_card", "gst_certificate"];
 
   const {
     handleChange,
@@ -69,15 +73,17 @@ const NewDealerOnboardScreen = () => {
       email: "",
       phoneNumber: "",
       workCity: "",
+      zipCode: "",
       counterAddress: "",
+      gst_number: "",
     },
     validationSchema: newDealerValidationSchema,
     onSubmit: async (values) => {
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
@@ -93,6 +99,10 @@ const NewDealerOnboardScreen = () => {
         formData.append("mobile_number", values.phoneNumber);
         formData.append("work_city", values.workCity);
         formData.append("address", values.counterAddress);
+        formData.append("gst_number", values.gst_number);
+        formData.append("zipcode", values.zipCode);
+        formData.append("dob", birthDate);
+        formData.append("region", userInfo?.region);
         formData.append("status", isOn ? "approved" : "pending");
         fileFields.forEach((field) => {
           if (uploadedDocuments[field]) {
@@ -106,7 +116,14 @@ const NewDealerOnboardScreen = () => {
         const res = await createNewDealerRegister(formData);
         if (res) {
           setIsApiLoading(false);
-          navigation.navigate(RouteString.DealerSuccessfullyScreen);
+          Toast.show({
+            type: "success",
+            text1:res?.message,
+          });
+          navigation.goBack();
+          // navigation.navigate(RouteString.Home, {
+          //  screen: RouteString.DealerSuccessfullyScreen
+          // } );
         }
       } catch (error) {
         setIsApiLoading(false);
@@ -140,6 +157,31 @@ const NewDealerOnboardScreen = () => {
       }
     }
   }, []);
+
+  const handleConfirm = (date: any) => {
+    const formattedDate = date.toISOString().split("T")[0];
+
+    // Calculate the cutoff date for 18 years ago
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    // Check if the selected date is before or equal to the cutoff date
+    if (date > eighteenYearsAgo) {
+      Toast.show({
+        type: "error",
+        text1: `${t("error.AgeMustBeOrAbove")}`,
+      });
+      setDatePickerVisibility(false);
+      return;
+    } else {
+      setBirthDate(formattedDate);
+    }
+    setDatePickerVisibility(false);
+  };
 
   const handleToggle = (isOn: boolean) => {
     setOn(isOn);
@@ -213,15 +255,63 @@ const NewDealerOnboardScreen = () => {
           isRequired={true}
           maxLength={10}
         />
-        <SearchDropDownView
-          zIndex={1}
-          label={t("registration.workCity")}
-          placeHolder={t("registration.enterWorkCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("workCity", value)}
-          errors={errors.workCity}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
+        <TextInputFieldOptional
+          title={t("registration.yourBirthDate")}
+          placeholder={t("registration.DDMM")}
+          value={birthDate}
+          isRequired
+          onChangeText={() => null}
+          onTouchStart={() => {
+            setDatePickerVisibility(true);
+          }}
+        />
+        <TextInputField
+          title={t("registration.GSTNumber")}
+          placeholder={t("registration.EnterGSTNumber")}
+          isPassword={false}
+          value={values.gst_number}
+          onChangeText={handleChange("gst_number")}
+          onBlur={handleBlur("gst_number")}
+          touched={touched.gst_number}
+          errors={errors.gst_number}
           isRequired={true}
+          maxLength={15}
+        />
+        <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.workCity}
+          onChangeText={handleChange("workCity")}
+          onBlur={handleBlur("workCity")}
+          touched={touched.workCity}
+          errors={errors.workCity}
+          isRequired={true}
+        />
+        <TextInputField
+          title={t("registration.zipCode")}
+          placeholder={t("registration.enterZipCode")}
+          isPassword={false}
+          value={values.zipCode}
+          onChangeText={handleChange("zipCode")}
+          onBlur={handleBlur("zipCode")}
+          touched={touched.zipCode}
+          errors={errors.zipCode}
+          maxLength={6}
+          isRequired={true}
+        />
+        <TextInputField
+          title={t("registration.SelectAnyOneAreaRegion")}
+          placeholder={t("registration.SelectAreaRegion")}
+          isPassword={false}
+          value={userInfo?.region?.join(" , ")}
+          onChangeText={handleChange("zipCode")}
+          onBlur={handleBlur("zipCode")}
+          touched={false}
+          errors={""}
+          maxLength={6}
+          isRequired={true}
+          editable={false}
         />
         <TextInputField
           title={t("registration.counterAddress")}
@@ -249,7 +339,7 @@ const NewDealerOnboardScreen = () => {
           onPress={() => handleDocumentSelection("aadhaar_card")}
           title={t("registration.aadharCardUpload")}
           fileName={uploadedDocuments?.aadhaar_card?.name}
-          isRequired={false}
+          isRequired={true}
         />
         <DocumentUploadView
           icons={
@@ -260,7 +350,7 @@ const NewDealerOnboardScreen = () => {
           onPress={() => handleDocumentSelection("pan_card")}
           title={t("registration.panCardUpload")}
           fileName={uploadedDocuments?.pan_card?.name}
-          isRequired={false}
+          isRequired={true}
         />
         <DocumentUploadView
           icons={
@@ -271,7 +361,7 @@ const NewDealerOnboardScreen = () => {
           onPress={() => handleDocumentSelection("gst_certificate")}
           title={t("registration.GSTCertificateUpload")}
           fileName={uploadedDocuments?.gst_certificate?.name}
-          isRequired={false}
+          isRequired={true}
         />
         <DocumentUploadView
           icons={
@@ -302,6 +392,12 @@ const NewDealerOnboardScreen = () => {
           onPress={handleSubmit}
         />
       </KeyboardAwareScrollView>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={() => setDatePickerVisibility(false)}
+      />
     </SafeAreaContainer>
   );
 };
@@ -329,7 +425,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginHorizontal: wp(3),
-    marginTop: hp(3),
+    marginVertical: hp(3),
   },
   backIcons: {
     width: wp(8),

@@ -78,7 +78,9 @@ const VerifyOTPScreen = () => {
       if (res) {
         setIsApiLoading(false);
         dispatch(authActions.setToken(res.access_token.token));
-        navigation.navigate(RouteString.SetPasswordScreen);
+        navigation.navigate(RouteString.SetPasswordScreen, {
+          from: routes.params.from,
+        });
       }
     } catch (error: any) {
       setIsApiLoading(false);
@@ -116,6 +118,9 @@ const VerifyOTPScreen = () => {
               pinCodeContainerStyle: styles.otpContainer,
               containerStyle: styles.containerStyle,
               focusStickStyle: styles.focusStickStyle,
+              pinCodeTextStyle:{
+                color:colors.black
+              }
             }}
           />
           {otpError && <Text style={styles.error}>{otpError}</Text>}
@@ -155,6 +160,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: FontPath.OutfitBold,
+    color:colors.black,
     fontSize: RFValue(26),
     marginVertical: hp(2),
     lineHeight: hp(5),

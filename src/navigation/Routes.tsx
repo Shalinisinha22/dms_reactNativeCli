@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   createNavigationContainerRef,
-  NavigationContainer,
 } from "@react-navigation/native";
 import { RouteString } from "./RouteString";
 import ChooseLanguageScreen from "../screen/onBording/ChooseLanguageScreen";
@@ -25,7 +24,6 @@ import { hp, isiPAD, RFValue, wp } from "../helper/Responsive";
 import { colors } from "../utils/Colors";
 import { FontPath } from "../utils/FontPath";
 import CustomDrawerContent from "./drawer/CustomDrawerContent";
-import { userProfileImage } from "../utils/JsonData";
 import OrderPlacementScreen from "../screen/home/OrderPlacementScreen";
 import ConfirmOrderScreen from "../screen/home/ConfirmOrderScreen";
 import CancelOrderScreen from "../screen/orderHistory/CancelOrderScreen";
@@ -226,9 +224,10 @@ function BottomTabNavigator() {
           }
           const icons =
             route.name === RouteString.ProfileScreen
-              ? isError || !imageUrl
-                ? IconsPath.user
-                : imageUrl
+              ? IconsPath.user
+              // isError || !imageUrl
+              //   ? IconsPath.user
+              //   : imageUrl
               : iconName;
           return (
             <Image
@@ -427,7 +426,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: FontPath.OutfitMedium,
-    fontSize: RFValue(11),
+    fontSize: RFValue(10),
     marginTop: hp(0.5),
     textAlign: "center",
   },

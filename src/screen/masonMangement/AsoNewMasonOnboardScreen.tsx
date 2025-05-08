@@ -32,6 +32,8 @@ import DocumentPicker from "react-native-document-picker";
 import { useNewMasonRegister } from "../../api/query/MasonManagementService";
 import SearchDropDownView from "../../components/common/SearchDropDownView";
 import Toast from "react-native-toast-message";
+import { commonStyle } from "../../utils/commonStyles";
+import { useAppSelector } from "../../redux/Store";
 
 const AsoNewMasonOnboardScreen = () => {
   const { t } = useTranslation();
@@ -44,9 +46,11 @@ const AsoNewMasonOnboardScreen = () => {
   const { mutateAsync: createNewMasonRegister } = useNewMasonRegister();
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [isOn, setOn] = useState(false);
+const [isVisible, setIsVisible] = useState(false);
+  const { userInfo } = useAppSelector((state) => state.auth);
 
   const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
-
+  const requiredDocuments = ["aadhaar_card", "pan_card"];
   const {
     handleChange,
     handleBlur,
@@ -66,11 +70,11 @@ const AsoNewMasonOnboardScreen = () => {
     },
     validationSchema: masonOnboard,
     onSubmit: async (values) => {
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
@@ -86,6 +90,7 @@ const AsoNewMasonOnboardScreen = () => {
         formData.append("mobile_number", values.phoneNumber);
         formData.append("skill", values.masonSkill);
         formData.append("work_city", values.city);
+        formData.append("region", userInfo?.region);
         formData.append("address", values.address);
         formData.append("status", isOn ? "approved" : "pending");
         fileFields.forEach((field) => {
@@ -102,14 +107,14 @@ const AsoNewMasonOnboardScreen = () => {
           setIsApiLoading(false);
           navigation.navigate(RouteString.DealerSuccessfullyScreen);
         }
-      } catch (error:any) {
+      } catch (error: any) {
         setIsApiLoading(false);
-        if(error.respons?.errors?.name){
-        Toast.show({
-          type: "error",
-          text1: error.respons?.errors?.name,
-        });
-      }
+        if (error.respons?.errors?.name) {
+          Toast.show({
+            type: "error",
+            text1: error.respons?.errors?.name,
+          });
+        }
         console.log("AsoNewMasonOnboardScreen", error.response?.errors);
       }
     },
@@ -212,15 +217,28 @@ const AsoNewMasonOnboardScreen = () => {
           selectedName={(name) => setFieldValue("masonSkill", name)}
           errors={errors.masonSkill}
         />
-        <SearchDropDownView
-          zIndex={1}
-          label={t("ASODealerOnboard.city")}
-          placeHolder={t("ASODealerOnboard.selectCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("city", value)}
-          errors={errors.city}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
+        <TextInputField
+          title={t("registration.SelectAnyOneAreaRegion")}
+          placeholder={t("registration.SelectAreaRegion")}
+          isPassword={false}
+          value={userInfo?.region?.join(" , ")}
+          touched={false}
+          errors={''}
+          maxLength={6}
           isRequired={true}
+          editable={false}
+        />
+        <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.city}
+          onChangeText={handleChange("city")}
+          onBlur={handleBlur("city")}
+          touched={touched.city}
+          errors={errors.city}
+          isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <TextInputField
           title={t("ASODealerOnboard.address")}
@@ -234,6 +252,7 @@ const AsoNewMasonOnboardScreen = () => {
           InputViewStyle={styles.inputView}
           multiline
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <Text style={styles.uplaodDocuments}>
           {t("registration.uplaodDocuments")}

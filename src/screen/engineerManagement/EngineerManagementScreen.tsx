@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -32,18 +33,46 @@ const EngineerManagementScreen = () => {
   const { mutateAsync: aprroveUser } = useApproveUser();
 
   const [isSelectType, setSelectType] = useState("all");
-  const { mutateAsync: getMasonList, data } = useGetUserRole();
+  const { mutateAsync: getMasonList } = useGetUserRole();
+
+  const [data, setData] = useState<any>([]);
+    const [totalPage, setTotalPage] = useState(0);
+    const [nextPage, setNextPage] = useState<any>(null);
+    const [curPage, setCurPage] = useState(1);
+    const [isFetching, setIsFetching] = useState(false);
+  
 
   useEffect(() => {
     handleGetData();
+    setCurPage(1);
+    setTotalPage(0);
+    setNextPage(null);
   }, [isSelectType]);
 
-  const handleGetData = () => {
-    getMasonList({
-      role: UserType.ENGINEER,
-      status: isSelectType === "all" ? "" : isSelectType,
-    });
-  };
+   const handleGetData = async () => {
+     try {
+       const res = await getMasonList({
+         role: UserType.ENGINEER,
+         status: isSelectType === "all" ? "" : isSelectType,
+         page: curPage,
+       });
+       if (nextPage >= curPage && nextPage != null) {
+         setIsFetching(true);
+       }
+       if (res?.data) {
+         setData((prev: any) =>
+           curPage === 1 ? res.data : [...prev, ...res.data]
+         );
+         setIsFetching(false);
+       }
+       if (res?.hasMore) {
+         setTotalPage(res.totalPage);
+         setNextPage(res.nextPage);
+       }
+     } catch (error) {
+       console.log("handleGetData", error);
+     }
+   };
 
   const handleApproveUser = async (status: string) => {
     try {
@@ -76,6 +105,20 @@ const EngineerManagementScreen = () => {
     }
   };
 
+    const onEndReached = () => {
+      if (nextPage <= totalPage && nextPage != null) {
+        setCurPage(curPage + 1);
+        handleGetData();
+      }
+    };
+  
+    const ListFooterComponent = () => {
+      return isFetching ? (
+        <ActivityIndicator size="small" color={colors.primary} />
+      ) : null;
+    };
+  
+
   return (
     <SafeAreaContainer>
       <View style={styles.headerRowView}>
@@ -98,6 +141,10 @@ const EngineerManagementScreen = () => {
         data={data}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingTop:hp(2)}}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
+        onEndReached={onEndReached}
+        ListFooterComponent={ListFooterComponent}
+        onEndReachedThreshold={16}
         renderItem={({ item, index }) => {
           return (
             <MasonManagementCard

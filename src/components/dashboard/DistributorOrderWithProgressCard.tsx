@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -21,6 +21,7 @@ import { commonStyle } from "../../utils/commonStyles";
 import moment from "moment";
 import { IconsPath } from "../../utils/IconPath";
 import { useAppSelector } from "../../redux/Store";
+import { abbreviateNumber } from "../../utils/commonFunctions";
 
 const DistributorOrderWithProgressCard = ({
   approveOnPress,
@@ -42,6 +43,7 @@ const DistributorOrderWithProgressCard = ({
   }, 0);
 
   const renderApproveButton = () => {
+    if(item?.status?.by_admin === 'pending'){
     if (
       item?.status?.by_distributor === "pending" &&
       portal === UserType.DISTRIBUTOR
@@ -50,6 +52,7 @@ const DistributorOrderWithProgressCard = ({
     } else if (item?.status?.by_aso === "pending" && portal === UserType.ASO) {
       return button;
     }
+  }
   };
 
   const button = (
@@ -69,13 +72,14 @@ const DistributorOrderWithProgressCard = ({
       <View style={styles.headerNoRowView}>
         <View>
           <View style={styles.orderNoView}>
-            <View style={commonStyle.profileView}>
+            {/* <View style={commonStyle.profileView}>
               <Text style={commonStyle.userNameText}>M</Text>
-            </View>
+            </View> */}
+            <Image source={IconsPath.orderlogo} style={commonStyle.logo} />
             <View style={styles.textView}>
-              <Text style={styles.name}>XYZ Enterprise</Text>
+              <Text style={styles.name} numberOfLines={2}>{item?.firm_name}</Text>
               <Text style={styles.invoiceNo}>
-                {t("dashboard.orderNo")} : {item?.orderNumber}
+                {t("dashboard.orderNo")} : {item?.odrNumber}
               </Text>
             </View>
           </View>
@@ -94,7 +98,9 @@ const DistributorOrderWithProgressCard = ({
               <Text style={styles.orderinfoText}>
                 {t("confirmOrder.amount")}
               </Text>
-              <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
+              <Text style={styles.orderInfoDes}>
+                Rs.{abbreviateNumber(totalAmount)}
+              </Text>
             </View>
           </View>
         </View>
@@ -103,7 +109,12 @@ const DistributorOrderWithProgressCard = ({
       <OrderTracking
         selectedStep={1}
         isCheckIcons={true}
-        admin={item?.status?.by_admin === "approved" ? true : false}
+        admin={
+          item?.status?.by_admin === "approved" ||
+          item?.status?.by_admin === "dispatched"
+            ? true
+            : false
+        }
         orderIcons={IconsPath.check}
         distributorIcons={
           item?.status?.by_distributor === "approved"
@@ -120,20 +131,20 @@ const DistributorOrderWithProgressCard = ({
             : IconsPath.whiteClose
         }
         dispatchedIcons={
-          item?.status?.by_admin === "approved" ||
           item?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : item?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose
+            : item?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
         }
         adminIcon={
           item?.status?.by_admin === "approved" ||
           item?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : item?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose}
+            : item?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
+        }
       />
     </Pressable>
   );
@@ -157,7 +168,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(2),
     paddingHorizontal: wp(3),
     paddingVertical: hp(2),
-    height: hp(24),
+    height: hp(25),
   },
   headerNoRowView: {
     flexDirection: "row",
@@ -207,6 +218,7 @@ const styles = StyleSheet.create({
   name: {
     color: colors.black,
     fontFamily: FontPath.OutfitBold,
-    fontSize: RFValue(16),
+    fontSize: RFValue(14),
+    width:wp(40)
   },
 });

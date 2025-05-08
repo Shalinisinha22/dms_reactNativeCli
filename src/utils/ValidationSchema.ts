@@ -33,6 +33,7 @@ export const signUpValidationSchema = yup.object().shape({
   email: yup
     .string()
     .email('error.emailValid')
+    .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'error.emailValid')
     .required('error.emailRequired'),
   fullname: yup.string().required('error.fullnameRequired'),
 });
@@ -56,6 +57,8 @@ export const dealerValidationSchema = yup.object().shape({
   firmName: yup.string().required('error.firmNameRequired'),
   workCity: yup.string().required('error.workCityRequired'),
   zipCode: yup.string().required('error.zipCodeRequired'),
+  gst_number: yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{3}$/, 'error.invalidGSTNumber').required('error.gstRequired'),
+  region: yup.array().min(1, 'error.areaRegionRequired').required('error.areaRegionRequired'),
   counterAddress: yup.string().required('error.counterAddressRequired'),
 });
 
@@ -76,13 +79,16 @@ export const newDealerValidationSchema = yup.object().shape({
   email: yup
   .string()
   .email('error.emailValid')
+  .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'error.emailValid')
   .required('error.emailRequired'),
   phoneNumber: yup
   .string()
   .phone('IN', "error.validPhoneNumber")
   .required('error.phoneNumberRequired'),
   workCity: yup.string().required('error.workCityRequired'),
+  zipCode: yup.string().required('error.zipCodeRequired'),
   counterAddress: yup.string().required('error.counterAddressRequired'),
+  gst_number: yup.string().matches(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{3}$/, 'error.invalidGSTNumber').required('error.gstRequired'),
 });
 
 export const asoRegistrationValidationSchema = yup.object().shape({
@@ -96,6 +102,7 @@ export const asoNewDealerOnboard = yup.object().shape({
   email: yup
   .string()
   .email('error.emailValid')
+  .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'error.emailValid')
   .required('error.emailRequired'),
   phoneNumber: yup
   .string()
@@ -110,6 +117,7 @@ export const masonOnboard = yup.object().shape({
   email: yup
   .string()
   .email('error.emailValid')
+  .matches(/^[a-zA-Z0-9._%+-]+@gmail\.com$/, 'error.emailValid')
   .required('error.emailRequired'),
   phoneNumber: yup
   .string()
@@ -123,7 +131,9 @@ export const masonOnboard = yup.object().shape({
 export const masonAndEngineerRegistration = yup.object().shape({
   workCity: yup.string().required('error.workCityRequired'),
   zipCode: yup.string().required('error.zipCodeRequired'),
+  masonSkill: yup.string().required('error.masonRequired'),
   counterAddress: yup.string().required('error.counterAddressRequired'),
+  region: yup.array().required('error.areaRegionRequired')
 })
 
 export const referralSubmission = yup.object().shape({

@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { hp, RFValue, wp } from "../../helper/Responsive";
@@ -21,18 +21,18 @@ import DocumentPicker from "react-native-document-picker";
 import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
 import SearchDropDownView from "../../components/common/SearchDropDownView";
-import { areaType, city } from "../../utils/JsonData";
 import { useAsoRegister } from "../../api/query/RegistrationService";
-import MultipulSelectDropDown from "../../components/common/MultipulSelectDropDown";
-import { useAppDispatch, useAppSelector } from "../../redux/Store";
+import { useAppDispatch } from "../../redux/Store";
 import Toast from "react-native-toast-message";
 import { useSendFCMToken } from "../../api/query/NotificationService";
+import { commonStyle } from "../../utils/commonStyles";
+import { authActions } from "../../redux/slice/AuthSlice";
+import messaging from "@react-native-firebase/messaging";
 
 const ASORegistrationScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { FCMToken } = useAppSelector((state) => state.auth);
-  
+
   const [uploadedDocuments, setUploadedDocuments] = useState<any>({
     aadhaar_card: null,
     pan_card: null,
@@ -40,13 +40,14 @@ const ASORegistrationScreen = () => {
   });
   const [isCheck, setIsCheck] = useState(false);
   const { mutateAsync: createAsoRegister } = useAsoRegister();
-    const { mutateAsync: sendFCMToken } = useSendFCMToken();
-  
+  const { mutateAsync: sendFCMToken } = useSendFCMToken();
+  const [isVisible, setIsVisible] = useState(false);
   const [isApiLoading, setIsApiLoading] = useState(false);
-
   const dispatch = useAppDispatch();
 
   const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
+
+  const requiredDocuments = ["aadhaar_card", "pan_card"];
 
   const {
     handleChange,
@@ -64,11 +65,11 @@ const ASORegistrationScreen = () => {
     },
     validationSchema: asoRegistrationValidationSchema,
     onSubmit: async (values) => {
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
@@ -81,7 +82,6 @@ const ASORegistrationScreen = () => {
         formData.append("work_city", values.workCity);
         formData.append("zipcode", values.zipCode);
         formData.append("region", values.region);
-        console.log("uploadedDocuments", uploadedDocuments);
         fileFields.forEach((field) => {
           if (uploadedDocuments[field]) {
             formData.append(field, {
@@ -93,16 +93,37 @@ const ASORegistrationScreen = () => {
         });
         const res = await createAsoRegister(formData);
         if (res) {
-          await sendFCMToken({firebaseToken: FCMToken})
+          const token = await messaging().getToken();
+          dispatch(authActions.setFCMToken(token));
+          await sendFCMToken({ firebaseToken: token });
           setIsApiLoading(false);
+          dispatch(authActions.setToken(""));
           navigation.navigate(RouteString.CompletingRegistrationScreen);
         }
       } catch (error) {
         setIsApiLoading(false);
         console.log("ASORegistrationScreen", error);
+        Toast.show({
+          type: "error",
+          text1: "Please try again",
+        });
       }
     },
   });
+
+  const onPress = () => {
+    if (
+      values.workCity == "" ||
+      values.zipCode == "" ||
+      values.region.length == 0
+    ) {
+      Toast.show({
+        type: "error",
+        text1: "Enter All Informatin Correctly",
+      });
+    }
+    handleSubmit();
+  };
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
     try {
@@ -139,23 +160,27 @@ const ASORegistrationScreen = () => {
         <Text style={styles.title}>
           {t("registration.completeRegistration")}
         </Text>
-        <MultipulSelectDropDown
-          zIndex={2}
-          label={t("registration.areaRegionName")}
-          placeHolder={t("registration.selectAreaRegionName")}
-          data={areaType}
-          selectedName={(value) => setFieldValue("region", value)}
-          errors={errors.region}
-          mainViewStyle={{ marginTop: hp(2) }}
-        />
         <SearchDropDownView
-          zIndex={1}
-          label={t("registration.workCity")}
-          placeHolder={t("registration.enterWorkCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("workCity", value)}
+          // zIndex={1}
+          label={t("registration.SelectAnyOneAreaRegion")}
+          placeHolder={t("registration.SelectAreaRegion")}
+          selectedNames={(value) => setFieldValue("region", value)}
+          errors={errors.region}
+          mainViewStyle={commonStyle.mainViewStyle}
+          isRequired={true}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
+        <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.workCity}
+          onChangeText={handleChange("workCity")}
+          onBlur={handleBlur("workCity")}
+          touched={touched.workCity}
+          onTouchStart={() => setIsVisible(false)}
           errors={errors.workCity}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
           isRequired={true}
         />
         <TextInputField
@@ -163,6 +188,7 @@ const ASORegistrationScreen = () => {
           placeholder={t("registration.enterZipCode")}
           isPassword={false}
           value={values.zipCode}
+          onTouchStart={() => setIsVisible(false)}
           onChangeText={handleChange("zipCode")}
           onBlur={handleBlur("zipCode")}
           touched={touched.zipCode}
@@ -173,36 +199,36 @@ const ASORegistrationScreen = () => {
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.aadharCard?.name
+            uploadedDocuments?.aadhaar_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
           onPress={() => handleDocumentSelection("aadhaar_card")}
           title={t("registration.aadharCardUpload")}
-          fileName={uploadedDocuments?.aadharCard?.name}
+          fileName={uploadedDocuments?.aadhaar_card?.name}
           isRequired={true}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.panCard?.name
+            uploadedDocuments?.pan_card?.name
               ? IconsPath.success
               : IconsPath.upload
           }
           onPress={() => handleDocumentSelection("pan_card")}
           title={t("registration.panCardUpload")}
-          fileName={uploadedDocuments?.panCard?.name}
+          fileName={uploadedDocuments?.pan_card?.name}
           isRequired={true}
         />
         <DocumentUploadView
           icons={
-            uploadedDocuments?.photo?.name
+            uploadedDocuments?.profile_pic?.name
               ? IconsPath.success
               : IconsPath.upload
           }
           onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
-          fileName={uploadedDocuments?.photo?.name}
-          isRequired={true}
+          fileName={uploadedDocuments?.profile_pic?.name}
+          isRequired={false}
         />
         <View style={styles.termsView}>
           <Pressable
@@ -227,7 +253,7 @@ const ASORegistrationScreen = () => {
           buttonName={t("registration.submitForApproval")}
           isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={handleSubmit}
+          onPress={onPress}
         />
       </KeyboardAwareScrollView>
     </SafeAreaContainer>

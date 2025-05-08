@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
@@ -30,7 +30,6 @@ import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
 import { RouteString } from "../../navigation/RouteString";
 import SearchDropDownView from "../../components/common/SearchDropDownView";
-import { city } from "../../utils/JsonData";
 import {
   useEngineerRegister,
   useMasonRegister,
@@ -38,10 +37,13 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux/Store";
 import { UserType } from "../../interfaces/Types";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { useGetUser } from "../../api/query/ProfileService";
-import { authActions } from "../../redux/slice/AuthSlice";
 import Toast from "react-native-toast-message";
 import { useSendFCMToken } from "../../api/query/NotificationService";
+import { commonStyle } from "../../utils/commonStyles";
+import DropDownView from "../../components/common/DropDownView";
+import { masonSkill } from "../../utils/JsonData";
+import { authActions } from "../../redux/slice/AuthSlice";
+import messaging from "@react-native-firebase/messaging";
 
 const MasonAndEngineerRegistrationScreen = () => {
   const { t } = useTranslation();
@@ -61,13 +63,14 @@ const MasonAndEngineerRegistrationScreen = () => {
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<any>("");
+  const [isVisible, setIsVisible] = useState(false);
   const { mutateAsync: createMasonRegister } = useMasonRegister();
   const { mutateAsync: createEngineerRegister } = useEngineerRegister();
   const { mutateAsync: sendFCMToken } = useSendFCMToken();
-
   const dispatch = useAppDispatch();
 
   const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
+  const requiredDocuments = ["aadhaar_card", "pan_card"];
 
   const {
     handleChange,
@@ -82,14 +85,16 @@ const MasonAndEngineerRegistrationScreen = () => {
       workCity: "",
       zipCode: "",
       counterAddress: "",
+      masonSkill: "",
+      region: [],
     },
     validationSchema: masonAndEngineerRegistration,
     onSubmit: async (values) => {
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
@@ -105,6 +110,8 @@ const MasonAndEngineerRegistrationScreen = () => {
         formData.append("work_city", values.workCity);
         formData.append("zipcode", values.zipCode);
         formData.append("address", values.counterAddress);
+        formData.append("region", values.region);
+        formData.append("skill", values.masonSkill);
         formData.append("dob", birthDate);
         formData.append(
           "member",
@@ -124,16 +131,42 @@ const MasonAndEngineerRegistrationScreen = () => {
             ? await createMasonRegister(formData)
             : await createEngineerRegister(formData);
         if (res) {
-          await sendFCMToken({ firebaseToken: FCMToken });
+          const token = await messaging().getToken();
+          dispatch(authActions.setFCMToken(token));
+          await sendFCMToken({ firebaseToken: token });
           setIsApiLoading(false);
+           dispatch(authActions.setToken(''));
           navigation.navigate(RouteString.CompletingRegistrationScreen);
         }
-      } catch (error) {
+      } catch (error: any) {
         setIsApiLoading(false);
-        console.log("MasonAndEngineerRegistrationScreen", error);
+        console.log('error?.response?.data',error?.response?.data)
+        Toast.show({
+          type: "error",
+          text1:
+            error?.response?.data?.message ||
+            error?.response?.data?.errors?.dob || 'Please try again'
+        });
       }
     },
   });
+
+  const onPress = () => {
+    if (
+      values.workCity == "" ||
+      values.zipCode == "" ||
+      values.counterAddress == "" ||
+      values.region.length == 0 ||
+      birthDate === "" ||
+      values.masonSkill === ''
+    ) {
+      Toast.show({
+        type: "error",
+        text1: "Enter All Informatin Correctly",
+      });
+    }
+    handleSubmit();
+  };
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
     Keyboard.dismiss();
@@ -236,14 +269,40 @@ const MasonAndEngineerRegistrationScreen = () => {
           {t("registration.completeRegistration")}
         </Text>
         <SearchDropDownView
-          zIndex={1}
-          label={t("registration.workCity")}
-          placeHolder={t("registration.enterWorkCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("workCity", value)}
-          errors={errors.workCity}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
+          // zIndex={1}
+          label={t("registration.SelectAnyOneAreaRegion")}
+          placeHolder={t("registration.SelectAreaRegion")}
+          selectedNames={(value) => setFieldValue("region", value)}
+          errors={errors.region}
+          mainViewStyle={commonStyle.mainViewStyle}
           isRequired={true}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
+          <DropDownView
+          zIndex={2}
+          label={t("masonOnboard.masonSkillType")}
+          placeHolder={
+            values.masonSkill
+              ? values.masonSkill
+              : t("masonOnboard.selectMasonSkillType")
+          }
+          mainViewStyle={{ marginTop: hp(3) }}
+          data={masonSkill}
+          selectedName={(name) => setFieldValue("masonSkill", name)}
+          errors={errors.masonSkill}
+        />
+        <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.workCity}
+          onChangeText={handleChange("workCity")}
+          onBlur={handleBlur("workCity")}
+          touched={touched.workCity}
+          errors={errors.workCity}
+          isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <TextInputField
           title={t("registration.zipCode")}
@@ -256,6 +315,7 @@ const MasonAndEngineerRegistrationScreen = () => {
           errors={errors.zipCode}
           maxLength={6}
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <TextInputField
           title={t("registration.counterAddress")}
@@ -267,25 +327,25 @@ const MasonAndEngineerRegistrationScreen = () => {
           touched={touched.counterAddress}
           errors={errors.counterAddress}
           InputViewStyle={styles.inputView}
-          textInputStyle={{ height:hp(15)}}
+          textInputStyle={{ height: hp(15) }}
           multiline
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
-        <Text style={styles.personalInfo}>
-          {t("registration.personalInfo")}
-        </Text>
         <TextInputFieldOptional
           title={t("registration.yourBirthDate")}
           placeholder={t("registration.DDMM")}
           value={birthDate}
-          maxLength={5}
+          isRequired
           onChangeText={() => null}
-          editable
           onTouchStart={() => {
             setDatePickerVisibility(true);
             setSelectedMemberId("");
           }}
         />
+        <Text style={styles.personalInfo}>
+          {t("registration.personalInfo")}
+        </Text>
         {familyMembers.map((member, index) => (
           <View style={styles.moreMemberView}>
             <Pressable
@@ -365,7 +425,7 @@ const MasonAndEngineerRegistrationScreen = () => {
           onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
           fileName={uploadedDocuments?.profile_pic?.name}
-          isRequired={true}
+          isRequired={false}
         />
         <View style={styles.termsView}>
           <Pressable
@@ -390,7 +450,7 @@ const MasonAndEngineerRegistrationScreen = () => {
           buttonName={t("registration.submitForApproval")}
           isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={handleSubmit}
+          onPress={onPress}
         />
       </KeyboardAwareScrollView>
       <DateTimePickerModal

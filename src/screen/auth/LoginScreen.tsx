@@ -25,10 +25,11 @@ import { authActions } from "../../redux/slice/AuthSlice";
 import { UserType } from "../../interfaces/Types";
 import { useGetUser } from "../../api/query/ProfileService";
 import { useSendFCMToken } from "../../api/query/NotificationService";
+import messaging from "@react-native-firebase/messaging";
 
 const LoginScreen = () => {
   const { t } = useTranslation();
-  const { portal, FCMToken } = useAppSelector((state) => state.auth);
+  const { portal } = useAppSelector((state) => state.auth);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { mutateAsync: getLogin } = useLogin();
   const [isApiLoading, setIsApiLoading] = useState(false);
@@ -37,10 +38,10 @@ const LoginScreen = () => {
   const { mutateAsync: sendFCMToken } = useSendFCMToken();
 
   const capitalizeFirstLetter = (word: string) => {
-    if (!word) return '';
+    if (!word) return "";
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
-  
+
   const capitalizedWord = capitalizeFirstLetter(portal);
 
   const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
@@ -80,7 +81,9 @@ const LoginScreen = () => {
                 navigation.navigate(RouteString.CompletingRegistrationScreen);
               } else {
                 const data = await getUserData();
-                await sendFCMToken({firebaseToken: FCMToken})
+                const token = await messaging().getToken();
+                dispatch(authActions.setFCMToken(token));
+                await sendFCMToken({ firebaseToken: token });
                 dispatch(authActions.setUserStatus(res?.user_approval_status));
                 setIsApiLoading(false);
                 if (data) {
@@ -97,7 +100,7 @@ const LoginScreen = () => {
           setIsApiLoading(false);
           Toast.show({
             type: "error",
-            text1: error?.response?.data?.message,
+            text1: error?.response?.data?.message || "Please try again",
           });
         }
       },

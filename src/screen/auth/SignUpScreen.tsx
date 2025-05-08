@@ -27,14 +27,14 @@ const SignUpScreen = () => {
   const { t } = useTranslation();
   const { portal } = useAppSelector((state) => state.auth);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { mutateAsync: createSignUp} = useSignUp();
+  const { mutateAsync: createSignUp } = useSignUp();
   const [isApiLoading, setIsApiLoading] = useState(false);
 
   const capitalizeFirstLetter = (word: string) => {
-    if (!word) return '';
+    if (!word) return "";
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
-  
+
   const capitalizedWord = capitalizeFirstLetter(portal);
 
   const { handleChange, handleBlur, handleSubmit, values, touched, errors } =
@@ -47,7 +47,7 @@ const SignUpScreen = () => {
       validationSchema: signUpValidationSchema,
       onSubmit: async (values) => {
         try {
-          setIsApiLoading(true)
+          setIsApiLoading(true);
           const res = await createSignUp({
             email: values.email,
             mobile_number: values.phoneNumber,
@@ -55,20 +55,20 @@ const SignUpScreen = () => {
             role: portal,
           });
           if (res) {
-            setIsApiLoading(false)
-            console.log("res", res);
+            setIsApiLoading(false);
             navigation.navigate(RouteString.VerifyOTPScreen, {
               mobile_number: values.phoneNumber,
+              from: "",
             });
           }
         } catch (error: any) {
-          setIsApiLoading(false)
+          setIsApiLoading(false);
           Toast.show({
-            type: 'error',
-            text1: error?.response.data.message,
+            type: "error",
+            text1: error?.response.data.message ||
+            error?.response?.data?.errors?.name ||  'Please try again'
           });
         }
-       
       },
     });
 

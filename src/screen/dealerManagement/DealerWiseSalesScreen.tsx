@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -25,15 +26,44 @@ const DealerWiseSalesScreen = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isStartDate, setStartDate] = useState("");
   const [isEndDate, setEndDate] = useState("");
-  const { mutateAsync: getDealerSales, data } = useGetDealerSales();
+  const { mutateAsync: getDealerSales } = useGetDealerSales();
   const [search, setSearch] = useState("");
 
+  const [data, setData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [nextPage, setNextPage] = useState<any>(null);
+  const [curPage, setCurPage] = useState(1);
+  const [isFetching, setIsFetching] = useState(false);
+
   useEffect(() => {
-    getDealerSales({
-      startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
-      endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
-    });
+    handleGetDealerSalesList();
   }, [isStartDate, isEndDate]);
+
+  const handleGetDealerSalesList = async () => {
+    try {
+      const res = await getDealerSales({
+        startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
+        endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
+        page: curPage,
+        status: ""
+      });
+      if (nextPage >= curPage && nextPage != null) {
+        setIsFetching(true);
+      }
+      if (res?.data) {
+        setData((prev: any) =>
+          curPage === 1 ? res.data : [...prev, ...res.data]
+        );
+        setIsFetching(false);
+      }
+      if (res?.hasMore) {
+        setTotalPage(res.totalPage);
+        setNextPage(res.nextPage);
+      }
+    } catch (error) {
+      console.log("handleGetDealerSalesList===>", error);
+    }
+  };
 
   const filterData = () => {
     if (!search) {
@@ -45,6 +75,19 @@ const DealerWiseSalesScreen = () => {
 
       return itemName.includes(query);
     });
+  };
+
+  const onEndReached = () => {
+    if (nextPage <= totalPage && nextPage != null) {
+      setCurPage(curPage + 1);
+      handleGetDealerSalesList();
+    }
+  };
+
+  const ListFooterComponent = () => {
+    return isFetching ? (
+      <ActivityIndicator size="small" color={colors.primary} />
+    ) : null;
   };
 
   return (
@@ -61,7 +104,12 @@ const DealerWiseSalesScreen = () => {
       <SearchView onChangeText={(text) => setSearch(text)} value={search} />
       <FlatList
         data={filterData()}
-        removeClippedSubviews={false} 
+        removeClippedSubviews={false}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
+        onEndReached={onEndReached}
+        ListEmptyComponent={() => <Text style={styles.noData}>{t('error.NoDataAvailable')}</Text>}
+        ListFooterComponent={ListFooterComponent}
+        onEndReachedThreshold={16}
         renderItem={({ item, index }) => {
           return <DealerWiseSalesCard key={index} item={item} />;
         }}
@@ -93,4 +141,9 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(20),
   },
+  noData:{
+    alignSelf:'center',
+    fontFamily:FontPath.OutfitMedium,
+    color:colors.black
+  }
 });

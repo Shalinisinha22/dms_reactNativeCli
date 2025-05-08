@@ -6,9 +6,11 @@ import { hp, RFValue, wp } from '../../helper/Responsive'
 import { FontPath } from '../../utils/FontPath'
 import { useTranslation } from 'react-i18next'
 import { IconsPath } from '../../utils/IconPath'
+import { abbreviateNumber } from '../../utils/commonFunctions'
 
 const DealerWiseSalesCard = ({item}:{item:any}) => {
     const {t} = useTranslation();
+
   return (
     <View style={styles.cardView}>
     <View style={styles.orderNoView}>
@@ -21,7 +23,7 @@ const DealerWiseSalesCard = ({item}:{item:any}) => {
           <Text style={styles.salesName}>{item.dealerName}</Text>
           <Text style={styles.orderNo}>{t('dealerwiseSales.dealerNo')} : {item.dealerNumber}</Text>
         </View>
-        <Text style={styles.amount}>Rs.{item.totalSale}</Text>
+        <Text style={styles.amount}>Rs.{abbreviateNumber(item.totalSale)}</Text>
         </View>
         <View style={styles.locationRowView}>
             <Image source={IconsPath.location} style={styles.location} />
@@ -95,6 +97,6 @@ const styles = StyleSheet.create({
     amount:{
         color:colors.primary,
         fontFamily:FontPath.OutfitSemiBold,
-        fontSize:RFValue(16)
+        fontSize:RFValue(14)
     }
 })

@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { IconsPath } from "../../utils/IconPath";

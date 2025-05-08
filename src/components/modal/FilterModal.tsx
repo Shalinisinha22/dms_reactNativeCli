@@ -182,5 +182,6 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(12),
     marginLeft: wp(3),
+    lineHeight:hp(4)
   },
 });

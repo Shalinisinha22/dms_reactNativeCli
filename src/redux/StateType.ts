@@ -4,6 +4,7 @@ export interface IAuthSliceInitialState {
   FCMToken:string;
   user_approval_status: string;
   userInfo: {
+    [x: string]: any;
     dealerNumber: number;
     asoNumber: any;
     masonNumber: any;
@@ -42,6 +43,7 @@ export interface IAuthSliceInitialState {
       by_admin:string
     }
     company:string
+    gst_number:string
     role:[]
     region:[]
     skill:[]

@@ -27,7 +27,7 @@ export const useGetUserRole = () => {
     mutationFn: async (payload: GetUserRolePayload) => {
       const response = await axiosInstance.get(
         API_ENDPOINT.GET_USER_ROLE +
-          `/${payload.role}/list?status=${payload.status}`
+          `/${payload.role}/list?status=${payload.status}&page=${payload.page}`
       );
       return response.data;
     },

@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.dms</string>
+	<string>com.balmukundsuperpartner</string>
 	<key>PROJECT_ID</key>
 	<string>dms-app-95df0</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:299988554736:ios:017ebaafb8d12752990335</string>
+	<string>1:299988554736:ios:80ebad3b91d87290990335</string>
 </dict>
 </plist>

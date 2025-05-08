@@ -68,8 +68,8 @@ const HomeScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (isFoused) {
-      stats.isFetchedAfterMount;
+    if (isFoused && portal) {
+      stats.refetch();
       handleGetorderList();
     }
   }, [isFoused]);
@@ -79,18 +79,20 @@ const HomeScreen = () => {
       const res = await getMyOrders({
         startDate: moment().format("YYYY-MM-DD"),
         endDate: moment().format("YYYY-MM-DD"),
+        page: 1,
+        status:'pending'
       });
-      if (res) {
+      if (res?.data) {
         if (portal === UserType.DISTRIBUTOR) {
-          const filterData = res.filter(
+          const filterData = res?.data.filter(
             (item: { status: { by_distributor: string } }) =>
               item?.status?.by_distributor === "pending"
           );
           setDistributorOrderList(filterData);
         } else if (portal === UserType.DEALER) {
-          setDealerOrderList(res);
+          setDealerOrderList(res?.data);
         } else if (portal === UserType.ASO) {
-          const filterData = res.filter(
+          const filterData = res?.data.filter(
             (item: { status: { by_aso: string; by_distributor: string } }) =>
               item?.status?.by_aso === "pending" &&
               item?.status?.by_distributor === "approved"
@@ -155,10 +157,10 @@ const HomeScreen = () => {
             <DashboardActionCard data={masonAndEngineerMoreOption} />
           </>
         )}
-        {portal === UserType.DEALER && (
+        {portal === UserType.DEALER && dealerOrderList.length > 0 && (
           <View style={{ marginBottom: hp(2) }}>
             <FlatList
-              data={dealerOrderList.slice(0, 5)}
+              data={dealerOrderList?.slice(0, 5)}
               horizontal
               pagingEnabled
               onScroll={handleScroll}
@@ -171,7 +173,7 @@ const HomeScreen = () => {
                 </View>
               )}
             />
-            {dealerOrderList.slice(0, 5).length > 1 && (
+            {dealerOrderList?.slice(0, 5).length > 1 && (
               <DotView data={dealerOrderList} currentPage={currentIndex} />
             )}
           </View>
@@ -201,7 +203,9 @@ const HomeScreen = () => {
               </Text>
               <Pressable
                 onPress={() =>
-                  navigation.navigate(RouteString.PlaceOrderScreen, { type : ''})
+                  navigation.navigate(RouteString.PlaceOrderScreen, {
+                    type: "",
+                  })
                 }
               >
                 <Text style={styles.sellAll}>{t("dashboard.viewAll")}</Text>
@@ -283,19 +287,19 @@ const HomeScreen = () => {
           portal === UserType.DISTRIBUTOR) && (
           <>
             <TotalOrderCard
-            onPress={() => {
-              if(portal === UserType.DEALER) {
-              navigation.navigate(RouteString.OrderHistory, {
-                screen: RouteString.OrderHistoryScreen,
-                params: { type : 'orderHistory.all' },
-              })
-            } else {
-              navigation.navigate(RouteString.BottomTabNavigator, {
-                screen: RouteString.PlaceOrderScreen,
-                params: { type :'orderHistory.pending' },
-              })
-            }
-            }}
+              onPress={() => {
+                if (portal === UserType.DEALER) {
+                  navigation.navigate(RouteString.OrderHistory, {
+                    screen: RouteString.OrderHistoryScreen,
+                    params: { type: "orderHistory.all" },
+                  });
+                } else {
+                  navigation.navigate(RouteString.BottomTabNavigator, {
+                    screen: RouteString.PlaceOrderScreen,
+                    params: { type: "orderHistory.pending" },
+                  });
+                }
+              }}
               source={
                 portal === UserType.DEALER
                   ? IconsPath.orderStatus
@@ -308,25 +312,29 @@ const HomeScreen = () => {
               }
               total={
                 portal === UserType.DEALER
-                  ? stats?.data?.rejected + stats?.data?.dispatched
+                  ? stats?.data?.approved +
+                    stats?.data?.cancel +
+                    stats?.data?.dispatched +
+                    stats?.data?.pending +
+                    stats?.data?.rejected
                   : stats.data?.pending
               }
+              backgroundColor={colors.yellow}
             />
             <TotalOrderCard
-            onPress={() => {
-              if(portal === UserType.DEALER) {
-                navigation.navigate(RouteString.OrderHistory, {
-                  screen: RouteString.OrderHistoryScreen,
-                  params: { type : 'orderHistory.dispatched' },
-                })
-              } else {
-                navigation.navigate(RouteString.BottomTabNavigator, {
-                  screen: RouteString.PlaceOrderScreen,
-                  params: { type : 'orderHistory.approved' },
-                })
-              }
-            
-            }}
+              onPress={() => {
+                if (portal === UserType.DEALER) {
+                  navigation.navigate(RouteString.OrderHistory, {
+                    screen: RouteString.OrderHistoryScreen,
+                    params: { type: "orderHistory.dispatched" },
+                  });
+                } else {
+                  navigation.navigate(RouteString.BottomTabNavigator, {
+                    screen: RouteString.PlaceOrderScreen,
+                    params: { type: "orderHistory.approved" },
+                  });
+                }
+              }}
               source={
                 portal === UserType.DEALER
                   ? IconsPath.dispatched
@@ -342,22 +350,22 @@ const HomeScreen = () => {
                   ? stats?.data?.dispatched
                   : stats.data?.approved
               }
+              backgroundColor={colors.green}
             />
             <TotalOrderCard
-             onPress={() => {
-              if(portal === UserType.DEALER) {
-                navigation.navigate(RouteString.OrderHistory, {
-                  screen: RouteString.OrderHistoryScreen,
-                  params: { type : 'orderHistory.rejected' },
-                })
-              } else {
-                navigation.navigate(RouteString.BottomTabNavigator, {
-                  screen: RouteString.PlaceOrderScreen,
-                  params: { type : 'orderHistory.rejected' },
-                })
-              }
-             
-            }}
+              onPress={() => {
+                if (portal === UserType.DEALER) {
+                  navigation.navigate(RouteString.OrderHistory, {
+                    screen: RouteString.OrderHistoryScreen,
+                    params: { type: "orderHistory.rejected" },
+                  });
+                } else {
+                  navigation.navigate(RouteString.BottomTabNavigator, {
+                    screen: RouteString.PlaceOrderScreen,
+                    params: { type: "orderHistory.rejected" },
+                  });
+                }
+              }}
               source={
                 portal === UserType.DEALER
                   ? IconsPath.dispatched
@@ -373,6 +381,7 @@ const HomeScreen = () => {
                   ? stats?.data?.rejected
                   : stats.data?.rejected
               }
+              backgroundColor={colors.primary}
             />
           </>
         )}

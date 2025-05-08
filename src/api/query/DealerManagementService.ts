@@ -59,7 +59,7 @@ export const useGetUserDetailsByID = () => {
 export const useApproveUser = () => {
   return useMutation({
     mutationFn: async (payload: ApproveUserPayload) => {
-      const response = await axiosInstance.get(
+      const response = await axiosInstance.put(
         API_ENDPOINT.APPROVE_USER +
           `/${payload.role}/${payload.userId}/${payload.status}`
       );

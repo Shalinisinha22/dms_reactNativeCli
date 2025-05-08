@@ -57,8 +57,8 @@
     "enterEnterprise": "Enter enterprise/firm name",
     "workCity": "Work City",
     "enterWorkCity": "Enter Work City",
-    "zipCode": "Zip Code",
-    "enterZipCode": "Enter 6 digit zip code",
+    "zipCode": "Pin Code",
+    "enterZipCode": "Enter 6 digit Pin code",
     "counterAddress": "Counter Address",
     "enterCounterAddress": "Enter Counter Address",
     "personalInfo": "Personal Info(Optional)",
@@ -81,7 +81,11 @@
     "selectCity":"Select City",
     "uplaodDocuments":"Uplaod Documents",
     "areaRegionName":"Area/ Region Name",
-    "selectAreaRegionName":"Select Area/ Region Name"
+    "selectAreaRegionName":"Select Area/ Region Name",
+    "GSTNumber":"GST Number",
+    "EnterGSTNumber":"Enter GST Number",
+    "SelectAnyOneAreaRegion":"Select Area / Region",
+    "SelectAreaRegion":"Select Area/ Region"
   },
   "completingRegistration": {
     "thankYouForCompletingTheRegistration": "Thank You for completing the Registration.",
@@ -157,14 +161,18 @@
     "rejected":"Rejected",
     "approved":"Approved",
     "dealerManagement":"Dealer Management",
-    "totalSalesVolume":"Total Sales Volume"
+    "totalSalesVolume":"Total Sales Volume",
+    "requirement":"Requirement",
+    "SearchByDealerDistributor":"Search By Dealer, Distributor"
   },
   "orderPlacement": {
     "orderPlacement": "Order Placement",
     "amount": "Amount",
     "totalWeight": "Total Weight",
     "totalAmount": "Total Amount",
-    "orderPreview": "ORDER PREVIEW"
+    "orderPreview": "ORDER PREVIEW",
+    "selectDistributor":"Select Distributor From Your Area",
+    "selectDistributor1":"Select Distributor"
   },
   "confirmOrder": {
     "confirmOrder": "Confirm Order",
@@ -203,18 +211,22 @@
     "rejectOrders":"REJECT ORDER",
     "orderModified":"Order Modified",
     "pending":"Pending",
-    "previous":"View Previous"
+    "previous":"View Previous",
+    "noOrderavailable":"No Order available"
   },
   "viewOrder": {
     "viewOrder": "ViewOrder",
     "orderDate": "Order Date",
     "dispatchDate": "Dispatch Date",
-    "totalWeight": "Total Weight",
-    "totalAmount": "Total Amount"
+    "totalWeight": "Total MT",
+    "totalAmount": "Total Amount",
+    "invoiceDate":"Invoice Date"
   },
   "invoice": {
     "invoice": "My Invoice",
-    "invoiceNo": "Invoice No"
+    "invoiceNo": "Invoice No",
+    "noIvoiceavailable":"No Invoice available"
+
   },
   "filter": {
     "filter": "Filter",
@@ -269,7 +281,9 @@
     "mobileNo": "Mobile No",
     "birthData": "Birth Date",
     "counterAddress": "Counter Address",
-    "member": "Member"
+    "member": "Member",
+    "AreaRegion":"Area / Region",
+    "firmName": "Firm Name"
   },
   "logOut": {
     "areYouSure": "Are You Sure?",
@@ -306,7 +320,9 @@
     "passwordMatch": "Passwords must match",
     "firmNameRequired": "The enterprise / firm name is required",
     "workCityRequired": "The work city is required",
-    "zipCodeRequired": "The zip code is required",
+    "zipCodeRequired": "The Pin code is required",
+    "gstRequired": "The GST number is required",
+    "invalidGSTNumber":"The GST number is invalid",
     "counterAddressRequired": "The counter address is required",
     "remarksRequired": "The Remarks is required",
     "descriptionRequired": "The Description is required",
@@ -322,7 +338,10 @@
     "areaRegionRequired" : "The Area / Region is required",
     "reasonRequired": "The Reason is required",
     "noDocumentFound":"No Document Found",
-    "AgeMustBeOrAbove":"Age must be 18 or above"
+    "AgeMustBeOrAbove":"Age must be 18 or above",
+    "distributorIsRequired":"The Distributor is required",
+    "NoDistributorInYourArea":"No Distributor in your Area",
+    "NoDataAvailable":"No Data Available"
   },
   "newDealerOnboard":{
     "newDealerOnboard":"New Dealer Onboard"

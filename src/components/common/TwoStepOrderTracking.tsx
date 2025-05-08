@@ -3,7 +3,6 @@ import React from "react";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
 import { colors } from "../../utils/Colors";
-import { IconsPath } from "../../utils/IconPath";
 import { useTranslation } from "react-i18next";
 import { TwoStepOrderTrackingProps } from "../../interfaces/Types";
 
@@ -13,6 +12,7 @@ const TwoStepOrderTracking = ({
   isCheckIcons,
   dealerIcons,
   asoIcons,
+  admin
 }: TwoStepOrderTrackingProps) => {
   const { t } = useTranslation();
   return (
@@ -53,7 +53,7 @@ const TwoStepOrderTracking = ({
             style={[
               styles.round,
               {
-                backgroundColor:  asoIcons === 39
+                backgroundColor: admin ||  asoIcons === 39
                       ? colors.green_1
                       : asoIcons !== null
                       ? colors.primary
@@ -65,7 +65,7 @@ const TwoStepOrderTracking = ({
               <Image source={asoIcons} style={styles.checkIcons} />
             )}
           </View>
-          <Text style={styles.label}>{t("masonManagement.approvedByASO")}</Text>
+          <Text style={styles.label}>{admin ?  t("dashboard.approvedByAdmin") : t("masonManagement.approvedByASO")}</Text>
         </View>
       </View>
     </View>
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     width: wp(20),
     zIndex: 1,
     marginTop: hp(3.5),
+    color:colors.black,
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(9),
     alignSelf: "center",

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_ENDPOINT } from "../ApiEndPoint";
 import axiosInstance from "../ApiService";
-import { SendFCMTokenPayload } from "../ApiPayloadType";
+import { NotificationUnReadPayload, SendFCMTokenPayload } from "../ApiPayloadType";
 
 export const useSendFCMToken = () => {
   return useMutation({
@@ -16,11 +16,10 @@ export const useSendFCMToken = () => {
 };
 
 export const useGetNotificationUnRead = () => {
-    return useQuery({
-      queryKey: ["useGetNotificationUnRead"],
-      queryFn: async () => {
-        const response = await axiosInstance.get(API_ENDPOINT.GET_NOTIFICATION_UNREAD);
-        return response.data;
-      },
-    });
-  };
+  return useMutation({
+    mutationFn: async (payload: NotificationUnReadPayload) => {
+      const response = await axiosInstance.get(API_ENDPOINT.GET_NOTIFICATION_UNREAD + `?page=${payload.page}`);
+      return response.data;
+    },
+  });
+};

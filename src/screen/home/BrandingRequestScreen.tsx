@@ -9,7 +9,6 @@ import CheckIcons from "../../assets/svg/CheckIcons";
 import Button from "../../components/common/Button";
 import { useTranslation } from "react-i18next";
 import { useBranding } from "../../api/query/SupportService";
-import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 const BrandingRequestScreen = () => {
@@ -17,7 +16,6 @@ const BrandingRequestScreen = () => {
   const [selectedItem, setSelectedItem] = useState<Set<string>>(new Set());
   const [isApiLoading, setIsApiLoading] = useState(false);
   const { mutateAsync: createBrandingRequest } = useBranding();
-  const navigation = useNavigation();
 
   const handleSelectItem = (name: string) => {
     if (selectedItem.has(name)) {

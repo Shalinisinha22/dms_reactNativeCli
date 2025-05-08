@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axiosInstance from "../ApiService";
 import { API_ENDPOINT } from "../ApiEndPoint";
-import { SupportPayload } from "../ApiPayloadType";
+import { BrandingListProps, SupportPayload } from "../ApiPayloadType";
 
 export const useSupport = () => {
   return useMutation({
@@ -28,11 +28,11 @@ export const useBranding = () => {
 };
 
 export const useBrandingList = () => {
-  return useQuery({
-    queryKey: ["useBrandingList"],
-    queryFn: async () => {
-      const response = await axiosInstance.get(API_ENDPOINT.BRANDING_LIST);
+  return useMutation({
+    mutationFn: async (payload: BrandingListProps) => {
+      const response = await axiosInstance.get(API_ENDPOINT.BRANDING_LIST + `?page=${payload.page}`);
       return response.data;
     },
   });
 };
+

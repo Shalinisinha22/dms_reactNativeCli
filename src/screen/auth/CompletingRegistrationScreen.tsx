@@ -23,7 +23,9 @@ const CompletingRegistrationScreen = () => {
         <Text style={styles.reviewTitle}>
           {t("completingRegistration.yourApplicationIsUnderReview")}
         </Text>
-       {portal !== UserType.ASO && <Text style={styles.des}>{t("completingRegistration.des")}</Text>}
+        {portal !== UserType.ASO && (
+          <Text style={styles.des}>{t("completingRegistration.des")}</Text>
+        )}
       </View>
     </SafeAreaContainer>
   );

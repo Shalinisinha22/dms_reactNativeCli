@@ -2,419 +2,389 @@ import { RouteString } from "../navigation/RouteString";
 import { IconsPath } from "./IconPath";
 import { ImagePath } from "./ImagePath";
 
-export const userProfileImage = 'https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-
 export const chooseLanguage = [
   {
-    language: 'English',
+    language: "English",
   },
   {
-    language: 'हिन्दी',
+    language: "हिन्दी",
   },
 ];
 
 export const portalOption = [
   {
-    name: 'Dealer',
-    icons: ImagePath.dealer
+    name: "Dealer",
+    icons: ImagePath.dealer,
   },
   {
-    name: 'Distributor',
-    icons: ImagePath.distributor
+    name: "Distributor",
+    icons: ImagePath.distributor,
   },
   {
-    name: 'Aso',
-    icons: ImagePath.aso
+    name: "Aso",
+    icons: ImagePath.aso,
   },
   {
-    name: 'Engineer',
-    icons: ImagePath.engineer
+    name: "Engineer",
+    icons: ImagePath.engineer,
   },
   {
-    name: 'Mason',
-    icons: ImagePath.mason
-  }
-]
+    name: "Mason",
+    icons: ImagePath.mason,
+  },
+];
 
 export const dealerDrawerOption = [
   {
-    name: 'drawer.dashboard',
+    name: "drawer.dashboard",
     icons: IconsPath.dashboard,
-    routes: RouteString.HomeScreen
+    routes: RouteString.HomeScreen,
   },
   {
-    name: 'drawer.orderPlacement',
+    name: "drawer.orderPlacement",
     icons: IconsPath.placeOrderRed,
-    routes: RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'drawer.orderHistory',
+    name: "drawer.orderHistory",
     icons: IconsPath.orderHistoryRed,
-    routes:RouteString.OrderHistory
+    routes: RouteString.OrderHistory,
   },
   {
-    name: 'drawer.myInvoice',
+    name: "drawer.myInvoice",
     icons: IconsPath.invocie,
-    routes:RouteString.InvoiceScreen
+    routes: RouteString.InvoiceScreen,
   },
   {
-    name: 'drawer.ledger',
+    name: "drawer.ledger",
     icons: IconsPath.lender,
-    routes: RouteString.LedgerScreen
+    routes: RouteString.LedgerScreen,
   },
   {
-    name: 'drawer.myScheme',
+    name: "drawer.myScheme",
     icons: IconsPath.scheme,
-    routes:RouteString.MySchemeScreen
+    routes: RouteString.MySchemeScreen,
   },
   {
-    name: 'drawer.brandingRequest',
+    name: "drawer.brandingRequest",
     icons: IconsPath.branding,
-    routes:RouteString.BrandingRequestScreen
+    routes: RouteString.BrandingRequestScreen,
   },
   {
-    name: 'drawer.support',
+    name: "drawer.support",
     icons: IconsPath.support,
-    routes:RouteString.SupportRequestScreen
+    routes: RouteString.SupportRequestScreen,
   },
   {
-    name: 'drawer.logOut',
+    name: "drawer.logOut",
     icons: IconsPath.logOut,
-    routes:''
+    routes: "",
   },
-]
+];
 
 export const distributorDrawerOption = [
   {
-    name: 'drawer.dashboard',
+    name: "drawer.dashboard",
     icons: IconsPath.dashboard,
-    routes: RouteString.HomeScreen
+    routes: RouteString.HomeScreen,
   },
   {
-    name: 'drawer.orderList',
+    name: "drawer.orderList",
     icons: IconsPath.orderHistoryRed,
-    routes:RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'drawer.myLedger',
+    name: "drawer.myLedger",
     icons: IconsPath.invocie,
-    routes:RouteString.LedgerScreen
+    routes: RouteString.LedgerScreen,
   },
   {
-    name: 'drawer.myInvoice',
+    name: "drawer.myInvoice",
     icons: IconsPath.invocie,
-    routes:RouteString.InvoiceScreen
+    routes: RouteString.InvoiceScreen,
   },
   {
-    name: 'drawer.dealerwiseSales',
+    name: "drawer.dealerwiseSales",
     icons: IconsPath.dealerWiseSales,
-    routes:RouteString.DealerWiseSalesScreen
+    routes: RouteString.DealerWiseSalesScreen,
   },
   {
-    name: 'drawer.dealerManagemet',
+    name: "drawer.dealerManagemet",
     icons: IconsPath.invocie,
-    routes:RouteString.OrderHistory
+    routes: RouteString.OrderHistory,
   },
   {
-    name: 'drawer.RunningScheme',
+    name: "drawer.RunningScheme",
     icons: IconsPath.scheme,
-    routes:RouteString.ViewSchemeScreen
+    routes: RouteString.ViewSchemeScreen,
   },
   {
-    name: 'drawer.brandingRequest',
+    name: "drawer.brandingRequest",
     icons: IconsPath.branding,
-    routes:RouteString.BrandingRequestScreen
+    routes: RouteString.BrandingRequestScreen,
   },
   {
-    name: 'drawer.support',
+    name: "drawer.support",
     icons: IconsPath.support,
-    routes:RouteString.SupportRequestScreen
+    routes: RouteString.SupportRequestScreen,
   },
   {
-    name: 'drawer.logOut',
+    name: "drawer.logOut",
     icons: IconsPath.logOut,
-    routes:''
+    routes: "",
   },
-]
+];
 
 export const asoDrawerOption = [
   {
-    name: 'drawer.dashboard',
+    name: "drawer.dashboard",
     icons: IconsPath.dashboard,
-    routes: RouteString.HomeScreen
+    routes: RouteString.HomeScreen,
   },
   {
-    name: 'drawer.orderList',
+    name: "drawer.orderList",
     icons: IconsPath.orderHistoryRed,
-    routes:RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'drawer.dealerwiseSales',
+    name: "drawer.dealerwiseSales",
     icons: IconsPath.dealerWiseSales,
-    routes:RouteString.DealerWiseSalesScreen
+    routes: RouteString.DealerWiseSalesScreen,
   },
   {
-    name: 'drawer.dealerManagemet',
+    name: "drawer.dealerManagemet",
     icons: IconsPath.invocie,
-    routes:RouteString.DealerManagementScreen
+    routes: RouteString.DealerManagementScreen,
   },
   {
-    name: 'drawer.masonManagement',
+    name: "drawer.masonManagement",
     icons: IconsPath.mason,
-    routes:RouteString.MasonManagementScreen
+    routes: RouteString.MasonManagementScreen,
   },
   {
-    name: 'drawer.engineerManagement',
+    name: "drawer.engineerManagement",
     icons: IconsPath.engineer,
-    routes:RouteString.EngineerManagementScreen
+    routes: RouteString.EngineerManagementScreen,
   },
   {
-    name: 'drawer.brandingMaterialquery',
+    name: "drawer.brandingMaterialquery",
     icons: IconsPath.brandingMaterial,
-    routes:RouteString.BrandingMaterialQueryScreen
+    routes: RouteString.BrandingMaterialQueryScreen,
   },
   {
-    name: 'drawer.support',
+    name: "drawer.support",
     icons: IconsPath.support,
-    routes:RouteString.SupportRequestScreen
+    routes: RouteString.SupportRequestScreen,
   },
   {
-    name: 'drawer.logOut',
+    name: "drawer.logOut",
     icons: IconsPath.logOut,
-    routes:''
+    routes: "",
   },
-]
+];
 
 export const masonANdEngineerDrawerOption = [
   {
-    name: 'drawer.dashboard',
+    name: "drawer.dashboard",
     icons: IconsPath.dashboard,
-    routes: RouteString.HomeScreen
+    routes: RouteString.HomeScreen,
   },
   {
-    name: 'drawer.referralSubmission',
+    name: "drawer.referralSubmission",
     icons: IconsPath.placeOrderRed,
-    routes: RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'drawer.rewardStatus',
+    name: "drawer.rewardStatus",
     icons: IconsPath.orderHistoryRed,
-    routes: RouteString.OrderHistory
+    routes: RouteString.OrderHistory,
   },
   {
-    name: 'drawer.RunningScheme',
+    name: "drawer.RunningScheme",
     icons: IconsPath.scheme,
-    routes:RouteString.ViewSchemeScreen
+    routes: RouteString.ViewSchemeScreen,
   },
   {
-    name: 'drawer.support',
+    name: "drawer.support",
     icons: IconsPath.support,
-    routes:RouteString.SupportRequestScreen
+    routes: RouteString.SupportRequestScreen,
   },
   {
-    name: 'drawer.logOut',
+    name: "drawer.logOut",
     icons: IconsPath.logOut,
-    routes:''
+    routes: "",
   },
-]
+];
 
 export const orderStatusOption = [
   {
-    name: 'dashboard.placeNewOrder',
+    name: "dashboard.placeNewOrder",
     icons: IconsPath.pluse2,
-    routes: RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'dashboard.viewOrderHistory',
+    name: "dashboard.viewOrderHistory",
     icons: IconsPath.easy,
-    routes: RouteString.OrderHistory
+    routes: RouteString.OrderHistory,
   },
   {
-    name: 'dashboard.myScheme',
+    name: "dashboard.myScheme",
     icons: IconsPath.scheme,
-    routes: RouteString.MySchemeScreen
+    routes: RouteString.MySchemeScreen,
   },
   {
-    name: 'dashboard.supportRequest',
+    name: "dashboard.supportRequest",
     icons: IconsPath.support,
-    routes: RouteString.SupportRequestScreen
+    routes: RouteString.SupportRequestScreen,
   },
   {
-    name: 'dashboard.brandingMaterialRequest',
+    name: "dashboard.brandingMaterialRequest",
     icons: IconsPath.branding,
-    routes: RouteString.BrandingRequestScreen
-  }
-]
+    routes: RouteString.BrandingRequestScreen,
+  },
+];
 export const brandingRequestItem = [
   {
-    name: 'GSB/ Sign Board'
+    name: "GSB/ Sign Board",
   },
   {
-    name: 'UniPol'
+    name: "UniPol",
   },
   {
-    name: 'Wall Wrap'
+    name: "Wall Wrap",
   },
   {
-    name: 'Wall Painting'
+    name: "Wall Painting",
   },
   {
-    name: 'Dealer Certificate'
+    name: "Dealer Certificate",
   },
   {
-    name: 'Shop Branding'
+    name: "Shop Branding",
   },
   {
-    name: 'Poll Kiosk'
-  }
-]
-
+    name: "Poll Kiosk",
+  },
+];
 
 export const orderMoreOption = [
   {
-    name: 'dashboard.approveOrder',
+    name: "dashboard.approveOrder",
     icons: IconsPath.checkRound,
-    routes: RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'dashboard.manageOrder',
+    name: "dashboard.manageOrder",
     icons: IconsPath.placeOrder,
-    routes: RouteString.PlaceOrderScreen
+    routes: RouteString.OrderHistory,
   },
   {
-    name: 'dashboard.viewLedger',
+    name: "dashboard.viewLedger",
     icons: IconsPath.easy,
-    routes: RouteString.LedgerScreen
+    routes: RouteString.LedgerScreen,
   },
   {
-    name: 'dashboard.onboardDealer',
+    name: "dashboard.onboardDealer",
     icons: IconsPath.profile,
-    routes: RouteString.NewDealerOnboardScreen
-  }
-]
+    routes: RouteString.NewDealerOnboardScreen,
+  },
+];
 
 export const asoMoreOption = [
   {
-    name: 'dashboard.approveOrder',
+    name: "dashboard.approveOrder",
     icons: IconsPath.checkRound,
-    routes:  RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'dashboard.manageOrder',
+    name: "dashboard.manageOrder",
     icons: IconsPath.placeOrder,
-    routes: RouteString.OrderHistory
+    routes: RouteString.DealerManagementScreen,
   },
   {
-    name: 'dashboard.viewLedger',
+    name: "dashboard.viewLedger",
     icons: IconsPath.easy,
-    routes: RouteString.LedgerScreen
+    routes: RouteString.LedgerScreen,
   },
-]
+];
 
 export const masonAndEngineerMoreOption = [
   {
-    name: 'drawer.referralSubmission',
+    name: "drawer.referralSubmission",
     icons: IconsPath.checkRound,
-    routes:  RouteString.PlaceOrderScreen
+    routes: RouteString.PlaceOrderScreen,
   },
   {
-    name: 'drawer.rewardStatus',
+    name: "drawer.rewardStatus",
     icons: IconsPath.placeOrder,
-    routes: RouteString.OrderHistory
-  }
-]
-export const orderHistoryType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.dispatched', 'orderHistory.pending']
-export const dealerManagementType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
-export const asorManagementType = ['orderHistory.all', 'orderHistory.approved', 'orderHistory.rejected', 'orderHistory.pending']
-export const rewardType = ['orderHistory.all','orderHistory.approved', 'orderHistory.rejected']
-export const dealerManagementType1 = ['orderHistory.all', 'orderHistory.pending']
-
-
+    routes: RouteString.OrderHistory,
+  },
+];
+export const orderHistoryType = [
+  "orderHistory.all",
+  "orderHistory.approved",
+  "orderHistory.rejected",
+  "orderHistory.dispatched",
+  "orderHistory.pending",
+];
+export const dealerManagementType = [
+  "orderHistory.all",
+  "orderHistory.approved",
+  "orderHistory.rejected",
+  "orderHistory.pending",
+];
+export const asorManagementType = [
+  "orderHistory.all",
+  "orderHistory.approved",
+  "orderHistory.rejected",
+  "orderHistory.pending",
+];
+export const rewardType = [
+  "orderHistory.all",
+  "orderHistory.approved",
+  "orderHistory.rejected",
+];
+export const dealerManagementType1 = [
+  "orderHistory.all",
+  "orderHistory.approved",
+  "orderHistory.pending",
+];
 
 export const supportRequestType = [
   {
-    name: 'General'
+    name: "General",
   },
   {
-    name: 'Order Related'
+    name: "Order Related",
   },
   {
-    name: 'Distributorship Related'
+    name: "Distributorship Related",
   },
   {
-    name: 'Dealership Related'
+    name: "Dealership Related",
   },
   {
-    name: 'Others'
-  }
-]
-
-export const city = [
-  {
-    name: 'delhi'
+    name: "Others",
   },
-  {
-    name: 'mumbai'
-  },
-]
-
-
-export const areaType = [
-  {
-    id:1,
-    name: 'Motihari'
-  },
-  {
-    id:2,
-    name: 'South Bihar'
-  },
-  {
-    id:3,
-    name: 'Siwan'
-  },
-  {
-    id:4,
-    name: 'Bettiah'
-  },
-  {
-    id:5,
-    name: 'Purnia'
-  },
-  {
-    id:6,
-    name: 'Begusarai'
-  },
-  {
-    id:7,
-    name: 'Samastipur/ Sitamarhi'
-  },
-  {
-    id:8,
-    name: 'Muzaffarpur'
-  },
-  {
-    id:9,
-    name: 'Others'
-  }
-]
+];
 
 export const masonSkill = [
   {
-    name: 'masonSkill.bricklayingAndBlocklaying'
+    name: "masonSkill.bricklayingAndBlocklaying",
   },
   {
-    name: 'masonSkill.ConcreteAndCementWork'
+    name: "masonSkill.ConcreteAndCementWork",
   },
   {
-    name: 'masonSkill.TileSetting'
+    name: "masonSkill.TileSetting",
   },
   {
-    name: 'masonSkill.StoneMasonry'
+    name: "masonSkill.StoneMasonry",
   },
   {
-    name: 'masonSkill.BlueprintReadingAndInterpretation'
+    name: "masonSkill.BlueprintReadingAndInterpretation",
   },
   {
-    name: 'masonSkill.Others'
-  }
-]
+    name: "masonSkill.Others",
+  },
+];

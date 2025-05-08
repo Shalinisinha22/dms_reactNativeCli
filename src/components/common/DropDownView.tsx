@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
   },
   status: {
     fontFamily: FontPath.OutfitRegular,
+    color:colors.black,
     fontSize: RFValue(14),
   },
   itemView: {
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     zIndex: 999,
     top: hp(9.5),
-    backgroundColor: colors.white,
+    backgroundColor: colors.lightBlue,
     paddingTop: hp(1),
     borderRadius: 12,
     width: wp(90),
@@ -109,6 +110,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: FontPath.OutfitMedium,
+    color:colors.black,
     marginHorizontal: wp(5),
     marginBottom: hp(2),
   },

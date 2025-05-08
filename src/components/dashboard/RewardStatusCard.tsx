@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../utils/Colors";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import { commonStyle } from "../../utils/commonStyles";
@@ -12,13 +12,28 @@ import {
 import { RouteString } from "../../navigation/RouteString";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import { useGetProductList } from "../../api/query/OrderPlacementService";
 
 const RewardStatusCard = ({ item }: { item: any }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { data } = useGetProductList();
+  const [productName, setProductName] = useState("");
 
   const isApprove = item?.status === "approved";
   const isPending = item?.status === "pending";
+
+  useEffect(() => {
+    if (data?.data) {
+      // Ensure referral_products exists and is not empty before accessing index 0
+      const updatedData = data?.data.find(
+        (i: any) => i.id === item.referral_products[0]
+      );
+      if (updatedData?.name) {
+        setProductName(updatedData?.name);
+      }
+    }
+  }, [data?.data]);
 
   return (
     <View style={styles.cardView}>
@@ -42,7 +57,7 @@ const RewardStatusCard = ({ item }: { item: any }) => {
         </View>
         <View>
           <Text style={styles.date}>Referral Products</Text>
-          <Text style={styles.value}>TMT Bar 8mm</Text>
+          <Text style={styles.value}>{productName}</Text>
         </View>
         <View style={{ alignItems: "center" }}>
           <View
@@ -71,7 +86,12 @@ const RewardStatusCard = ({ item }: { item: any }) => {
           <Pressable
             style={{ marginTop: hp(1) }}
             onPress={() =>
-              navigation.navigate(RouteString.RewardStatusdetailScreen)
+              navigation.navigate(RouteString.Home, {
+                screen: RouteString.RewardStatusdetailScreen,
+                params: {
+                  id: item?.id,
+                },
+              })
             }
           >
             <Text style={styles.viewDetail}>

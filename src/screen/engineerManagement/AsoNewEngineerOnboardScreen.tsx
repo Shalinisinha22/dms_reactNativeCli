@@ -23,14 +23,13 @@ import CustomToggle from "../../components/common/CustomToggle";
 import TextInputField from "../../components/common/TextInputField";
 import { useFormik } from "formik";
 import { asoNewDealerOnboard } from "../../utils/ValidationSchema";
-import { city } from "../../utils/JsonData";
 import DocumentUploadView from "../../components/registration/DocumentUploadView";
 import Button from "../../components/common/Button";
 import { RouteString } from "../../navigation/RouteString";
 import DocumentPicker from "react-native-document-picker";
 import { useNewEngineerRegister } from "../../api/query/EngineerManagementService";
-import SearchDropDownView from "../../components/common/SearchDropDownView";
 import Toast from "react-native-toast-message";
+import { useAppSelector } from "../../redux/Store";
 
 const AsoNewEngineerOnboardScreen = () => {
   const { t } = useTranslation();
@@ -43,9 +42,10 @@ const AsoNewEngineerOnboardScreen = () => {
   const { mutateAsync: createNewEngineerRegister } = useNewEngineerRegister();
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [isOn, setOn] = useState(false);
+  const { userInfo } = useAppSelector((state) => state.auth);
 
   const fileFields = ["aadhaar_card", "pan_card", "profile_pic"];
-
+  const requiredDocuments = ["aadhaar_card", "pan_card"];
   const {
     handleChange,
     handleBlur,
@@ -64,11 +64,11 @@ const AsoNewEngineerOnboardScreen = () => {
     },
     validationSchema: asoNewDealerOnboard,
     onSubmit: async (values) => {
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
@@ -82,6 +82,7 @@ const AsoNewEngineerOnboardScreen = () => {
         formData.append("email", values.email);
         formData.append("mobile_number", values.phoneNumber);
         formData.append("work_city", values.city);
+        formData.append("region", userInfo?.region);
         formData.append("address", values.address);
         formData.append("status", isOn ? "approved" : "pending");
         fileFields.forEach((field) => {
@@ -100,7 +101,7 @@ const AsoNewEngineerOnboardScreen = () => {
         }
       } catch (error) {
         setIsApiLoading(false);
-        console.log("AsoNewMasonOnboardScreen", error.response);
+        console.log("AsoNewMasonOnboardScreen", error);
       }
     },
   });
@@ -191,14 +192,28 @@ const AsoNewEngineerOnboardScreen = () => {
           isRequired={true}
           maxLength={10}
         />
-        <SearchDropDownView
-          zIndex={1}
-          label={t("ASODealerOnboard.city")}
-          placeHolder={t("ASODealerOnboard.selectCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("city", value)}
+        <TextInputField
+          title={t("registration.SelectAnyOneAreaRegion")}
+          placeholder={t("registration.SelectAreaRegion")}
+          isPassword={false}
+          value={userInfo?.region?.join(" , ")}
+          onChangeText={handleChange("zipCode")}
+          onBlur={handleBlur("zipCode")}
+          touched={false}
+          errors={''}
+          maxLength={6}
+          isRequired={true}
+          editable={false}
+        />
+         <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.city}
+          onChangeText={handleChange("city")}
+          onBlur={handleBlur("city")}
+          touched={touched.city}
           errors={errors.city}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
           isRequired={true}
         />
         <TextInputField

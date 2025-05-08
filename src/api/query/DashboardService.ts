@@ -13,7 +13,7 @@ export const useMyOrders = () => {
     mutationFn: async (payload: MyOrdersPayload) => {
       const response = await axiosInstance.get(
         API_ENDPOINT.MY_ORDERS +
-          `?startDate=${payload.startDate}&endDate=${payload.endDate}`
+          `?startDate=${payload.startDate}&endDate=${payload.endDate}&page=${payload.page}&status=${payload.status}`
       );
       return response.data;
     },

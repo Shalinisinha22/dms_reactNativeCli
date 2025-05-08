@@ -1,5 +1,4 @@
 import {
-  FlatList,
   Image,
   Platform,
   Pressable,
@@ -12,54 +11,62 @@ import React, { useEffect, useState } from "react";
 import { colors } from "../../utils/Colors";
 import { FontPath } from "../../utils/FontPath";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
-import { SearchDropDownViewProps } from "../../interfaces/Types";
+import { SearchDropDownSignalSelectionProps } from "../../interfaces/Types";
 import { useTranslation } from "react-i18next";
-import { IconsPath } from "../../utils/IconPath";
 import CheckIcons from "../../assets/svg/CheckIcons";
-import { useGetRegionsList } from "../../api/query/AuthService";
+import { FlatList } from "react-native-gesture-handler";
+import { IconsPath } from "../../utils/IconPath";
 
-const SearchDropDownView = ({
+const SearchDropDownSignalSelection = ({
   zIndex,
   label,
   placeHolder,
-  mainViewStyle,
   data,
   selectedNames,
   errors,
+  distributorId,
   isRequired,
   isVisible,
-  setIsVisible
-}: SearchDropDownViewProps) => {
-  const getRegionsList = useGetRegionsList();
+  setIsVisible,
+}: SearchDropDownSignalSelectionProps) => {
   const { t } = useTranslation();
-  const [text, setText] = useState("");
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const handleSelectItem = (name: string) => {
-    if (selectedItems.includes(name)) {
-      setSelectedItems(selectedItems.filter((item) => item !== name));
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (distributorId) {
+      const findDilear = data.filter((item: any) => item.id === distributorId);
+      selectedNames(findDilear[0]?.id);
+      setText(findDilear[0]?.name);
     } else {
-      setSelectedItems([...selectedItems, name]);
+      setText("");
     }
-    selectedNames([...selectedItems, name]);
-    setText(name);
-    // setIsVisible(false);
+  }, [distributorId, data]);
+
+  const handleSelectItem = (item: any) => {
+    if (text === item.name) {
+      selectedNames(null);
+      setText("");
+    } else {
+      selectedNames(item?.id);
+      setText(item?.name);
+      setIsVisible(false);
+    }
+  };
+  const filterData = () => {
+    if (!text) {
+      return data;
+    }
+    return data.filter((filtered: { name: string }) => {
+      const itemName = filtered?.name.toLowerCase();
+      const query = text.toLowerCase();
+
+      return itemName.includes(query);
+    });
   };
 
-  // const filterData = () => {
-  //   if (!text) {
-  //     return data;
-  //   }
-  //   return data.filter((filtered: { name: string }) => {
-  //     const itemName = filtered?.name.toLowerCase();
-  //     const query = text.toLowerCase();
-
-  //     return itemName.includes(query);
-  //   });
-  // };
-
   return (
-    <View style={[mainViewStyle, { zIndex: zIndex }]}>
+    <View style={[styles.mainViewStyle, { zIndex: zIndex }]}>
       <Text style={styles.label}>
         {label} {isRequired && <Text style={styles.required}>*</Text>}
       </Text>
@@ -67,56 +74,39 @@ const SearchDropDownView = ({
         style={styles.inputView}
         onPress={() => setIsVisible(!isVisible)}
       >
-        {/* <TextInput
+        <TextInput
           placeholder={placeHolder}
           placeholderTextColor={colors.darkGray}
           style={styles.textInput}
           value={text}
+          editable={false}
           onChangeText={(v) => setText(v)}
-          onFocus={() => setIsVisible(true)}
-          onTouchStart={() => setIsVisible(true)}
-          onBlur={() => setIsVisible(false)}
+          onTouchStart={() => setIsVisible(!isVisible)}
           autoCapitalize="none"
-        /> */}
-        <Text
-          style={[
-            styles.areaText,
-            {
-              color: selectedItems.length > 0 ? colors.black : colors.darkGray,
-            },
-          ]}
-        >
-          {selectedItems.length > 0
-            ? selectedItems
-                .map((item) =>
-                  item
-                    .split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")
-                )
-                .join(" , ")
-            : placeHolder}
-        </Text>
+        />
         <Image source={IconsPath.downArrow} style={styles.downArrow} />
       </Pressable>
       {isVisible && (
         <View style={styles.itemView}>
           <FlatList
-            data={getRegionsList?.data}
-            nestedScrollEnabled
+            data={filterData()}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <Text style={styles.noData}>
+                {t("error.NoDistributorInYourArea")}
+              </Text>
+            )}
             renderItem={({ item, index }) => {
               return (
                 <Pressable
-                  key={index}
-                  onPress={() => handleSelectItem(item.name)}
+                  key={`area${index}`}
+                  onPress={() => handleSelectItem(item)}
                   style={styles.button}
                 >
                   <Text style={styles.name}>
-                    {item?.name?.charAt(0).toUpperCase() + item?.name?.slice(1)}
+                    {item?.firm_name?.charAt(0).toUpperCase() + item?.firm_name?.slice(1)}
                   </Text>
-                  {selectedItems.includes(item.name) && (
-                    <CheckIcons fill={colors.primary} />
-                  )}
+                  {text == item.firm_name && <CheckIcons fill={colors.primary} />}
                 </Pressable>
               );
             }}
@@ -128,7 +118,7 @@ const SearchDropDownView = ({
   );
 };
 
-export default SearchDropDownView;
+export default SearchDropDownSignalSelection;
 
 const styles = StyleSheet.create({
   label: {
@@ -162,7 +152,7 @@ const styles = StyleSheet.create({
   name: {
     fontFamily: FontPath.OutfitMedium,
     marginBottom: hp(2),
-    color:colors.black,
+    color: colors.black,
   },
   error: {
     color: colors.primary,
@@ -195,8 +185,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: wp(5),
   },
-  areaText: {
-    fontFamily: FontPath.OutfitRegular,
-    fontSize: RFValue(14),
+  mainViewStyle: {
+    marginHorizontal: wp(5),
+    marginBottom: hp(2),
+  },
+  noData: {
+    alignSelf: "center",
+    marginTop: hp(5),
+    justifyContent: "center",
+    fontFamily: FontPath.OutfitMedium,
+    color: colors.black_900,
   },
 });

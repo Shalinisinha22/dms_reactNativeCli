@@ -41,6 +41,7 @@ const initialState: IAuthSliceInitialState = {
       by_admin: ""
     },
     company: "",
+    gst_number:"",
     role: [],
     region: [],
     skill: [],

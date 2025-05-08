@@ -1,58 +1,62 @@
 // packages
-import {Dimensions, PixelRatio, Platform, StatusBar} from 'react-native';
+import { Dimensions, PixelRatio, Platform, StatusBar } from "react-native";
 
 // Retrieve initial screen's width
-let screenWidth = Dimensions.get('window').width;
+let screenWidth = Dimensions.get("window").width;
 
 // Retrieve initial screen's height
-let screenHeight = Dimensions.get('window').height;
-
-export const isiPAD = screenHeight / screenWidth < 2.6 && Math.max(screenHeight, screenWidth) >= 850
+let screenHeight = Dimensions.get("window").height;
+export const isiPAD =
+  screenHeight / screenWidth < 2.6 &&
+  Math.max(screenHeight, screenWidth) >= 930 
 export const isTablet = screenHeight / screenWidth < 1.6;
 
 export const WINDOW_WIDTH = screenWidth;
 export const WINDOW_HEIGHT = screenHeight;
 
-export const isIOS = Platform.OS === 'ios';
-export const isAndroid = Platform.OS === 'android';
+export const isIOS = Platform.OS === "ios";
+export const isAndroid = Platform.OS === "android";
 export const isX = isIphoneXorAbove();
 
 export function isIphoneXorAbove() {
-    const dimen = Dimensions.get('screen');
-    return (
-      Platform.OS === 'ios' &&
-      !Platform.isPad &&
-      !Platform.isTV &&
-      (dimen.height === 812 ||
-        dimen.width === 812 ||
-        dimen.height === 896 ||
-        dimen.width === 414 ||
-        dimen.width === 896 ||
-        dimen.width === 390 ||
-        dimen.height === 844 ||
-        dimen.height === 926 ||
-        dimen.width === 428 ||
-        dimen.height === 852 ||
-        dimen.width === 393 ||
-        dimen.width === 932)
-    );
-  }
-
+  const dimen = Dimensions.get('window');
+  return (
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    !Platform.isTV &&
+    (dimen.height === 932 ||
+      dimen.width === 430 ||
+      dimen.height === 812 ||
+      dimen.width === 812 ||
+      dimen.height === 896 ||
+      dimen.width === 896 ||
+      dimen.width === 390 ||
+      dimen.height === 844 ||
+      dimen.height === 926 ||
+      dimen.width === 428 ||
+      dimen.height === 852 ||
+      dimen.width === 393)
+  );
+}
 // guideline height for standard 5" device screen is 680
 export function RFValue(fontSize: number, standardScreenHeight = 680) {
-    const standardLength = screenWidth > screenHeight ? screenWidth : screenHeight;
-    const offset: number | any =
-    screenWidth > screenHeight ? 0 : Platform.OS === "ios" ? 78 : StatusBar.currentHeight; // iPhone X style SafeAreaView size in portrait
-  
-    const deviceHeight =
-    isIphoneXorAbove() || Platform.OS === "android"
-        ? standardLength - offset
-        : standardLength;
-  
-    const heightPercent = (fontSize * deviceHeight) / standardScreenHeight;
-    return Math.round(heightPercent);
-  }
+  const standardLength =
+    screenWidth > screenHeight ? screenWidth : screenHeight;
+  const offset: number | any =
+    screenWidth > screenHeight
+      ? 0
+      : Platform.OS === "ios"
+      ? 78
+      : StatusBar.currentHeight; // iPhone X style SafeAreaView size in portrait
 
+  const deviceHeight =
+    isIphoneXorAbove() || Platform.OS === "android"
+      ? standardLength - offset
+      : standardLength;
+
+  const heightPercent = (fontSize * deviceHeight) / standardScreenHeight;
+  return Math.round(heightPercent);
+}
 
 /**
  * Converts provided width percentage to independent pixel (dp).
@@ -63,7 +67,7 @@ export function RFValue(fontSize: number, standardScreenHeight = 680) {
 const wp = (widthPercent: number) => {
   // Parse string percentage input and convert it to number.
   const elemWidth =
-    typeof widthPercent === 'number' ? widthPercent : parseFloat(widthPercent);
+    typeof widthPercent === "number" ? widthPercent : parseFloat(widthPercent);
 
   // Use PixelRatio.roundToNearestPixel method in order to round the layout
   // size (dp) to the nearest one that correspons to an integer number of pixels.
@@ -79,7 +83,7 @@ const wp = (widthPercent: number) => {
 const hp = (heightPercent: number) => {
   // Parse string percentage input and convert it to number.
   const elemHeight =
-    typeof heightPercent === 'number'
+    typeof heightPercent === "number"
       ? heightPercent
       : parseFloat(heightPercent);
 
@@ -98,16 +102,16 @@ const hp = (heightPercent: number) => {
  *                      invoke setState method and trigger screen rerender (this.setState()).
  */
 const listenOrientationChange = (that: {
-  setState: (arg0: {orientation: string}) => void;
+  setState: (arg0: { orientation: string }) => void;
 }) => {
-  Dimensions.addEventListener('change', newDimensions => {
+  Dimensions.addEventListener("change", (newDimensions) => {
     // Retrieve and save new dimensions
     screenWidth = newDimensions.window.width;
     screenHeight = newDimensions.window.height;
 
     // Trigger screen's rerender with a state update of the orientation variable
     that.setState({
-      orientation: screenWidth < screenHeight ? 'portrait' : 'landscape',
+      orientation: screenWidth < screenHeight ? "portrait" : "landscape",
     });
   });
 };
@@ -119,4 +123,4 @@ const listenOrientationChange = (that: {
  * avoid adding new listeners every time the same component is re-mounted.
  */
 
-export {hp, listenOrientationChange, wp};
+export { hp, listenOrientationChange, wp };

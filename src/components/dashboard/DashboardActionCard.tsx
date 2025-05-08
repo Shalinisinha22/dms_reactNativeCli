@@ -26,7 +26,7 @@ const DashboardActionCard = ({ data }: { data: any }) => {
               if(item.name === 'dashboard.approveOrder'){
                 navigation.navigate(item.routes,{ type : 'orderHistory.pending'})
               } else {
-                navigation.navigate(item.routes)
+                navigation.navigate(item.routes,{ type : undefined})
               }
             }}
           >

@@ -6,6 +6,7 @@ import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { DropDownViewProps } from "../../interfaces/Types";
 import { useTranslation } from "react-i18next";
 import { IconsPath } from "../../utils/IconPath";
+import { useIsFocused } from "@react-navigation/native";
 
 const MultipulSelectDropDown = ({
   zIndex,
@@ -15,17 +16,28 @@ const MultipulSelectDropDown = ({
   data,
   errors,
   selectedName,
-  selectedId
+  selectedId,
+  isReset,
+  isVisible,
+  setIsVisible
 }: DropDownViewProps) => {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
   const [select, setSelect] = useState(new Set());
   const [selectId, setSelectId] = useState(new Set())
+  const isFoused = useIsFocused();
+
+  useEffect(() =>{
+    if(isFoused || isReset){
+      setIsVisible(false)
+      setSelect(new Set())
+      setSelectId(new Set())
+    }
+  },[isFoused, isReset])
 
   const handleSelectItem = (item: any) => {
     if (select?.has(item.name)) {
       const newSet = new Set(select);
-      newSet.delete(item.id);
+      newSet.delete(item.name);
 
       const newSetId = new Set(selectId);
       newSetId.delete(item.id);
@@ -55,6 +67,7 @@ const MultipulSelectDropDown = ({
         onPress={() => setIsVisible(!isVisible)}
       >
         <Text
+        numberOfLines={2}
           style={[
             styles.status,
             {
@@ -132,13 +145,14 @@ const styles = StyleSheet.create({
   status: {
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
+    width:wp(70)
   },
   itemView: {
     position: "absolute",
     alignSelf: "center",
     zIndex: 999,
     top: hp(9.5),
-    backgroundColor: colors.white,
+    backgroundColor: colors.lightBlue,
     paddingTop: hp(1),
     borderRadius: 12,
     width: wp(90),
@@ -150,6 +164,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontFamily: FontPath.OutfitMedium,
+    color:colors.black,
     marginBottom: hp(2),
   },
   error: {

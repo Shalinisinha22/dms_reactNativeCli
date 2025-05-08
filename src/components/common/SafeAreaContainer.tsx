@@ -3,7 +3,6 @@ import React, { PropsWithChildren } from 'react'
 import { colors } from '../../utils/Colors'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import TopHeader from './TopHeader';
-import { hp } from '../../helper/Responsive';
 
 interface SafeAreaContainerProps {
   showHeader?: boolean;

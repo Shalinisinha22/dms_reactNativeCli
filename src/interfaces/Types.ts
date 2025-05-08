@@ -13,8 +13,8 @@ export type TextInputFieldProps = {
   placeholder: string;
   isPassword: boolean;
   value: string;
-  onChangeText: (text: string) => void;
-  onBlur: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
+  onChangeText?: (text: string) => void;
+  onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   touched: boolean | undefined;
   errors: string | any;
   keyboardType?: KeyboardType;
@@ -24,6 +24,9 @@ export type TextInputFieldProps = {
   mainViewStyle?: StyleProp<ViewStyle>;
   isRequired: boolean;
   textInputStyle?: StyleProp<ViewStyle>;
+  inputRef?: any
+  onTouchStart?: () =>void
+  editable?:boolean
 };
 
 export type TextInputFieldOptionalProps = {
@@ -37,6 +40,7 @@ export type TextInputFieldOptionalProps = {
   maxLength?: number
   onTouchStart?: () => void
   editable?: boolean
+  isRequired?: boolean
 };
 
 export type ButtonProps = {
@@ -73,6 +77,7 @@ export type TwoStepOrderTrackingProps = {
   isCheckIcons?: boolean;
   dealerIcons?:ImageSourcePropType
   asoIcons:ImageSourcePropType
+  admin?:boolean
 }
 
 export type TotalOrderCardProps = {
@@ -80,6 +85,7 @@ export type TotalOrderCardProps = {
   title: string;
   total: string;
   onPress: () => void
+  backgroundColor?: string
 };
 
 export type OrderPlacementCardProps = {
@@ -87,6 +93,7 @@ export type OrderPlacementCardProps = {
   value: any;
   onChangeText: (text: string) => void
   mt: number
+  onTouchStart?:() => void
 };
 
 export type FilterModalProps = {
@@ -137,17 +144,36 @@ export type DropDownViewProps = {
   selectedId?: ((id: any) => void | any) | undefined
   errors: string | undefined | any
   isRequired?: boolean
+  isReset?:boolean
+  isVisible: boolean
+  setIsVisible: Dispatch<SetStateAction<boolean>>
 };
 
 export type SearchDropDownViewProps = {
+  zIndex?: number;
+  label: string;
+  placeHolder: string;
+  mainViewStyle?: StyleProp<ViewStyle>
+  data?: any
+  selectedNames: (name: any) => void
+  errors: string | undefined |any
+  isRequired?: boolean
+  isVisible: boolean
+  setIsVisible: Dispatch<SetStateAction<boolean>>
+};
+
+export type SearchDropDownSignalSelectionProps = {
   zIndex: number;
   label: string;
   placeHolder: string;
   mainViewStyle?: StyleProp<ViewStyle>
   data?: any
-  selectedName: (name: string) => void
-  errors: string | undefined
+  selectedNames: (name: any) => void
+  errors: string | undefined |any
   isRequired?: boolean
+  distributorId?:string
+  isVisible: boolean
+  setIsVisible: Dispatch<SetStateAction<boolean>>
 };
 
 export type UserInfoRowViewProps = {

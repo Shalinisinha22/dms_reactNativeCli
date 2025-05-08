@@ -11,7 +11,7 @@ import { useMySchemes } from "../../api/query/DashboardService";
 
 const MySchemeScreen = () => {
   const { t } = useTranslation();
-  const schemes = useMySchemes()
+  const schemes = useMySchemes();
 
   return (
     <SafeAreaContainer>

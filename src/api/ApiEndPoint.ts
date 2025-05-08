@@ -33,6 +33,8 @@ export const API_ENDPOINT = {
     //invoice
     GET_INVOICE: '/api/my/invoices',
     INVOICE_DETAILS: '/api/invoice',
+    GET_INVOICE_GST:'/api/invoiceByGstin/',
+    DOWNLOAD_PDF: 'api/getInvoicePDF',
 
     //ledgers
     GET_LEDGERS: '/api/my/ledgers',
@@ -40,6 +42,10 @@ export const API_ENDPOINT = {
     //product
     GET_PRODUCT_LIST: '/api/get/product/list',
     NEW_ORDER: '/api/order/new',
+    UPDATE_ORDER: '/api/order/',
+
+    //distributor
+    DISTRIBUTOR_LIST:'/api/available/distributor/list',
 
     //support
     SUPPORT_REQUEST: '/api/new/support/request',
@@ -67,9 +73,12 @@ export const API_ENDPOINT = {
 
     //rewardStatus
     GET_REWARD_STATUS: '/api/get/reward/list',
+    REFERRAL_DETAILS: '/api/get/referral',
 
     //notification
     SEND_FCM_TOKEN : '/api/user/save/firebase-token',
     GET_NOTIFICATION_UNREAD: '/api/notifications/fetch/unread',
+
+    GET_REGIONS: '/api/available/regions/list'
 
 }

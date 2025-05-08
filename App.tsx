@@ -5,8 +5,6 @@ import {
   Platform,
   StatusBar,
   StyleSheet,
-  Text,
-  View,
 } from "react-native";
 import React, { useEffect } from "react";
 import Routes, { navigationRef } from "./src/navigation/Routes";
@@ -19,6 +17,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Toast from "react-native-toast-message";
 import { NavigationContainer } from "@react-navigation/native";
 import messaging from "@react-native-firebase/messaging";
+import {
+  getTrackingStatus,
+  requestTrackingPermission,
+} from "react-native-tracking-transparency";
 
 const queryClient = new QueryClient();
 
@@ -26,9 +28,21 @@ const App = () => {
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hide();
-    }, 6000)
+    }, 3000);
     requestUserPermission();
+    trackingPermission();
   }, []);
+
+  async function trackingPermission() {
+    await requestTrackingPermission();
+    const trackingStatus = await getTrackingStatus();
+
+    if (trackingStatus === "authorized" || trackingStatus === "unavailable") {
+      console.log("Tracking permission granted");
+    } else {
+      console.log("Tracking permission denied");
+    }
+  }
 
   async function requestUserPermission() {
     await messaging().requestPermission();

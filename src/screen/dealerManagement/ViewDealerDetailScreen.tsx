@@ -206,6 +206,7 @@ const styles = StyleSheet.create({
     marginVertical: hp(2),
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(18),
+    color:colors.black,
   },
   backRowView: {
     flexDirection: "row",

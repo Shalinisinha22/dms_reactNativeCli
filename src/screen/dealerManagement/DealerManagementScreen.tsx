@@ -1,10 +1,10 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -20,88 +20,125 @@ import DealerManagementCard from "../../components/dashboard/DealerManagementCar
 import {
   NavigationProp,
   ParamListBase,
+  useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
 import { RouteString } from "../../navigation/RouteString";
-import { useAppSelector } from "../../redux/Store";
 import { UserType } from "../../interfaces/Types";
 import { useGetUserRole } from "../../api/query/MasonManagementService";
 import { useApproveUser } from "../../api/query/DealerManagementService";
 import Toast from "react-native-toast-message";
 import { dealerManagementType1 } from "../../utils/JsonData";
+import { useAppSelector } from "../../redux/Store";
 
 const DealerManagementScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { portal } = useAppSelector((state) => state.auth);
-  const [isSelectType, setSelectType] = useState('all');
-  const { mutateAsync: getDealerStatus, data } = useGetUserRole();
-    const { mutateAsync: aprroveUser } = useApproveUser();
-  
-  const [search, setSearch] = useState('');
+  const [isSelectType, setSelectType] = useState("all");
+  const { mutateAsync: getDealerStatus } = useGetUserRole();
+  const { mutateAsync: aprroveUser } = useApproveUser();
 
+  const [search, setSearch] = useState("");
+
+  const [data, setData] = useState<any>([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [nextPage, setNextPage] = useState<any>(null);
+  const [curPage, setCurPage] = useState(1);
+  const [isFetching, setIsFetching] = useState(false);
+  const isFoused = useIsFocused();
+ const { portal } = useAppSelector((state) => state.auth);
+ 
   useEffect(() => {
-    handleGetDealerManagement();
-  }, [isSelectType]);
+    if(portal){
+      handleGetDealerManagement();
+    }
+  }, [isSelectType, isFoused]);
 
-  const handleGetDealerManagement = () => {
+  const handleGetDealerManagement = async () => {
     try {
-      getDealerStatus({
-           role: UserType.DEALER,
-           status: isSelectType === "all" ? "" : isSelectType,
-         });
+      const res = await getDealerStatus({
+        role: UserType.DEALER,
+        status: isSelectType === "all" ? "" : isSelectType,
+        page: curPage,
+      });
+      if (nextPage >= curPage && nextPage != null) {
+        setIsFetching(true);
+      }
+      if (res?.data) {
+        setData((prev: any) =>
+          curPage === 1 ? res.data : [...prev, ...res.data]
+        );
+        setIsFetching(false);
+      }
+      if (res?.hasMore) {
+        setTotalPage(res.totalPage);
+        setNextPage(res.nextPage);
+      }
     } catch (error) {
+      setIsFetching(false);
       console.log("handleGetDealerManagement", error);
     }
   };
 
+  const onEndReached = () => {
+    if (nextPage <= totalPage && nextPage != null) {
+      setCurPage(curPage + 1);
+      handleGetDealerManagement();
+    }
+  };
+
+  const ListFooterComponent = () => {
+    return isFetching ? (
+      <ActivityIndicator size="small" color={colors.primary} />
+    ) : null;
+  };
+
   const handleAddDeler = () => {
-      navigation.navigate(RouteString.NewDealerOnboardScreen);
+    navigation.navigate(RouteString.NewDealerOnboardScreen);
   };
 
   const handleType = (id: string) => {
-    if(id === 'orderHistory.all'){
-      setSelectType('all');
-    } else if (id === 'orderHistory.approved'){
-      setSelectType('approved');
-    }else if (id === 'orderHistory.rejected'){
-      setSelectType('declined');
-    }else if (id === 'orderHistory.pending'){
-      setSelectType('pending');
+    if (id === "orderHistory.all") {
+      setSelectType("all");
+    } else if (id === "orderHistory.approved") {
+      setSelectType("approved");
+    } else if (id === "orderHistory.rejected") {
+      setSelectType("declined");
+    } else if (id === "orderHistory.pending") {
+      setSelectType("pending");
     }
-  }
+  };
 
   const filterData = () => {
     if (!search) {
       return data;
     }
-    return data.filter((filtered: { name: string }) => {
-      const itemName = filtered?.name?.toLowerCase();
+    return data.filter((filtered: { firm_name: string }) => {
+      const itemName = filtered?.firm_name?.toLowerCase();
       const query = search?.toLowerCase();
 
       return itemName.includes(query);
     });
   };
 
-    const handleApproveUser = async (status: string, id :string) => {
-      try {
-        const res = await aprroveUser({
-          userId: id,
-          status: status,
-          role: UserType.DEALER,
+  const handleApproveUser = async (status: string, id: string) => {
+    try {
+      const res = await aprroveUser({
+        userId: id,
+        status: status,
+        role: UserType.DEALER,
+      });
+      if (res) {
+        Toast.show({
+          type: "success",
+          text1: res.message,
         });
-        if (res) {
-          Toast.show({
-            type: "success",
-            text1: res.message,
-          });
-          handleGetDealerManagement();
-        }
-      } catch (error) {
-        console.log("handleApproveOrder", error);
+        handleGetDealerManagement();
       }
-    };
-
+    } catch (error) {
+      console.log("handleApproveOrder", error);
+    }
+  };
 
   return (
     <SafeAreaContainer>
@@ -115,20 +152,28 @@ const DealerManagementScreen = () => {
           />
         </Pressable>
       </View>
-      <SearchView onChangeText={(text) => setSearch(text)}  value={search}/>
-      <FilterStatueType data ={dealerManagementType1} selectedId={handleType} />
+      <SearchView onChangeText={(text) => setSearch(text)} value={search} />
+      <FilterStatueType data={dealerManagementType1} selectedId={handleType} />
       <FlatList
         data={filterData()}
-        removeClippedSubviews={false} 
+        removeClippedSubviews={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingTop:hp(1)}}
+        contentContainerStyle={{ paddingTop: hp(1) }}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
+        onEndReached={onEndReached}
+        ListFooterComponent={ListFooterComponent}
+        onEndReachedThreshold={16}
         renderItem={({ item, index }) => {
           return (
             <DealerManagementCard
               key={index}
               item={item}
-              ApproveOnPress={() => handleApproveUser("approved", item?.dealerId)}
-              RejectOnPress={() => handleApproveUser("declined", item?.dealerId)}
+              ApproveOnPress={() =>
+                handleApproveUser("approved", item?.dealerId)
+              }
+              RejectOnPress={() =>
+                handleApproveUser("declined", item?.dealerId)
+              }
             />
           );
         }}

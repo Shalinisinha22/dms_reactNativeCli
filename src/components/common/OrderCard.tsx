@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import OrderTracking from "./OrderTracking";
 import { colors } from "../../utils/Colors";
-import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
+import { hp, RFValue, wp } from "../../helper/Responsive";
 import { FontPath } from "../../utils/FontPath";
 import {
   NavigationProp,
@@ -15,6 +15,7 @@ import { OrderCardProps } from "../../interfaces/Types";
 import { commonStyle } from "../../utils/commonStyles";
 import moment from "moment";
 import { IconsPath } from "../../utils/IconPath";
+import { abbreviateNumber } from "../../utils/commonFunctions";
 
 const OrderCard = ({
   isShowButton,
@@ -27,12 +28,12 @@ const OrderCard = ({
 
   const totalQty = item?.products.reduce((acc: number, item: any) => {
     const weight = parseFloat(item.quantity) || 0;
-    return acc + weight;
+    return Number(acc) + Number(weight);
   }, 0);
 
   const totalAmount = item?.products.reduce((acc: number, item: any) => {
     const amount = parseFloat(item.amount) || 0;
-    return acc + amount;
+    return Number(acc) + Number(amount);
   }, 0);
 
   return (
@@ -44,12 +45,10 @@ const OrderCard = ({
     >
       <View style={styles.headerNoRowView}>
         <View style={styles.orderNoView}>
-          <View style={commonStyle.profileView}>
-            <Text style={commonStyle.userNameText}>M</Text>
-          </View>
+          <Image source={IconsPath.orderlogo} style={commonStyle.logo} />
           <View style={{ marginLeft: wp(3) }}>
             <Text style={styles.orderNo}>
-              {t("orderHistory.orderNo")} : {item?.orderNumber}
+              {t("orderHistory.orderNo")} : {item?.odrNumber}
             </Text>
             {item?.dispatchDate && (
               <Text style={styles.dispatchDate}>
@@ -88,21 +87,24 @@ const OrderCard = ({
           <Text style={styles.orderinfoText}>
             {t("orderHistory.totalWeight")}
           </Text>
-          <Text style={styles.orderInfoDes}>{totalQty} MT</Text>
+          <Text style={styles.orderInfoDes}>{Number(totalQty).toFixed(2)} MT</Text>
         </View>
         <View>
           <Text style={styles.orderinfoText}>
             {t("orderHistory.totalAmount")}
           </Text>
-          <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
+          <Text style={styles.orderInfoDes}>
+            Rs.{abbreviateNumber(Number(totalAmount).toFixed(2))}
+          </Text>
         </View>
         {isShowButton && (
           <View>
+            {item?.orderModified != 'no' && 
             <Pressable onPress={orderModifiedOnPress}>
               <Text style={styles.orderModified}>
                 {t("orderHistory.orderModified")}
               </Text>
-            </Pressable>
+            </Pressable>}
             <Pressable onPress={perviouseOnPress}>
               <Text style={styles.previous}>{t("orderHistory.previous")}</Text>
             </Pressable>
@@ -113,7 +115,12 @@ const OrderCard = ({
         selectedStep={1}
         containerStyle={{ marginTop: 0 }}
         isCheckIcons={true}
-        admin={item?.status?.by_admin === "approved" ? true : false}
+        admin={
+          item?.status?.by_admin === "approved" ||
+          item?.status?.by_admin === "dispatched"
+            ? true
+            : false
+        }
         orderIcons={IconsPath.check}
         distributorIcons={
           item?.status?.by_distributor === "approved"
@@ -130,20 +137,19 @@ const OrderCard = ({
             : IconsPath.whiteClose
         }
         dispatchedIcons={
-          item?.status?.by_admin === "approved" ||
           item?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : item?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose
+            : item?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
         }
         adminIcon={
           item?.status?.by_admin === "approved" ||
           item?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : item?.status?.by_admin === "pending"
-            ? null
-            : IconsPath.whiteClose
+            : item?.status?.by_admin === "declined"
+            ? IconsPath.whiteClose
+            : null
         }
       />
     </Pressable>
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
   orderNo: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
-    fontSize: RFValue(14),
+    fontSize: RFValue(13),
   },
   dispatchDate: {
     color: colors.black,
@@ -205,14 +211,15 @@ const styles = StyleSheet.create({
   orderinfoText: {
     color: colors.black,
     fontFamily: FontPath.OutfitRegular,
-    fontSize: RFValue(11),
+    fontSize: RFValue(10),
+    textAlign:'center'
   },
   orderInfoDes: {
     color: colors.black,
     fontFamily: FontPath.OutfitMedium,
-    fontSize: RFValue(11),
+    fontSize: RFValue(10),
     marginTop: hp(0.3),
-    textAlign:'center'
+    textAlign: "center",
   },
   orderInfoRowView: {
     flexDirection: "row",
@@ -230,7 +237,7 @@ const styles = StyleSheet.create({
   previous: {
     color: colors.black,
     fontFamily: FontPath.OutfitMedium,
-    fontSize: RFValue(9),
+    fontSize: RFValue(11),
     textAlign: "right",
     marginTop: hp(0.5),
   },

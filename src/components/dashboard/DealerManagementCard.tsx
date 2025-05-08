@@ -25,9 +25,12 @@ const DealerManagementCard = ({
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-  const isApproveButton = item?.status?.by_aso === "pending";
+  const isApproveButton =
+    item?.status?.by_admin === "approved"
+      ? false
+      : item?.status?.by_aso === "pending";
 
-  return (
+      return (
     <Pressable
       style={styles.cardView}
       onPress={() =>
@@ -39,27 +42,24 @@ const DealerManagementCard = ({
     >
       <View style={styles.orderNoView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>{item.name.slice(0, 1)}</Text>
+          <Text style={commonStyle.userNameText}>{item.firm_name.slice(0, 1)}</Text>
         </View>
         <View style={styles.mainTextView}>
           <View style={styles.textView}>
             <View>
-              <Text style={styles.salesName}>{item.name}</Text>
+              <Text style={styles.salesName}>{item.firm_name}</Text>
               <Text style={styles.orderNo}>
                 {t("dealerwiseSales.dealerNo")} : {item.dealerNumber}
               </Text>
             </View>
-            <View
-              style={{
-                marginTop: hp(2),
-                marginRight: wp(8),
-              }}
-            >
+            <View style={styles.trackingView}>
               <TwoStepOrderTracking
                 selectedStep={1}
                 isCheckIcons
+                admin={item?.status?.by_admin === "approved"}
                 asoIcons={
-                  item?.status?.by_aso === "approved"
+                  item?.status?.by_aso === "approved" ||
+                  item?.status?.by_admin === "approved"
                     ? IconsPath.check
                     : item?.status?.by_aso === "pending"
                     ? null
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(16),
+    width:wp(40)
   },
   salesView: {
     width: wp(23),
@@ -149,11 +150,12 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitMedium,
     fontSize: RFValue(11),
     marginLeft: wp(2),
+    width:wp(55),
   },
   locationRowView: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: hp(1),
+    marginTop: hp(2),
   },
   mainTextView: {
     flex: 1,
@@ -165,5 +167,9 @@ const styles = StyleSheet.create({
     marginLeft: wp(10),
     justifyContent: "space-between",
     width: wp(46),
+  },
+  trackingView: {
+    marginTop: hp(2),
+    marginRight: wp(8),
   },
 });

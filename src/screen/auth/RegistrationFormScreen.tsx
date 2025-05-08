@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { colors } from "../../utils/Colors";
@@ -35,17 +35,17 @@ import {
   useDistributorRegister,
 } from "../../api/query/RegistrationService";
 import SearchDropDownView from "../../components/common/SearchDropDownView";
-import { city } from "../../utils/JsonData";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Toast from "react-native-toast-message";
 import { UserType } from "../../interfaces/Types";
-import { useGetUser } from "../../api/query/ProfileService";
-import { authActions } from "../../redux/slice/AuthSlice";
 import { useSendFCMToken } from "../../api/query/NotificationService";
+import { commonStyle } from "../../utils/commonStyles";
+import { authActions } from "../../redux/slice/AuthSlice";
+import messaging from "@react-native-firebase/messaging";
 
 const RegistrationFormScreen = () => {
   const { t } = useTranslation();
-  const { portal, FCMToken } = useAppSelector((state) => state.auth);
+  const { portal } = useAppSelector((state) => state.auth);
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [birthDate, setBirthDate] = useState("");
   const [isCheck, setIsCheck] = useState(false);
@@ -66,6 +66,7 @@ const RegistrationFormScreen = () => {
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<any>("");
+  const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
 
   const fileFields = [
@@ -75,6 +76,8 @@ const RegistrationFormScreen = () => {
     "profile_pic",
     "cheque",
   ];
+
+  const requiredDocuments = ["aadhaar_card", "pan_card", "gst_certificate"];
 
   const {
     handleChange,
@@ -90,6 +93,8 @@ const RegistrationFormScreen = () => {
       workCity: "",
       zipCode: "",
       counterAddress: "",
+      gst_number: "",
+      region: [],
     },
     validationSchema: dealerValidationSchema,
     onSubmit: async (values) => {
@@ -100,14 +105,21 @@ const RegistrationFormScreen = () => {
         });
         return;
       }
-      const allDocumentsUploaded = Object.values(uploadedDocuments).every(
-        (doc) => doc !== null
+      const allRequiredDocumentsUploaded = requiredDocuments.every(
+        (doc) => uploadedDocuments[doc] !== null
       );
 
-      if (!allDocumentsUploaded) {
+      if (!allRequiredDocumentsUploaded) {
         Toast.show({
           type: "error",
           text1: "Please upload all the required documents",
+        });
+        return;
+      }
+      if (values.firmName.length < 3) {
+        Toast.show({
+          type: "error",
+          text1: "Name must be at least 3 characters",
         });
         return;
       }
@@ -123,6 +135,8 @@ const RegistrationFormScreen = () => {
         formData.append("zipcode", values.zipCode);
         formData.append("address", values.counterAddress);
         formData.append("dob", birthDate);
+        formData.append("gst_number", values.gst_number);
+        formData.append("region", values.region);
         formData.append(
           "member",
           updatedFamilyMembers[0]?.name === "" ? [] : updatedFamilyMembers
@@ -141,16 +155,43 @@ const RegistrationFormScreen = () => {
             ? await createDistributorRegister(formData)
             : await createDealerRegister(formData);
         if (res) {
-          await sendFCMToken({ firebaseToken: FCMToken });
+          const token = await messaging().getToken();
+          dispatch(authActions.setFCMToken(token));
+          await sendFCMToken({ firebaseToken: token });
           setIsApiLoading(false);
+          dispatch(authActions.setToken(''));
           navigation.navigate(RouteString.CompletingRegistrationScreen);
         }
-      } catch (error) {
+      } catch (error: any) {
         setIsApiLoading(false);
-        console.log("RegistrationFormScreen", error);
+        Toast.show({
+          type: "error",
+          text1:
+            error?.response?.data?.message ||
+            error?.response?.data?.errors?.dob ||
+            error?.response?.data?.errors?.gst_number ||  'Please try again'
+        });
       }
     },
   });
+
+  const onPress = () => {
+    if (
+      values.firmName == "" ||
+      values.workCity == "" ||
+      values.zipCode == "" ||
+      values.counterAddress == "" ||
+      values.gst_number == "" ||
+      values.region.length == 0 ||
+      birthDate === ""
+    ) {
+      Toast.show({
+        type: "error",
+        text1: "Enter All Informatin Correctly",
+      });
+    }
+    handleSubmit();
+  };
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
     Keyboard.dismiss();
@@ -223,7 +264,7 @@ const RegistrationFormScreen = () => {
     if (date > eighteenYearsAgo) {
       Toast.show({
         type: "error",
-        text1: `${t('error.AgeMustBeOrAbove')}`,
+        text1: `${t("error.AgeMustBeOrAbove")}`,
       });
       setDatePickerVisibility(false);
       return;
@@ -246,6 +287,7 @@ const RegistrationFormScreen = () => {
     <SafeAreaContainer showHeader={false}>
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
         extraScrollHeight={hp(-10)} // Adjust as needed
         contentContainerStyle={{ paddingBottom: hp(5) }}
       >
@@ -262,16 +304,43 @@ const RegistrationFormScreen = () => {
           touched={touched.firmName}
           errors={errors.firmName}
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
+        />
+        <TextInputField
+          title={t("registration.GSTNumber")}
+          placeholder={t("registration.EnterGSTNumber")}
+          isPassword={false}
+          onTouchStart={() => setIsVisible(false)}
+          value={values.gst_number}
+          onChangeText={handleChange("gst_number")}
+          onBlur={handleBlur("gst_number")}
+          touched={touched.gst_number}
+          errors={errors.gst_number}
+          isRequired={true}
+          maxLength={15}
+        />
+        <TextInputField
+          title={t("registration.workCity")}
+          placeholder={t("registration.enterWorkCity")}
+          isPassword={false}
+          value={values.workCity}
+          onChangeText={handleChange("workCity")}
+          onBlur={handleBlur("workCity")}
+          touched={touched.workCity}
+          errors={errors.workCity}
+          isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <SearchDropDownView
-          zIndex={1}
-          label={t("registration.workCity")}
-          placeHolder={t("registration.enterWorkCity")}
-          data={city}
-          selectedName={(value) => setFieldValue("workCity", value)}
-          errors={errors.workCity}
-          mainViewStyle={{ marginTop: hp(3), marginHorizontal: wp(5) }}
+          // zIndex={0}
+          label={t("registration.SelectAnyOneAreaRegion")}
+          placeHolder={t("registration.SelectAreaRegion")}
+          selectedNames={(value) => setFieldValue("region", value)}
+          errors={errors.region}
+          mainViewStyle={commonStyle.mainViewStyle}
           isRequired={true}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
         />
         <TextInputField
           title={t("registration.zipCode")}
@@ -282,6 +351,7 @@ const RegistrationFormScreen = () => {
           onBlur={handleBlur("zipCode")}
           touched={touched.zipCode}
           errors={errors.zipCode}
+          onTouchStart={() => setIsVisible(false)}
           maxLength={6}
           isRequired={true}
         />
@@ -289,29 +359,31 @@ const RegistrationFormScreen = () => {
           title={t("registration.counterAddress")}
           placeholder={t("registration.enterCounterAddress")}
           isPassword={false}
+          onTouchStart={() => setIsVisible(false)}
           value={values.counterAddress}
           onChangeText={handleChange("counterAddress")}
           onBlur={handleBlur("counterAddress")}
           touched={touched.counterAddress}
           errors={errors.counterAddress}
           InputViewStyle={styles.inputView}
-          textInputStyle={{ height:hp(15)}}
+          textInputStyle={{ height: hp(15) }}
           multiline
           isRequired={true}
         />
-        <Text style={styles.personalInfo}>
-          {t("registration.personalInfo")}
-        </Text>
         <TextInputFieldOptional
           title={t("registration.yourBirthDate")}
           placeholder={t("registration.DDMM")}
           value={birthDate}
+          isRequired
           onChangeText={() => null}
           onTouchStart={() => {
             setDatePickerVisibility(true);
             setSelectedMemberId("");
           }}
         />
+        <Text style={styles.personalInfo}>
+          {t("registration.personalInfo")}
+        </Text>
         {familyMembers.map((member, index) => (
           <View style={styles.moreMemberView} key={index}>
             <Pressable
@@ -402,7 +474,7 @@ const RegistrationFormScreen = () => {
           onPress={() => handleDocumentSelection("profile_pic")}
           title={t("registration.photoUpload")}
           fileName={uploadedDocuments?.profile_pic?.name}
-          isRequired={true}
+          isRequired={false}
         />
         <DocumentUploadView
           icons={
@@ -413,7 +485,7 @@ const RegistrationFormScreen = () => {
           onPress={() => handleDocumentSelection("cheque")}
           title={t("registration.signedChequeUpload")}
           fileName={uploadedDocuments?.cheque?.name}
-          isRequired={true}
+          isRequired={false}
         />
         <View style={styles.termsView}>
           <Pressable
@@ -438,7 +510,7 @@ const RegistrationFormScreen = () => {
           buttonName={t("registration.submitForApproval")}
           isLoading={isApiLoading}
           buttonStyle={{ marginTop: 0 }}
-          onPress={handleSubmit}
+          onPress={onPress}
         />
       </KeyboardAwareScrollView>
       <DateTimePickerModal

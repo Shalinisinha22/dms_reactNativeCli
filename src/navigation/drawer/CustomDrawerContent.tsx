@@ -1,19 +1,17 @@
 import {
   Image,
-  ImageSourcePropType,
+  Linking,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import React, { useState } from "react";
-import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import {
   asoDrawerOption,
   dealerDrawerOption,
   distributorDrawerOption,
   masonANdEngineerDrawerOption,
-  userProfileImage,
 } from "../../utils/JsonData";
 import { hp, isiPAD, RFValue, wp } from "../../helper/Responsive";
 import { IconsPath } from "../../utils/IconPath";
@@ -31,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/Store";
 import { drawerItemType, UserType } from "../../interfaces/Types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { authActions } from "../../redux/slice/AuthSlice";
+import { IMAGE_URL } from "@env";
 
 const CustomDrawerContent = (props: any) => {
   const { t } = useTranslation();
@@ -38,6 +37,8 @@ const CustomDrawerContent = (props: any) => {
   const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [isLogOut, setIsLogOut] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const drawer: any =
@@ -63,8 +64,10 @@ const CustomDrawerContent = (props: any) => {
       : "Engineer ID";
 
   const handleYesOnPress = () => {
+    setIsLogOut(false);
     dispatch(authActions.setPortal(""));
     dispatch(authActions.setToken(""));
+    dispatch(authActions.setFCMToken(""));
     dispatch(authActions.setUserInfo({}));
     dispatch(authActions.setUserStatus("pending"));
     navigation.reset({
@@ -73,13 +76,19 @@ const CustomDrawerContent = (props: any) => {
     });
   };
 
+  const imageUrl = userInfo.profile_pic?.file_path
+    ? { uri: `${IMAGE_URL}${userInfo.profile_pic.file_path}` }
+    : null;
+
   return (
     <View style={{ marginTop: top }}>
       <View style={styles.topHeaderView}>
         <View style={styles.imageRowView}>
           <Image
-            source={{ uri: userProfileImage }}
+            // source={isError || !imageUrl ? IconsPath.user : imageUrl}
+            source={IconsPath.user}
             style={styles.userProfile}
+            onError={() => setIsError(true)}
           />
           <View>
             <Text style={styles.userName}>{userInfo?.name}</Text>
@@ -149,6 +158,16 @@ const CustomDrawerContent = (props: any) => {
           </Pressable>
         );
       })}
+      <Pressable
+        style={{
+          marginLeft: wp(11),
+        }}
+        onPress={() => Linking.openURL(`tel:9241879323`)}
+      >
+        <Text style={styles.buttonName}>
+          Support/helpline Number <Text style={styles.helpineNumber}>9241873998</Text> 
+        </Text>
+      </Pressable>
       <LogoutModal
         isVisible={isLogOut}
         backOnPress={() => setIsLogOut(!isLogOut)}
@@ -201,9 +220,15 @@ const styles = StyleSheet.create({
     marginBottom: hp(3),
   },
   buttonName: {
-    fontSize: RFValue(18),
+    fontSize: RFValue(16),
     fontFamily: FontPath.OutfitRegular,
+    color: colors.black,
     marginLeft: wp(3),
     lineHeight: hp(3.5),
+  },
+  helpineNumber: {
+    fontFamily: FontPath.OutfitRegular,
+    fontSize: RFValue(16),
+    color: colors.blue,
   },
 });

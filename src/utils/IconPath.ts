@@ -48,5 +48,6 @@ export const IconsPath = {
     placeOrderRed: require('../assets/icons/placeOrderRed.png'),
     trash: require('../assets/icons/trash.png'),
     whiteClose: require('../assets/icons/whiteClose.png'),
-    user: require('../assets/icons/user.png')
+    user: require('../assets/icons/user.png'),
+    orderlogo: require('../assets/icons/orderlogo.jpg')
 }

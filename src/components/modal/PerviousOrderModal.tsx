@@ -32,9 +32,10 @@ const PerviousOrderModal = ({
           />
         </Pressable>
         <View style={styles.orderNoView}>
-          <View style={commonStyle.profileView}>
+          {/* <View style={commonStyle.profileView}>
             <Text style={commonStyle.userNameText}>M</Text>
-          </View>
+          </View> */}
+          <Image source={IconsPath.orderlogo} style={commonStyle.logo}/>
           <View style={{ marginLeft: wp(3) }}>
             <Text style={styles.orderNo}>
               {t("orderHistory.orderNo")} : 121124

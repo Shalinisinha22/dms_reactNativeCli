@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text } from "react-native";
 import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
@@ -7,7 +7,9 @@ import { hp, RFValue, wp } from "../../helper/Responsive";
 import {
   NavigationProp,
   ParamListBase,
+  RouteProp,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 import { ImagePath } from "../../utils/ImagePath";
 import { colors } from "../../utils/Colors";
@@ -23,10 +25,12 @@ import { commonStyle } from "../../utils/commonStyles";
 import { UserType } from "../../interfaces/Types";
 import { useSetPassword } from "../../api/query/AuthService";
 import { authActions } from "../../redux/slice/AuthSlice";
+import { ParamsType } from "../../navigation/ParamsType";
 
 const SetPasswordScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const routes = useRoute<RouteProp<ParamsType, "SetPasswordScreen">>();
   const { portal } = useAppSelector((state) => state.auth);
   const { mutateAsync: createPassword } = useSetPassword();
   const [isApiLoading, setIsApiLoading] = useState(false);
@@ -43,7 +47,6 @@ const SetPasswordScreen = () => {
             new_password: values.newPassword,
             confirm_password: values.passwordConfirmation,
           });
-          console.log('res',res)
           if (res) {
             setIsApiLoading(false);
             dispatch(authActions.setToken(res.access_token.token));
@@ -57,12 +60,16 @@ const SetPasswordScreen = () => {
     });
 
   const handleNavigation = () => {
-    if ((portal === UserType.DEALER) || (portal === UserType.DISTRIBUTOR)) {
-      navigation.navigate(RouteString.RegistrationFormScreen);
-    } else if (portal === UserType.ASO) {
-      navigation.navigate(RouteString.ASORegistrationScreen);
-    } else if ((portal === UserType.ENGINEER) || (portal === UserType.MASON)) {
-      navigation.navigate(RouteString.MasonAndEngineerRegistrationScreen);
+    if (routes.params.from === "forgotPassword") {
+      navigation.navigate(RouteString.LoginScreen);
+    } else {
+      if (portal === UserType.DEALER || portal === UserType.DISTRIBUTOR) {
+        navigation.navigate(RouteString.RegistrationFormScreen);
+      } else if (portal === UserType.ASO) {
+        navigation.navigate(RouteString.ASORegistrationScreen);
+      } else if (portal === UserType.ENGINEER || portal === UserType.MASON) {
+        navigation.navigate(RouteString.MasonAndEngineerRegistrationScreen);
+      }
     }
   };
 

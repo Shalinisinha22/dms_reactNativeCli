@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import {
   NavigationProp,
   ParamListBase,
+  useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
 import { colors } from "../../utils/Colors";
@@ -39,17 +40,19 @@ const ReferralSubmissionScreen = () => {
   const [productList, setProductList] = useState([]);
   const [productId, setProductId] = useState([]);
   const { data } = useGetProductList();
+  const [isReset, setIsReset] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const fileFields = ["proof"];
 
   useEffect(() => {
-    if (data) {
-      const updatedData: any = data?.map((item: any) => ({
+    if (data?.data) {
+      const updatedData: any = data?.data?.map((item: any) => ({
         id: item.id,
         name: item.name,
       }));
       setProductList(updatedData);
-      setUploadedDocuments({})
+      setUploadedDocuments({});
     }
   }, [data]);
 
@@ -87,8 +90,10 @@ const ReferralSubmissionScreen = () => {
             });
           }
         });
+        setIsReset(false);
         const res = await createReferralRegister(formData);
         if (res) {
+          setIsReset(true);
           setIsApiLoading(false);
           setFieldValue("referral", "");
           setFieldValue("phoneNumber", "");
@@ -100,18 +105,27 @@ const ReferralSubmissionScreen = () => {
             text1: res.message,
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         setIsApiLoading(false);
         console.log("ReferralSubmissionScreen", error);
+        Toast.show({
+          type: "error",
+          text1: error?.response?.data?.message || "Please try again",
+        });
       }
     },
   });
 
   const handleDocumentSelection = useCallback(async (docType: any) => {
+    setIsVisible(false);
     Keyboard.dismiss();
     try {
       const response = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf, DocumentPicker.types.images, DocumentPicker.types.doc], 
+        type: [
+          DocumentPicker.types.pdf,
+          DocumentPicker.types.images,
+          DocumentPicker.types.doc,
+        ],
         presentationStyle: "fullScreen",
       });
 
@@ -153,6 +167,7 @@ const ReferralSubmissionScreen = () => {
           touched={touched.referral}
           errors={errors.referral}
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <TextInputField
           title={t("referralSubmission.phoneNO")}
@@ -166,6 +181,7 @@ const ReferralSubmissionScreen = () => {
           keyboardType="number-pad"
           isRequired={true}
           maxLength={10}
+          onTouchStart={() => setIsVisible(false)}
         />
         <MultipulSelectDropDown
           zIndex={2}
@@ -176,6 +192,9 @@ const ReferralSubmissionScreen = () => {
           selectedId={(value) => setProductId(value)}
           errors={errors.productUsed}
           mainViewStyle={{ marginTop: hp(3) }}
+          isReset={isReset}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
         />
         <TextInputField
           title={t("ASODealerOnboard.address")}
@@ -190,6 +209,7 @@ const ReferralSubmissionScreen = () => {
           mainViewStyle={{ marginBottom: hp(2) }}
           multiline
           isRequired={true}
+          onTouchStart={() => setIsVisible(false)}
         />
         <DocumentUploadView
           icons={

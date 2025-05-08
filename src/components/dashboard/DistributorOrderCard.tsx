@@ -13,6 +13,8 @@ import ApproveButton from "../common/ApproveButton";
 import RejectButton from "../common/RejectButton";
 import { commonStyle } from "../../utils/commonStyles";
 import moment from "moment";
+import { IconsPath } from "../../utils/IconPath";
+import { abbreviateNumber } from "../../utils/commonFunctions";
 
 const DistributorOrderCard = ({
   item,
@@ -46,14 +48,15 @@ const DistributorOrderCard = ({
         <View style={styles.headerNoRowView}>
           <View>
             <View style={styles.orderNoView}>
-              <View style={commonStyle.profileView}>
+              {/* <View style={commonStyle.profileView}>
                 <Text style={commonStyle.userNameText}>
                   {item?.dealer_name.slice(0, 1)}
                 </Text>
-              </View>
+              </View> */}
+              <Image source={IconsPath.orderlogo} style={commonStyle.logo}/>
               <View style={styles.textView}>
                 <Text style={styles.invoiceNo}>
-                  {t("dashboard.orderNo")} : {item?.orderNumber}
+                  {t("dashboard.orderNo")} : {item?.odrNumber}
                 </Text>
               </View>
             </View>
@@ -74,7 +77,7 @@ const DistributorOrderCard = ({
                 <Text style={styles.orderinfoText}>
                   {t("confirmOrder.amount")}
                 </Text>
-                <Text style={styles.orderInfoDes}>Rs.{totalAmount}</Text>
+                <Text style={styles.orderInfoDes}>Rs.{abbreviateNumber(totalAmount)}</Text>
               </View>
             </View>
           </View>
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
   invoiceNo: {
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
-    fontSize: RFValue(16),
+    fontSize: RFValue(13),
   },
   download: {
     width: wp(7),

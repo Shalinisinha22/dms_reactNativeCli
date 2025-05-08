@@ -1,12 +1,13 @@
 import {
   FlatList,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { hp, RFValue, wp } from "../../helper/Responsive";
 import { colors } from "../../utils/Colors";
@@ -22,35 +23,35 @@ import {
 import { useTranslation } from "react-i18next";
 import { commonStyle } from "../../utils/commonStyles";
 import Share from "react-native-share";
-import { generateInvoicePDF } from "../../utils/commonFunctions";
+import { abbreviateNumber } from "../../utils/commonFunctions";
 import { ParamsType } from "../../navigation/ParamsType";
-import { useMyInvoiceDetils } from "../../api/query/InvoiceService";
+import { useDownloadPdf } from "../../api/query/InvoiceService";
 import moment from "moment";
 import { useAppSelector } from "../../redux/Store";
-import { useGetProductList } from "../../api/query/OrderPlacementService";
 import RNFS from "react-native-fs";
+import RNFetchBlob from "react-native-blob-util";
+import Toast from "react-native-toast-message";
 
 const InvoiceDetailScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const routes = useRoute<RouteProp<ParamsType, "InvoiceDetailScreen">>();
-  const { mutateAsync: getMyInvoiceDetils, data } = useMyInvoiceDetils();
-  const {userInfo} = useAppSelector((state) => state.auth);
-  const productList = useGetProductList();
-  
-  useEffect(()=>{
-    if(routes.params?.id){
-      getMyInvoiceDetils({invoiceId:routes.params?.id })
-    }
-  },[routes.params?.id])
+  const routes =
+    useRoute<RouteProp<ParamsType, "InvoiceDetailScreen">>().params.item;
 
+  const { userInfo } = useAppSelector((state) => state.auth);
+  const { mutateAsync: downloadPdf } = useDownloadPdf();
 
   const handleShare = () => {
-    const destinationPath = `${RNFS.DownloadDirectoryPath}/invoice_${data?.invoiceNumber}.pdf`;
+    const fileName = routes?.voucher_number.replace(/\//g, "_");
+    const destinationPath = `${
+      Platform.OS === "ios"
+        ? RNFS.DocumentDirectoryPath
+        : RNFS.DownloadDirectoryPath
+    }/invoice_${fileName}.pdf`;
     Share.open({
-      title: 'Share invoice',
-      message: 'Hello, here is the invoice.',
-       url: `file://${destinationPath}`,
+      title: "Share invoice",
+      message: "Hello, here is the invoice.",
+      url: `file://${destinationPath}`,
     })
       .then((res) => {
         console.log(res);
@@ -60,17 +61,46 @@ const InvoiceDetailScreen = () => {
       });
   };
 
+  const totalAmount = routes?.items.reduce((acc: number, item: any) => {
+    const amount = parseFloat(item.amount) || 0;
+    return acc + amount;
+  }, 0);
 
+  const pdf = async (invoiceId: string) => {
+    try {
+      const res = await downloadPdf({ invoiceId: invoiceId });
+      if (res?.url) {
+        const fileName = invoiceId.replace(/\//g, "_");
+        const { dirs } = RNFetchBlob.fs;
+        const path = `${dirs.LegacyDownloadDir}/${fileName}.pdf`;
 
-  const combinedResult = data?.products?.map((product: { productId: any }) => {
-    const matchingDetail = productList.data?.find(
-      (detail: { id: any }) => detail.id === product.productId
-    );
-    return {
-      ...product,
-      name: matchingDetail ? matchingDetail.name : "",
-    };
-  });
+        RNFetchBlob.config({
+          fileCache: true,
+          addAndroidDownloads: {
+            notification: true,
+            useDownloadManager: true,
+            path: path,
+          },
+          path:
+            Platform.OS === "ios"
+              ? `${dirs.DocumentDir}/${fileName}.pdf`
+              : path,
+        })
+          .fetch("GET", res?.url)
+          .then((res) => {
+            Toast.show({
+              type: "success",
+              text1: "PDF successfully donwload",
+            });
+          })
+          .catch((error) => {
+            console.log("===>", error.message);
+          });
+      }
+    } catch (error) {
+      console.log("pdf==>", error);
+    }
+  };
 
   return (
     <SafeAreaContainer showHeader={false}>
@@ -89,9 +119,14 @@ const InvoiceDetailScreen = () => {
       </View>
       <View style={styles.rowView}>
         <View style={commonStyle.profileView}>
-          <Text style={commonStyle.userNameText}>{userInfo?.name.slice(0,1)}</Text>
+          <Text style={commonStyle.userNameText}>
+            {userInfo?.name.slice(0, 1)}
+          </Text>
         </View>
-        <Pressable style={styles.downloadButton} onPress={() => generateInvoicePDF(userInfo, data, combinedResult)}>
+        <Pressable
+          style={styles.downloadButton}
+          onPress={() => pdf(routes?.voucher_number)}
+        >
           <Image
             source={IconsPath.downlaod}
             tintColor={colors.white}
@@ -102,34 +137,35 @@ const InvoiceDetailScreen = () => {
       </View>
       <View style={styles.rowView1}>
         <View>
-          <Text style={styles.name}>{userInfo?.company}</Text>
-          <Text style={styles.address}>
-           {userInfo?.address}
-          </Text>
+          <Text style={styles.name}>{userInfo?.company || userInfo?.name}</Text>
+          <Text style={styles.address}>{userInfo?.address}</Text>
           <Text style={styles.zipcode}>{userInfo?.zipcode}</Text>
         </View>
         <View>
           <Text style={styles.invoice}>{t("invoiceDetail.invoice")}</Text>
-          <Text style={styles.invoiceNo}>{data?.invoiceNumber}</Text>
+          <Text style={styles.invoiceNo}>{routes?.voucher_number}</Text>
           <Text style={styles.balanceDue}>{t("invoiceDetail.balanceDue")}</Text>
-          <Text style={styles.amount}>Rs.{data?.totalAmount}</Text>
+          <Text style={styles.amount}>Rs.{abbreviateNumber(totalAmount)}</Text>
         </View>
       </View>
       <View style={styles.rowView1}>
         <View>
           <Text style={styles.billTO}>{t("invoiceDetail.billTo")}</Text>
-          <Text style={styles.invoiceName}>{data?.customerNameOnBill}</Text>
+          <Text style={styles.invoiceName}>{routes?.bill_to_name}</Text>
           <Text style={styles.address}>
-            {data?.address}, {data?.state}, {data?.country}
+            {routes?.address_1}, {routes?.state},{routes?.country}
           </Text>
-          <Text style={styles.zipcode}>{data?.zipcode}</Text>
+          <Text style={styles.zipcode}>{routes?.zipcode}</Text>
         </View>
         <View>
           <View style={styles.totalRowView}>
             <Text style={styles.invoiceDate}>
               {t("invoiceDetail.invoiceDate")} :{" "}
             </Text>
-            <Text style={styles.date}> {moment(data?.invoiceDate).format('DD MMM YYYY')}</Text>
+            <Text style={styles.date}>
+              {" "}
+              {moment(routes?.invoiceDate).format("DD MMM YYYY")}
+            </Text>
           </View>
           <View
             style={[
@@ -142,7 +178,10 @@ const InvoiceDetailScreen = () => {
             <Text style={styles.invoiceDate}>
               {t("invoiceDetail.dueDate")} :{" "}
             </Text>
-            <Text style={styles.date}> {moment(data?.dueDate).format('DD MMM YYYY')}</Text>
+            <Text style={styles.date}>
+              {" "}
+              {moment(routes?.dueDate).format("DD MMM YYYY")}
+            </Text>
           </View>
         </View>
       </View>
@@ -156,14 +195,14 @@ const InvoiceDetailScreen = () => {
       </View>
       <View>
         <FlatList
-          data={combinedResult}
-          removeClippedSubviews={false} 
+          data={routes?.items}
+          removeClippedSubviews={false}
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView}>
                 <Text style={styles.itemText1}>{index + 1}</Text>
-                <Text style={styles.itemText2}>{item.name}</Text>
-                <Text style={styles.itemText3}>{item.quantity}</Text>
+                <Text style={styles.itemText2}>{item.item_name}</Text>
+                <Text style={styles.itemText3}>{item.qty}</Text>
                 <Text style={styles.itemText4}>{item.amount}</Text>
               </View>
             );
@@ -171,10 +210,10 @@ const InvoiceDetailScreen = () => {
         />
       </View>
       <View style={styles.totalView}>
-        <View style={styles.totalRowView}>
+        {/* <View style={styles.totalRowView}>
           <Text style={styles.total}>{t("confirmOrder.subTotal")} : </Text>
-          <Text style={styles.subAmount}> ₹{data?.totalAmount}</Text>
-        </View>
+          <Text style={styles.subAmount}> ₹{totalAmount}</Text>
+        </View> */}
         <View
           style={[
             styles.totalRowView,
@@ -184,7 +223,9 @@ const InvoiceDetailScreen = () => {
           ]}
         >
           <Text style={styles.total}>{t("confirmOrder.total")} : </Text>
-          <Text style={styles.totalAmount}>₹{data?.totalAmount}</Text>
+          <Text style={styles.totalAmount}>
+            ₹{abbreviateNumber(totalAmount)}
+          </Text>
         </View>
       </View>
     </SafeAreaContainer>
@@ -327,6 +368,7 @@ const styles = StyleSheet.create({
     fontFamily: FontPath.OutfitRegular,
     fontSize: RFValue(14),
     marginTop: hp(0.5),
+    width: wp(45),
   },
   billTO: {
     color: colors.black,
