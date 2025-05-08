@@ -77,3 +77,81 @@ To learn more about React Native, take a look at the following resources:
 - [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
 - [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
 - [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+
+# Building Release Versions
+
+## Creating APK and AAB files for Android
+
+When you're ready to release your Android app, you'll need to generate a signed APK or AAB file.
+
+### Generating a Keystore
+
+First, you need to generate a signing key using keytool:
+
+```bash
+keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+```
+
+### Setting up Gradle Variables
+
+Place the `my-release-key.keystore` file in the `android/app` directory.
+
+Edit your `~/.gradle/gradle.properties` or `android/gradle.properties` file and add:
+
+```
+MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+MYAPP_RELEASE_KEY_ALIAS=my-key-alias
+MYAPP_RELEASE_STORE_PASSWORD=*****
+MYAPP_RELEASE_KEY_PASSWORD=*****
+```
+
+### Configuring Gradle for Release
+
+Edit the file `android/app/build.gradle` and add the signing config:
+
+```gradle
+signingConfigs {
+    release {
+        storeFile file(MYAPP_RELEASE_STORE_FILE)
+        storePassword MYAPP_RELEASE_STORE_PASSWORD
+        keyAlias MYAPP_RELEASE_KEY_ALIAS
+        keyPassword MYAPP_RELEASE_KEY_PASSWORD
+    }
+}
+buildTypes {
+    release {
+        signingConfig signingConfigs.release
+        // ...existing config
+    }
+}
+```
+
+### Building the APK
+
+Run the following command to generate a release APK:
+
+```bash
+# using npm
+npm run android -- --mode=release
+
+# OR using Yarn
+yarn android --mode=release
+```
+
+The APK file will be located at `android/app/build/outputs/apk/release/app-release.apk`
+
+### Building the AAB (Android App Bundle)
+
+To generate an AAB file for Google Play Store:
+
+```bash
+# navigate to android directory
+cd android
+
+# using Gradle
+./gradlew bundleRelease
+```
+
+The AAB file will be located at `android/app/build/outputs/bundle/release/app-release.aab`
+
+For more details, refer to the [React Native official documentation on publishing to Google Play Store](https://reactnative.dev/docs/signed-apk-android).
