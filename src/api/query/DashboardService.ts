@@ -35,6 +35,7 @@ export const useMySchemes = () => {
     queryKey: ["useMySchemes"],
     queryFn: async () => {
       const response = await axiosInstance.get(API_ENDPOINT.MY_SCHEMES);
+      console.log(response.data,"scheme response")
       return response.data;
     },
   });

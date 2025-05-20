@@ -13,6 +13,8 @@ const MySchemeScreen = () => {
   const { t } = useTranslation();
   const schemes = useMySchemes();
 
+  console.log(schemes.data,ImagePath,"16 my scheme")
+
   return (
     <SafeAreaContainer>
       <ScrollView showsVerticalScrollIndicator={false}>

@@ -28,7 +28,7 @@ const VerifyOTPScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const routes = useRoute<RouteProp<ParamsType, "VerifyOTPScreen">>();
-  const [timer, setTimer] = useState(0); // Timer state
+  const [timer, setTimer] = useState(0); 
   const [isApiLoading, setIsApiLoading] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState("");
@@ -43,7 +43,7 @@ const VerifyOTPScreen = () => {
         setTimer((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(interval); // Cleanup interval
+    return () => clearInterval(interval); 
   }, [timer]);
 
   const handleResendCode = async () => {

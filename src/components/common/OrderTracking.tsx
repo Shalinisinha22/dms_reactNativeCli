@@ -47,7 +47,7 @@ const OrderTracking = ({
             },
           ]}
         />
-        {admin ? null : (
+        {adminIcon ? null : (
           <View>
             <View
               style={[
@@ -72,7 +72,8 @@ const OrderTracking = ({
                 : t("dashboard.rejectByDisctributor")}
             </Text>
           </View>
-        )}
+         )}
+ 
         {admin && (
           <View>
             <View
@@ -102,7 +103,7 @@ const OrderTracking = ({
         <View
           style={styles.line}
         />
-        {admin ? null : (
+        {adminIcon ? null : (
           <View>
             <View
               style={[
@@ -127,7 +128,7 @@ const OrderTracking = ({
                 : t("dashboard.rejectByASO")}
             </Text>
           </View>
-        )}
+         )}
         <View
           style={[
             styles.line,

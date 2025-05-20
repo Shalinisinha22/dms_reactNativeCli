@@ -36,6 +36,8 @@ const OrderCard = ({
     return Number(acc) + Number(amount);
   }, 0);
 
+
+
   return (
     <Pressable
       style={styles.cardView}
@@ -137,9 +139,12 @@ const OrderCard = ({
             : IconsPath.whiteClose
         }
         dispatchedIcons={
-          item?.status?.by_admin === "dispatched"
+          item?.status?.by_dispatcher === "dispatched"
+          ||
+            item?.status?.by_admin === "dispatched"
             ? IconsPath.check
-            : item?.status?.by_admin === "declined"
+            : item?.status?.by_dispatcher === "declined"
+            ||  item?.status?.by_admin === "declined"
             ? IconsPath.whiteClose
             : null
         }

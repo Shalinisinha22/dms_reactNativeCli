@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView
 } from "react-native";
 import React, { useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
@@ -48,13 +49,17 @@ const ConfirmOrderScreen = () => {
     setIsApiLoading(true);
     try {
       const formattedData: any = {
-        products: routes.params.order.map((item:any) => ({
+        products: routes.params.order.map((item: any) => ({
           productId: item.id || item?.productId,
-          quantity: (item?.value * 0.001).toFixed(2)
+          quantity: Number((item.value * 0.001).toFixed(3)), 
         })),
         distributorId: routes.params.distributorid,
       };
+
+      console.log("Formatted Data:", formattedData); // Debugging log
+
       const res = await createNewOrder(formattedData);
+      console.log(res, "orderResponse");
       if (res) {
         setIsApiLoading(false);
         navigation.navigate(RouteString.OrderSuccessfullyScreen);
@@ -90,6 +95,8 @@ const ConfirmOrderScreen = () => {
 
   return (
     <SafeAreaContainer>
+          <ScrollView showsVerticalScrollIndicator={false}>
+
       <View style={styles.backRowView}>
         <Pressable onPress={() => navigation.goBack()}>
           <Image source={IconsPath.backArrow} style={styles.backIcons} />
@@ -151,6 +158,7 @@ const ConfirmOrderScreen = () => {
             : handleCreateOrder()
         }
       />
+      </ScrollView>
     </SafeAreaContainer>
   );
 };

@@ -21,6 +21,7 @@ const DealerSchemeView = ({ item }: { item: any }) => {
       <View style={styles.schemeView}>
         <View>
           <Text style={styles.dealerScheme}>Dealer’s Annual Scheme </Text>
+
           <Text style={styles.date}>
             {moment(item[0]?.startDate).format("DD MMMM YYYY")} To{" "}
             {moment(item[item?.length]?.endDate).format("DD MMMM YYYY")}
@@ -49,7 +50,7 @@ const DealerSchemeView = ({ item }: { item: any }) => {
               <View style={styles.itemView} key={index}>
                 <Text style={styles.itemText1}>{index + 1}</Text>
                 <Text style={styles.itemText2}>{item.slab}</Text>
-                <Text style={styles.itemText3}>{item.incentive}</Text>
+                <Text style={styles.itemText3}>{item.slabs.incentive}</Text>
                 <View style={{ width: wp(23) }}>
                   <Text style={styles.itemText4}>{item.my_order}</Text>
                   {item.pending > 0 && (

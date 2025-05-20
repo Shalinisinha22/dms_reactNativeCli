@@ -113,6 +113,7 @@ const OrderHistoryScreen = () => {
         setIsFetching(true);
       }
       if (res?.data) {
+        console.log(res.totalPage,res.nextPage, res.data.length,"116")
         setOrderList((prevData: any) =>
           curPage === 1 ? res?.data : [...prevData, ...res?.data]
         );
