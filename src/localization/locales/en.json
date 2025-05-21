@@ -116,7 +116,8 @@
     "referralSubmission":"Referral Submission",
     "rewardStatus":"Reward Status",
     "rducationalResources":"Educational Resources",
-    "deleteAccount": "Delete Account"
+    "deleteAccount": "Delete Account",
+     "todaysRate": "Today's Rate"
   },
   "dashboard": {
     "dashboard": "Dashboard",
@@ -415,5 +416,11 @@
     "StoneMasonry":"Stone Masonry",
     "BlueprintReadingAndInterpretation":"Blueprint Reading and Interpretation",
     "Others":"Others"
+  },
+  "todaysRate": {
+    "todaysRate": "Today's Rate",
+    "superTMTBars": "Super TMT Bars",
+    "superStarTMTBars": "Super Star TMT Bars",
+    "mrp": "MRP: Rs. {{price}}/-"
   }
 }

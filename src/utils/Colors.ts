@@ -28,5 +28,6 @@ export const colors = {
     drarkGray_1:'#606060',
     red_100: '#E31C2310',
     green_100: '#00800010',
-    yellow:'#FFC839'
+    yellow:'#FFC839',
+    orange:'#fb8500'
 }

@@ -35,30 +35,32 @@ const SearchDropDownSignalSelection = ({
 
   useEffect(() => {
     if (distributorId) {
-      const findDilear = data.filter((item: any) => item.id === distributorId);
-      selectedNames(findDilear[0]?.id);
-      setText(findDilear[0]?.name);
+      const findDealer = data.filter((item: any) => item.id === distributorId);
+      selectedNames(findDealer[0]?.id);
+      setText(findDealer[0]?.firm_name); // Display only firm_name after selection
     } else {
       setText("");
     }
   }, [distributorId, data]);
 
   const handleSelectItem = (item: any) => {
-    if (text === item.name) {
+    if (text === item.firm_name) {
       selectedNames(null);
       setText("");
+      setIsVisible(false);
     } else {
       selectedNames(item?.id);
-      setText(item?.name);
+      setText(item?.firm_name); // Set firm_name as the selected text
       setIsVisible(false);
     }
   };
+
   const filterData = () => {
     if (!text) {
       return data;
     }
-    return data.filter((filtered: { name: string }) => {
-      const itemName = filtered?.name.toLowerCase();
+    return data.filter((filtered: { firm_name: string }) => {
+      const itemName = filtered?.firm_name.toLowerCase();
       const query = text.toLowerCase();
 
       return itemName.includes(query);
@@ -78,9 +80,8 @@ const SearchDropDownSignalSelection = ({
           placeholder={placeHolder}
           placeholderTextColor={colors.darkGray}
           style={styles.textInput}
-          value={text}
+          value={text} // Display the selected firm_name
           editable={false}
-          onChangeText={(v) => setText(v)}
           onTouchStart={() => setIsVisible(!isVisible)}
           autoCapitalize="none"
         />
@@ -104,9 +105,12 @@ const SearchDropDownSignalSelection = ({
                   style={styles.button}
                 >
                   <Text style={styles.name}>
-                    {item?.firm_name?.charAt(0).toUpperCase() + item?.firm_name?.slice(1)}
+                    {item?.firm_name?.charAt(0).toUpperCase() +
+                      item?.firm_name?.slice(1)}
                   </Text>
-                  {text == item.firm_name && <CheckIcons fill={colors.primary} />}
+                  {text === item.firm_name && (
+                    <CheckIcons fill={colors.primary} />
+                  )}
                 </Pressable>
               );
             }}

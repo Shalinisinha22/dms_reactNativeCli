@@ -59,6 +59,7 @@ import RewardStatusdetailScreen from "../screen/home/RewardStatusdetailScreen";
 import { authActions } from "../redux/slice/AuthSlice";
 import messaging from "@react-native-firebase/messaging";
 import { IMAGE_URL } from "@env";
+import TodaysRateScreen from "../screen/Rate/TodayRateScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -156,6 +157,7 @@ function Auth() {
         name={RouteString.MasonAndEngineerRegistrationScreen}
         component={MasonAndEngineerRegistrationScreen}
       />
+
     </Stack.Navigator>
   );
 }
@@ -375,6 +377,10 @@ function Home() {
       <Stack.Screen
         name={RouteString.ViewDealerDetailScreen}
         component={ViewDealerDetailScreen}
+      />
+      <Stack.Screen
+        name={RouteString.TodaysRateScreen}    
+        component={TodaysRateScreen}
       />
     </Stack.Navigator>
   );

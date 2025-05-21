@@ -46,5 +46,6 @@ export const RouteString = {
     MasonAndEngineerRegistrationScreen:"MasonAndEngineerRegistrationScreen",
     ReferralSubmissionScreen:"ReferralSubmissionScreen",
     RewardStatusScreen:"RewardStatusScreen",
-    RewardStatusdetailScreen:"RewardStatusdetailScreen"
+    RewardStatusdetailScreen:"RewardStatusdetailScreen",
+    TodaysRateScreen:"TodaysRateScreen",
 }

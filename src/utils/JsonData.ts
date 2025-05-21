@@ -88,6 +88,11 @@ export const distributorDrawerOption = [
     icons: IconsPath.dashboard,
     routes: RouteString.HomeScreen,
   },
+   {
+    name: "drawer.todaysRate",
+    icons: IconsPath.rate, 
+    routes: RouteString.TodaysRateScreen,
+  },
   {
     name: "drawer.orderList",
     icons: IconsPath.orderHistoryRed,
@@ -140,6 +145,11 @@ export const asoDrawerOption = [
     name: "drawer.dashboard",
     icons: IconsPath.dashboard,
     routes: RouteString.HomeScreen,
+  },
+    {
+    name: "drawer.todaysRate", 
+    icons: IconsPath.rate, 
+    routes: RouteString.TodaysRateScreen, 
   },
   {
     name: "drawer.orderList",

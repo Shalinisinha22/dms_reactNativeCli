@@ -149,6 +149,7 @@ const CustomDrawerContent = (props: any) => {
               }
             }}
           >
+        
             <Image
               source={item.icons}
               style={styles.edit}

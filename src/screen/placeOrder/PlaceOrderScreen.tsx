@@ -32,7 +32,7 @@ const PlaceOrderScreen = () => {
   const distributorList = useGetDistributorList();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const routes = useRoute<RouteProp<ParamsType, "PlaceOrderScreen">>();
-  const [orderItems, setOrderItems] = useState<any[]>([]); // Track weights for all products
+  const [orderItems, setOrderItems] = useState<any[]>([]); 
   const [distributorid, setDistributorId] = useState("");
   const [distributoridError, setDistributorIdError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -194,7 +194,7 @@ const PlaceOrderScreen = () => {
                 selectedCategory === "superStarTMT" && styles.activeCategoryButtonText,
               ]}
             >
-              Super Star TMT Bars
+              SuperStar TMT Bars
             </Text>
           </TouchableOpacity>
         </View>
@@ -235,21 +235,27 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    gap:5,
+    // justifyContent: "space-around",
     marginVertical: 16,
+     marginHorizontal: wp(5),
   },
   categoryButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: 16,
+    // paddingHorizontal: 20,
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 5,
-    backgroundColor: "gray", 
+    backgroundColor: colors.orange, 
   },
   activeCategoryButton: {
-    backgroundColor: "orange", 
+     backgroundColor: colors.darkGray, 
   },
   categoryButtonText: {
     fontSize: 16,
-    color: "#fff", 
+    color: "#fff",
+    fontWeight: "bold",
   },
   activeCategoryButtonText: {
     color: "#fff",
