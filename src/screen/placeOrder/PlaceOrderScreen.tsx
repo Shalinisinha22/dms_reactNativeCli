@@ -1,4 +1,11 @@
-import { StyleSheet, Text,ScrollView,View,TouchableOpacity,FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+  View,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import OrderPlacementCard from "../../components/dashboard/OrderPlacementCard";
@@ -32,7 +39,7 @@ const PlaceOrderScreen = () => {
   const distributorList = useGetDistributorList();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const routes = useRoute<RouteProp<ParamsType, "PlaceOrderScreen">>();
-  const [orderItems, setOrderItems] = useState<any[]>([]); 
+  const [orderItems, setOrderItems] = useState<any[]>([]);
   const [distributorid, setDistributorId] = useState("");
   const [distributoridError, setDistributorIdError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -63,7 +70,11 @@ const PlaceOrderScreen = () => {
     }
   }, [productList.data]);
 
-  const handleValueChange = (index: number, newValue: string, productList: any) => {
+  const handleValueChange = (
+    index: number,
+    newValue: string,
+    productList: any
+  ) => {
     const updatedOrderItems = [...orderItems];
     const productIndex = updatedOrderItems.findIndex(
       (item) => item.id === productList[index].id
@@ -117,8 +128,11 @@ const PlaceOrderScreen = () => {
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={({ item, index }) => {
-        const productIndex = orderItems.findIndex((orderItem) => orderItem.id === item.id);
-        const productValue = productIndex !== -1 ? orderItems[productIndex].value : "";
+        const productIndex = orderItems.findIndex(
+          (orderItem) => orderItem.id === item.id
+        );
+        const productValue =
+          productIndex !== -1 ? orderItems[productIndex].value : "";
         return (
           <OrderPlacementCard
             key={index}
@@ -136,7 +150,8 @@ const PlaceOrderScreen = () => {
 
   const calculateTotals = () => {
     const totalWeight = orderItems.reduce(
-      (acc: number, item: any) => acc + (parseFloat(item.value || 0) * 0.001 || 0),
+      (acc: number, item: any) =>
+        acc + (parseFloat(item.value || 0) * 0.001 || 0),
       0
     );
     const totalAmount = orderItems.reduce((acc: number, item: any) => {
@@ -175,7 +190,8 @@ const PlaceOrderScreen = () => {
             <Text
               style={[
                 styles.categoryButtonText,
-                selectedCategory === "superTMT" && styles.activeCategoryButtonText,
+                selectedCategory === "superTMT" &&
+                  styles.activeCategoryButtonText,
               ]}
             >
               Super TMT Bars
@@ -184,14 +200,16 @@ const PlaceOrderScreen = () => {
           <TouchableOpacity
             style={[
               styles.categoryButton,
-              selectedCategory === "superStarTMT" && styles.activeCategoryButton,
+              selectedCategory === "superStarTMT" &&
+                styles.activeCategoryButton,
             ]}
             onPress={() => setSelectedCategory("superStarTMT")}
           >
             <Text
               style={[
                 styles.categoryButtonText,
-                selectedCategory === "superStarTMT" && styles.activeCategoryButtonText,
+                selectedCategory === "superStarTMT" &&
+                  styles.activeCategoryButtonText,
               ]}
             >
               SuperStar TMT Bars
@@ -205,7 +223,8 @@ const PlaceOrderScreen = () => {
           {t("orderPlacement.totalWeight")} : {totalWeight.toFixed(3)} MT
         </Text>
         <Text style={styles.totalAmount}>
-          {t("orderPlacement.totalAmount")}: Rs. {abbreviateNumber(totalAmount)}/-
+          {t("orderPlacement.totalAmount")}: Rs. {abbreviateNumber(totalAmount)}
+          /-
         </Text>
         <Button
           buttonName={t("orderPlacement.orderPreview")}
@@ -222,9 +241,9 @@ export default PlaceOrderScreen;
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    paddingBottom: hp(5), 
+    paddingBottom: hp(5),
   },
- title: {
+  title: {
     color: colors.black,
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(20),
@@ -235,10 +254,10 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flexDirection: "row",
-    gap:5,
+    gap: 5,
     // justifyContent: "space-around",
     marginVertical: 16,
-     marginHorizontal: wp(5),
+    marginHorizontal: wp(5),
   },
   categoryButton: {
     paddingVertical: 16,
@@ -247,10 +266,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    backgroundColor: colors.orange, 
+
+    backgroundColor: colors.darkGray,
   },
   activeCategoryButton: {
-     backgroundColor: colors.darkGray, 
+    backgroundColor: colors.orange,
   },
   categoryButtonText: {
     fontSize: 16,
@@ -260,7 +280,7 @@ const styles = StyleSheet.create({
   activeCategoryButtonText: {
     color: "#fff",
   },
- totalWeight: {
+  totalWeight: {
     fontFamily: FontPath.OutfitSemiBold,
     fontSize: RFValue(17),
     textAlign: "center",

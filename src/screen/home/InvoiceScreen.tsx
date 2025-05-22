@@ -47,6 +47,8 @@ const InvoiceScreen = () => {
   const isFoused = useIsFocused();
 
   useEffect(() => {
+    console.log("Start Date:", isStartDate);
+    console.log("End Date:", isEndDate);
     handleGetInvoice();
     setCurPage(1);
     setTotalPage(0);
@@ -59,12 +61,23 @@ const InvoiceScreen = () => {
 
   const handleGetInvoice = async () => {
     try {
+      const formattedStartDate = isStartDate
+        ? moment(isStartDate).format("YYYY-MM-DD")
+        : "";
+      const formattedEndDate = isEndDate
+        ? moment(isEndDate).format("YYYY-MM-DD")
+        : "";
+
+      console.log("Formatted Start Date:", formattedStartDate);
+      console.log("Formatted End Date:", formattedEndDate);
+
       const res = await getMyInvoiceGST({
         gst: userInfo?.gst_number,
-        startDate: isStartDate ? moment(isStartDate).format("YYYY-MM-DD") : "",
-        endDate: isEndDate ? moment(isEndDate).format("YYYY-MM-DD") : "",
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
         page: curPage,
       });
+
       if (nextPage >= curPage && nextPage != null) {
         setIsFetching(true);
       }
@@ -188,8 +201,14 @@ const InvoiceScreen = () => {
         isVisible={isFilterOpen}
         isStartDate={isStartDate}
         isEndDate={isEndDate}
-        setStartDate={setStartDate}
-        setEndDate={setEndDate}
+        setStartDate={(date) => {
+          console.log("Selected Start Date:", date);
+          setStartDate(date);
+        }}
+        setEndDate={(date) => {
+          console.log("Selected End Date:", date);
+          setEndDate(date);
+        }}
         backOnPress={() => setIsFilterOpen(!isFilterOpen)}
       />
     </SafeAreaContainer>

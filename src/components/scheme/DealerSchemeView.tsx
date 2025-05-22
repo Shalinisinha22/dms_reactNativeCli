@@ -24,8 +24,9 @@ const DealerSchemeView = ({ item }: { item: any }) => {
 
           <Text style={styles.date}>
             {moment(item[0]?.startDate).format("DD MMMM YYYY")} To{" "}
-            {moment(item[item?.length]?.endDate).format("DD MMMM YYYY")}
+            {moment(item[(item?.length)-1]?.endDate).format("DD MMMM YYYY")}
           </Text>
+            
         </View>
         <Pressable
           onPress={() => navigation.navigate(RouteString.ViewSchemeScreen)}
@@ -48,9 +49,10 @@ const DealerSchemeView = ({ item }: { item: any }) => {
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView} key={index}>
+                {console.log("item", item)}
                 <Text style={styles.itemText1}>{index + 1}</Text>
                 <Text style={styles.itemText2}>{item.slab}</Text>
-                <Text style={styles.itemText3}>{item.slabs.incentive}</Text>
+                <Text style={styles.itemText3}>{item.name}</Text>
                 <View style={{ width: wp(23) }}>
                   <Text style={styles.itemText4}>{item.my_order}</Text>
                   {item.pending > 0 && (

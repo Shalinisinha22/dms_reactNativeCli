@@ -52,5 +52,6 @@ const styles = StyleSheet.create({
     fontSize: RFValue(14),
     marginLeft: wp(2),
     height: Platform.OS === 'android' ? hp(5): hp(3),
+    color: colors.black,
   },
 });

@@ -53,10 +53,11 @@ const TodaysRateScreen = () => {
     keyExtractor={(item) => item.id}
     renderItem={({ item }) => (
       <View style={styles.productCard}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.productPrice}>
-          {t("todaysRate.mrp", { price: abbreviateNumber(item.price_per_mt) })}
-        </Text>
+  
+              <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.mrp}>
+                  MRP : <Text style={styles.unit}>{item.price_per_mt}/MT</Text>
+                </Text>
       </View>
     )}
     contentContainerStyle={{
@@ -148,10 +149,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    backgroundColor: colors.orange, 
+       backgroundColor: colors.darkGray, 
+   
   },
   activeCategoryButton: {
-     backgroundColor: colors.darkGray, 
+   backgroundColor: colors.orange, 
   },
   categoryButtonText: {
     fontSize: 16,
@@ -191,14 +193,19 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
-  productName: {
-    fontSize: RFValue(16),
-    fontWeight: "bold",
-    color: colors.black,
-    marginBottom: 8,
-  },
-  productPrice: {
-    fontSize: RFValue(12),
+ productName: {
     color: colors.primary,
+    fontFamily: FontPath.OutfitSemiBold,
+    fontSize: RFValue(16),
+    marginBottom: hp(0.8),
+  },
+  mrp: {
+    color: colors.black,
+    fontFamily: FontPath.OutfitSemiBold,
+    fontSize: RFValue(14),
+  },
+    unit: {
+    fontFamily: FontPath.OutfitMedium,
+    color: colors.black,
   },
 });
