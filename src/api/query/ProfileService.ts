@@ -16,6 +16,7 @@ export const useGetUser = () => {
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.get(API_ENDPOINT.GET_USER);
+      console.log(response.data)
       return response.data;
     },
   });

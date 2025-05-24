@@ -36,7 +36,7 @@ const OrderCard = ({
     return Number(acc) + Number(amount);
   }, 0);
 
-
+console.log(item.distributor_firm_name,"order")
 
   return (
     <Pressable
@@ -130,6 +130,10 @@ const OrderCard = ({
             : item?.status?.by_distributor === "pending"
             ? null
             : IconsPath.whiteClose
+        }
+        distributor_firm_name={
+            
+                item?.distributor_firm_name
         }
         asoIcons={
           item?.status?.by_aso === "approved"

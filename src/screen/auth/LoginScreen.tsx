@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import SafeAreaContainer from "../../components/common/SafeAreaContainer";
 import { ImagePath } from "../../utils/ImagePath";
 import { hp, RFValue, wp } from "../../helper/Responsive";
@@ -25,7 +25,11 @@ import { authActions } from "../../redux/slice/AuthSlice";
 import { UserType } from "../../interfaces/Types";
 import { useGetUser } from "../../api/query/ProfileService";
 import { useSendFCMToken } from "../../api/query/NotificationService";
-import messaging from "@react-native-firebase/messaging";
+import { getMessaging, getToken } from 'firebase/messaging';
+import { getApp } from 'firebase/app';
+import messaging from '@react-native-firebase/messaging';
+
+
 
 const LoginScreen = () => {
   const { t } = useTranslation();
@@ -41,6 +45,25 @@ const LoginScreen = () => {
     if (!word) return "";
     return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
   };
+
+
+
+  const getFCMToken = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      const token = await messaging().getToken();
+      console.log('FCM Token:', token);
+      return token
+      // Send token to backend if needed
+    } else {
+      console.log('FCM permission not granted');
+    }
+  };
+
 
   const capitalizedWord = capitalizeFirstLetter(portal);
 
@@ -80,12 +103,14 @@ const LoginScreen = () => {
                 setIsApiLoading(false);
                 navigation.navigate(RouteString.CompletingRegistrationScreen);
               } else {
-                const data = await getUserData();
-                const token = await messaging().getToken();
+                const data = await getUserData();console.log(data,"data")
+const token = await getFCMToken();
+  console.log(token,"token")
                 dispatch(authActions.setFCMToken(token));
                 await sendFCMToken({ firebaseToken: token });
                 dispatch(authActions.setUserStatus(res?.user_approval_status));
                 setIsApiLoading(false);
+                console.log(data)
                 if (data) {
                   dispatch(authActions.setUserInfo(data));
                   navigation.reset({

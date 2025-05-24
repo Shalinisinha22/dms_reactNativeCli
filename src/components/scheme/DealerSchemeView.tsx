@@ -16,6 +16,10 @@ const DealerSchemeView = ({ item }: { item: any }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
+  console.log(item, "item");  
+
+  console.log(item[0]?.slabIncentives, "item[0]?.slabIncentives");
+
   return (
     <View>
       <View style={styles.schemeView}>
@@ -49,23 +53,38 @@ const DealerSchemeView = ({ item }: { item: any }) => {
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemView} key={index}>
-                {console.log("item", item)}
+        
                 <Text style={styles.itemText1}>{index + 1}</Text>
-                <Text style={styles.itemText2}>{item.slab}</Text>
-                <Text style={styles.itemText3}>{item.name}</Text>
-                <View style={{ width: wp(23) }}>
+                {
+                  item.slabIncentives.map((slab: any, index: number) => {
+                    return (
+                      <>
+                            <Text key={index} style={styles.itemText2}>
+                        {slab.min} - {slab.max}
+                      </Text>
+                            <Text style={styles.itemText3}>Rs {slab.incentive} Per Ton</Text>
+
+                              <View style={{ width: wp(23) }}>
                   <Text style={styles.itemText4}>{item.my_order}</Text>
-                  {item.pending > 0 && (
+                  {slab.remaining > 0 && (
                     <Text style={styles.remaining}>
                       {' '}
-                      <Text>(</Text>{t('myScheme.remaining')} {item.pending}
+                      <Text>(</Text>{t('myScheme.remaining')} {slab.remaining}
                       <Text>)</Text>
                     </Text>
                   )}
                 </View>
                 <Text style={styles.itemText5}>
-                  {item?.achieved === "yes" ? t("myScheme.achieved") : ""}
+                  {slab?.achieved === "yes" ? t("myScheme.achieved") : ""}
                 </Text>
+                      </>
+                
+                    );
+                  })
+                }
+          
+          
+              
               </View>
             );
           }}

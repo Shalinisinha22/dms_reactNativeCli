@@ -24,7 +24,7 @@ const MySchemeScreen = () => {
             <DealerSchemeView item={schemes.data} />
           </View>
         </View>
-        <Image source={ImagePath.scheme} style={styles.schemeImage} />
+        {/* <Image source={ImagePath.scheme} style={styles.schemeImage} /> */}
       </ScrollView>
     </SafeAreaContainer>
   );

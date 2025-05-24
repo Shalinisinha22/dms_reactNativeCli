@@ -13,12 +13,15 @@ const OrderTracking = ({
   isCheckIcons,
   orderIcons,
   distributorIcons,
+     distributor_firm_name,
   asoIcons,
   dispatchedIcons,
   admin,
   adminIcon
 }: OrderTrackingProps) => {
   const { t } = useTranslation();
+
+
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -66,11 +69,20 @@ const OrderTracking = ({
                 <Image source={distributorIcons} style={styles.checkIcons} />
               )}
             </View>
+            
             <Text style={styles.label}>
               {distributorIcons === 39 || distributorIcons === null
                 ? t("dashboard.approvedByDisctributor")
                 : t("dashboard.rejectByDisctributor")}
             </Text>
+            <View style={{marginTop:5}}>
+
+             <Text numberOfLines={5} style={[styles.label,{fontWeight:"500",fontSize:10}]}>
+              {distributorIcons === 39 || distributorIcons === null
+                ? distributor_firm_name
+                :""}
+            </Text>
+            </View>
           </View>
          )}
  
@@ -189,7 +201,7 @@ const styles = StyleSheet.create({
     marginTop: hp(3.5),
     color:colors.black,
     fontFamily: FontPath.OutfitRegular,
-    fontSize: RFValue(10),
+    fontSize: RFValue(9),
     alignSelf: "center",
     textAlign: "center",
   },

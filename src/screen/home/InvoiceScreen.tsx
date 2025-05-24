@@ -47,8 +47,7 @@ const InvoiceScreen = () => {
   const isFoused = useIsFocused();
 
   useEffect(() => {
-    console.log("Start Date:", isStartDate);
-    console.log("End Date:", isEndDate);
+
     handleGetInvoice();
     setCurPage(1);
     setTotalPage(0);
@@ -68,8 +67,7 @@ const InvoiceScreen = () => {
         ? moment(isEndDate).format("YYYY-MM-DD")
         : "";
 
-      console.log("Formatted Start Date:", formattedStartDate);
-      console.log("Formatted End Date:", formattedEndDate);
+      
 
       const res = await getMyInvoiceGST({
         gst: userInfo?.gst_number,
@@ -86,7 +84,10 @@ const InvoiceScreen = () => {
           curPage === 1 ? res.data : [...prev, ...res.data]
         );
         setIsFetching(false);
+        console.log("Invoice Data:", res.data);
       }
+
+      
       if (res?.hasMore) {
         setTotalPage(res.totalPage);
         setNextPage(res.nextPage);
@@ -202,11 +203,11 @@ const InvoiceScreen = () => {
         isStartDate={isStartDate}
         isEndDate={isEndDate}
         setStartDate={(date) => {
-          console.log("Selected Start Date:", date);
+          // console.log("Selected Start Date:", date);
           setStartDate(date);
         }}
         setEndDate={(date) => {
-          console.log("Selected End Date:", date);
+          // console.log("Selected End Date:", date);
           setEndDate(date);
         }}
         backOnPress={() => setIsFilterOpen(!isFilterOpen)}
